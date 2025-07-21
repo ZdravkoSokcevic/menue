@@ -5,10 +5,10 @@
 * **Order your drink and food from your table**
 * **Ability to order pickup or delivery**
 * **Pay directly with your phone or pay in cash**
-* **Translate menu for your phone**
+* **Translate menu on your phone language**
 
 
-We reckognize needs when is possible. We think about problem with language understanding, between waiters and guests, so we build our tool to improve that. 
+We recognize needs when is possible. We think about problem with language understanding, between waiters and guests, so we build our tool to improve that. 
 
 Every table in restaurants have qr code, that is printed trough admin panel.
 Admin panel is place, where restaurants can moderate, add, remove or edit all possible tables, drinks and dishes.

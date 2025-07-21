@@ -27,7 +27,6 @@ class Authenticate extends Middleware
      */
     public function handle($request, Closure $next, ...$guards)
     {   
-        // dd('here');
         $this->guards = $guards;
 
         return parent::handle($request, $next, ...$guards);

@@ -1,7 +1,7 @@
 <?php
 namespace App\Interfaces;
 
-use Illuminate\Database\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 interface CompanyRepositoryInterface
 {

@@ -2,7 +2,7 @@
 	// use Response;
 	// /api ROUTES
 	// namespace App\Http\Controllers;
-	use App\Http\Controllers\CompaniesController;
+	// use App\Http\Controllers\CompaniesController;
 	use App\Http\Controllers\UsersController;
 	// use Route;
 		Route::get('/strange', function() {
@@ -22,13 +22,13 @@
 			dd('Middleware free route');
 		});
 
-		Route::post('/companies/create', CompaniesController::class . '@store');
+		Route::post('/companies/create', '\App\Http\Controllers\CompaniesController@create');
+		Route::post('/companies/edit/{id}', [\App\Http\Controllers\CompaniesController::class , 'edit']);
 		Route::middleware(['auth:sanctum'])->group(function($router) {
 
 			// Companies routes
-			Route::post('/companies/edit/:id', 'CompaniesController@edit');
-			Route::post('/companies/delete/:id', 'CompaniesController@delete');
-			Route::get('/companies/all', 'CompaniesController@all');
+			Route::get('/companies/delete/{id}', '\App\Http\Controllers\CompaniesController@delete');
+			Route::get('/companies/all', '\App\Http\Controllers\CompaniesController@all');
 
 			Route::get('/testificate', function() {
 				dd('Here in auth');

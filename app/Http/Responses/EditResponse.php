@@ -3,7 +3,7 @@
     use Illuminate\Http\JsonResponse;
     use Illuminate\Contracts\Support\Responsable;
 
-    class CreateResponse implements Responsable
+    class EditResponse implements Responsable
     {
         protected $success;
         protected $custom_message;
@@ -18,15 +18,14 @@
         {
             $error_message = [
                 'message' => ($data['resource']) ? 
-                sprintf("Error creating resource %s", $data['resource']) : 
-                'Error creating resource!'
+                sprintf("Error during edit resource %s", $data['resource']) : 
+                'Error editing resource!'
             ];
             $success_message = [
                 'message' => ($data['resource']) ?
-                sprintf(sprintf('%s created successfully', $data['resource'])) :
-                'Resource created successfully'
+                sprintf(sprintf('%s edited successfully', $data['resource'])) :
+                'Resource edited successfully'
             ];
-            // dd($this->success);
 
             return ($this->success) ?
                 new JsonResponse($success_message) :
