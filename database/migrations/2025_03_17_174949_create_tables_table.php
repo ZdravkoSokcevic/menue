@@ -34,7 +34,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('table', function($table) {
-            $schema->dropForeign('company_id');
+            $table->dropForeign('company_id');
         });
         Schema::dropIfExists('table');
     }

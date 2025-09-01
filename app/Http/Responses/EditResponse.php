@@ -7,9 +7,12 @@
     {
         protected $success;
         protected $custom_message;
-        public function __construct($success, $custom_message = '')
+
+        protected Array|Collection $data;
+        public function __construct($success, $custom_message = '', $data)
         {
             $this->success = $success;
+            $this->data = $data;
             if($custom_message != '')
                 $this->custom_message = $custom_message;
         }
