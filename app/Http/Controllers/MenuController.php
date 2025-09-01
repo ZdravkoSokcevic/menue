@@ -12,11 +12,11 @@ class MenuController extends Controller
 {
     protected MenuRepository $menuRepository;
 
-    public function __construct(MenuRepositoryInterface $me)
+    public function __construct(MenuRepositoryInterface $me): void
     {
         $this->menuRepository = $me;
     }
-    
+
     public function get(): Collection
     {
         return $this->menuRepository->getTables();
@@ -34,6 +34,6 @@ class MenuController extends Controller
 
     public function delete($id)
     {
-        return $
+        return $this->menuRepository->delete($id);
     }
 }
