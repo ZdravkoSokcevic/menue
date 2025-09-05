@@ -11,6 +11,7 @@ class Order extends Model
     protected $fillable = [
         'menu_id',
         'table_id',
+        'quantity',
         'special_occasion'
     ];
 }

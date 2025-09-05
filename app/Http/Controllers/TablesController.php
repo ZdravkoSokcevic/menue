@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TableCreateRequest;
+use App\Http\Requests\TableEditRequest;
 use App\Http\Responses\CreateResponse;
 use App\Http\Responses\EditResponse;
+use App\Interfaces\TableRepositoryInterface;
 use App\Models\Table;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +17,7 @@ class TablesController extends Controller
 {
     private TableRepository $tableRepository;
 
-    public function __construct(TableRepositoryInterafce $t) 
+    public function __construct(TableRepositoryInterface $t) 
     {
         $this->tableRepository = $t;
     }
