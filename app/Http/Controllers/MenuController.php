@@ -9,15 +9,15 @@ use App\Http\Responses\EditResponse;
 use App\Models\Menu;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use MenuRepository;
-use MenuRepositoryInterface;
+use App\Http\Repositories\MenuRepository;
 use Response;
+use \App\Interfaces\MenuRepositoryInterface;
 
 class MenuController extends Controller
 {
-    protected MenuRepository $menuRepository;
+    protected MenuRepositoryInterface $menuRepository;
 
-    public function __construct(MenuRepositoryInterface $me)
+    public function __construct(MenuRepository $me)
     {
         $this->menuRepository = $me;
     }
@@ -34,7 +34,8 @@ class MenuController extends Controller
 
     public function insert(MenuCreateRequest $r): CreateResponse
     {
-        $data = Menu::getFillable();
+        $data = $r->only((new Menu)->getFillable());
+        // dd($data);
         $success = $this->menuRepository->store($data);
         if($success)
             return new CreateResponse(true, 'Created successfully!');
@@ -43,7 +44,7 @@ class MenuController extends Controller
 
     public function edit($id, MenuEditRequest $r): EditResponse
     {
-        $data = $r->only(Menu::getFillableFields());
+        $data = $r->only((new Menu)->getFillable());
         $menu = Menu::find($id);
         if(!$menu)
             return new EditResponse(success: false, custom_message: 'Company not found!');

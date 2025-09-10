@@ -46,7 +46,7 @@ class TablesController extends Controller
         $data = $r->only(Table::getFillableFields());
         $success = $this->tableRepository->edit($id, $data);
         if($success)
-            return new EditResponse(true, 'Successfully edited', $this->tableRepository->findOne($id));
+            return new EditResponse(true, 'Successfully edited', ['data' => $this->tableRepository->findOne($id)]);
         else return new EditResponse(false, 'Cannot edit row!');
     }
 

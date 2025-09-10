@@ -51,7 +51,7 @@ class CompaniesController extends Controller
         else {
             $success = $this->companyRepository->edit($id, $data);
             if($success)
-                return new EditResponse(true);
+                return new EditResponse(true, ['Company edited successfully']);
             else return new EditResponse(false, 'Could not edit company!');
         }
     }

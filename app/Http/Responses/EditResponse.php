@@ -9,7 +9,7 @@
         protected $custom_message;
 
         protected Array|Collection $data;
-        public function __construct($success, $custom_message = '', $data)
+        public function __construct($success, $custom_message = '', Array $data=[])
         {
             $this->success = $success;
             $this->data = $data;

@@ -3,17 +3,15 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class MenuCreateRequest extends FormRequest
+class OrderCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $user = auth('sanctum')->user();
-        return $user && $user->role === 'admin';
+        return false;
     }
 
     /**
@@ -24,11 +22,7 @@ class MenuCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=> 'required|string|max:30',
-            'picuture' => 'string',
-            'description' => 'string|max:255',
-            'quantity' => '',
-            'company_id' => Rule::exists('companies', 'id')
+            //
         ];
     }
 }

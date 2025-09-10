@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('description', 255);
+            $table->string('quantity');
+            $table->string('picture')->nullable();
+            $table->bigInteger('company_id')->unsigned()->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('menus', function($table) {
+            $table->foreign('company_id')->references('id')->on('companies');
         });
     }
 
@@ -22,6 +31,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropForeign('company_id');
         Schema::dropIfExists('menus');
     }
 };

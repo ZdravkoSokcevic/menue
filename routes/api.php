@@ -25,10 +25,13 @@
 		Route::post('/companies/create', '\App\Http\Controllers\CompaniesController@create');
 		Route::post('/companies/edit/{id}', [\App\Http\Controllers\CompaniesController::class , 'edit']);
 		Route::middleware(['auth:sanctum'])->group(function($router) {
-
+			
 			// Companies routes
 			Route::get('/companies/delete/{id}', '\App\Http\Controllers\CompaniesController@delete');
 			Route::get('/companies/all', '\App\Http\Controllers\CompaniesController@all');
+			
+			Route::get('/menu', '\App\Http\Controllers\MenuController@get');
+			Route::post('/menu/create', '\App\Http\Controllers\MenuController@insert');
 
 			Route::get('/testificate', function() {
 				dd('Here in auth');

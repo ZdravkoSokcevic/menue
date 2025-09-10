@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 abstract class BaseModel extends Model
 {
     protected $fillable = [];
-    public static function getFillable()
+    public static function getFillableFields()
     {
         return (new static)->fillable;
     }

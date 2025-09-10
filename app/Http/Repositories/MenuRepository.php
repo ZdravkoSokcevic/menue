@@ -1,7 +1,10 @@
 <?php
 
+namespace App\Http\Repositories;
+
 use App\Models\Menu;
 use Illuminate\Database\Eloquent\Collection;
+use App\Interfaces\MenuRepositoryInterface;
 
 class MenuRepository implements MenuRepositoryInterface
 {
