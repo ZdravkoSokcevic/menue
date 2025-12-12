@@ -1,0 +1,6 @@
+.login-bg {
+  /* background-image: url('/images/restaurant-bg.jpg'); Replace this with your image path */
+  background-image: url('/menue.jpeg');
+  background-size: cover;
+  background-position: center;
+}

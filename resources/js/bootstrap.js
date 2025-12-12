@@ -9,7 +9,24 @@ import 'bootstrap';
 import axios from 'axios';
 window.axios = axios;
 
+    async function getCsrfToken() {
+        try {
+            const response = await axios.get('/sanctum/csrf-cookie',{withCredentials: true}); // Replace with your actual endpoint
+            console.log(response.headers['set-cookie']);
+            return response.headers['set-cookie']; // Assuming the token is in the response data
+        } catch (error) {
+            console.error('Error fetching CSRF token:', error);
+            return null;
+        }
+    }
+
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.withCredentials = true;
+
+// getCsrfToken().then(token => {
+//     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+//     console.log(token);
+// })
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('picture')->nullable();
+            $table->bigInteger('parent_id')->unsigned()->nullable();
             $table->timestamps();
+        });
+        Schema::table('categories', function(Blueprint $table) {
+            $table->foreign('parent_id')->references('id')->on('categories')->onUpdate('set null')->onDelete('cascade');
         });
     }
 
@@ -22,6 +28,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('categories', function(Blueprint $table) {
+            $table->dropForeign('parent_id');
+        });
         Schema::dropIfExists('categories');
     }
 };

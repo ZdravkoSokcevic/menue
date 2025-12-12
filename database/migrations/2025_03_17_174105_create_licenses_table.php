@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('licenses', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('discount')->max(300);
+            $table->string('name', 40);
+            $table->string('description', 255)->nullable();
+            $table->string('picture',255)->nullable();
+            $table->integer('discount')->max(300)->nullable();
+            $table->enum('discount_type', ['percent', 'value', null])->nullable();
             $table->string('type');
-            $table->string('country');
             $table->timestamps();
         });
     }

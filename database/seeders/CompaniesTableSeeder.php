@@ -28,7 +28,7 @@ class CompaniesTableSeeder extends Seeder
             'last_name'     => 'Admin',
             'username'      => 'administrator',
             'email'         => 'admin@menue.com',
-            'password'      => Hash::make('test123'),
+            'password'      => Hash::make('test1234'),
             'role'          => 'admin',
             'company_id'    => $company_id
         ]);

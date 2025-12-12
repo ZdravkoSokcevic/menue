@@ -13,5 +13,6 @@ class Menu extends BaseModel
         'quantity',
         'name',
         'company_id',
+        'category_id'
     ];
 }

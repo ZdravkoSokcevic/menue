@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+"use client"
+import { BrowserRouter, Routes, Route, Link, useLocation, Location } from 'react-router-dom';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // @ts-ignore
 import { Container, createRoot } from 'react-dom/client';
 
@@ -9,37 +10,58 @@ import About from "../pages/About";
 import { PrivateRoute } from './PrivateRoute';
 import { ToastContainer } from 'react-toastify';
 import Login from '@/pages/admin/Login';
+import Admin from '@/pages/Admin';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
 const App: React.FC = () => {
 
+    let location = window.location;
+    const [showNavigation, setShowNavigation] = useState(true);
+
+    useEffect(() => {
+        // // debugger;
+        if(location.pathname == '/login')
+            setShowNavigation(false);
+    }, [1]);
+
 
     return (
-        <>
         <BrowserRouter>
-            <React.Fragment>
-                <nav>
-                    <ul>
-                        <li>
-                            <Link to={'/home'}>Home</Link>
-                        </li>
-                        <li>
-                            <Link to={'/about'}>About</Link>
-                        </li>
-                        {/* <li>Home</li> */}
-                        {/* <li>About</li> */}
-                    </ul>
-                </nav>
-            </React.Fragment>
+                {
+                    showNavigation && <React.Fragment>
+                        <nav>
+                            <ul>
+                                <li>
+                                    <Link to={'/home'}>Home</Link>
+                                </li>
+                                <li>
+                                    <Link to={'/about'}>About</Link>
+                                </li>
+                                {/* <li>Home</li> */}
+                                {/* <li>About</li> */}
+                            </ul>
+                        </nav>
+                    </React.Fragment>
+                }
             
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />
-                <Route path='/about' element={ <About nesto="to nesto" /> }></Route>
+                <Route path="/about" element={ <About nesto="to nesto" /> }></Route>
                 <Route path="/settings" element= {
                     <PrivateRoute Children={<About nesto="nesto" />}></PrivateRoute>
                 }/>
+
+                {/* ADMIN COMPONENTS */}
+                <Route path="/admin" element = {
+                    <PrivateRoute Children={<Admin />}> </PrivateRoute>
+                } />
+
+                {/*<Route path="/admin" element = {
+                    <Admin />
+                } /> */}
 
                 <Route path="/login" element= {
                     <Login />
@@ -49,7 +71,6 @@ const App: React.FC = () => {
             </Routes>
             <ToastContainer />
         </BrowserRouter>
-        </>
     )
 }
 

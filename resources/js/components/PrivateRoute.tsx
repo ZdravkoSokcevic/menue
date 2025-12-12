@@ -1,5 +1,16 @@
-import React, { useState } from "react";
+import React, { Component, ReactNode, useState } from "react";
+import { JSX } from "react";
 import { Navigate } from "react-router-dom";
+
+interface PrivateRouteProps {
+    children: Component;
+}
+
+export const PrivateRoute = ( props: PrivateRouteProps ) => {
+    const [auth, setAuth] = useState(true);
+    const Children: ReactNode = props.children;
+    return auth ? <Children /> : <Navigate to={"/login"} />;
+}
 
 // export class PrivateRoute extends React.Component
 // {
@@ -17,9 +28,3 @@ import { Navigate } from "react-router-dom";
 //         // )
 //     }
 // }
-
-export const PrivateRoute = ({ Children, ...rest }: any) => {
-    const [auth, setAuth] = useState(false);
-
-    return auth ? <Children {...rest} /> : <Navigate to={"/admin/login"} />;
-}

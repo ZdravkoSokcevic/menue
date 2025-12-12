@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('value');
             $table->string('model');
             $table->string('model_id');
+            $table->string('model_class');
             $table->string('locale',2);
             $table->timestamps();
             $table->unique([ 'model', 'model_id',  'locale', 'key']);

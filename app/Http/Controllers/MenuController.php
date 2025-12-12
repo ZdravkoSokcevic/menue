@@ -47,7 +47,7 @@ class MenuController extends Controller
         $data = $r->only((new Menu)->getFillable());
         $menu = Menu::find($id);
         if(!$menu)
-            return new EditResponse(success: false, custom_message: 'Company not found!');
+            return new EditResponse(success: false, custom_message: 'Menu not found!');
         else {
             $success = $this->menuRepository->edit($id, $data);
             if($success)

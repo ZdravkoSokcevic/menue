@@ -18,11 +18,13 @@ return new class extends Migration
             $table->string('quantity');
             $table->string('picture')->nullable();
             $table->bigInteger('company_id')->unsigned()->nullable();
+            $table->bigInteger('category_id')->unsigned()->nullable();
             $table->timestamps();
         });
 
         Schema::table('menus', function($table) {
             $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('set null');
         });
     }
 
@@ -32,6 +34,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropForeign('company_id');
+        Schema::dropForeign('category_id');
         Schema::dropIfExists('menus');
     }
 };

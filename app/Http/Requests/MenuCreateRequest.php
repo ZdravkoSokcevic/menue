@@ -28,7 +28,13 @@ class MenuCreateRequest extends FormRequest
             'picuture' => 'string',
             'description' => 'string|max:255',
             'quantity' => '',
-            'company_id' => Rule::exists('companies', 'id')
+            'company_id' => [
+                'nullable', 
+                Rule::exists('companies', 'id')],
+            'category_id' => [
+                'nullable',
+                Rule::exists('categories', 'id')
+            ]
         ];
     }
 }

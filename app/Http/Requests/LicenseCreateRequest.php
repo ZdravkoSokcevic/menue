@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class MenuEditRequest extends FormRequest
+class LicenseCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,17 +23,11 @@ class MenuEditRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=> 'required|string|max:30',
-            'picuture' => 'string',
-            'description' => 'string|max:255',
-            'quantity' => '',
-            'company_id' => [
-                'nullable', 
-                Rule::exists('companies', 'id')],
-            'category_id' => [
-                'nullable',
-                Rule::exists('categories', 'id')
-            ]
+            'name' => 'required|string|max:40',
+            'quantity' => 'string',
+            'description' => 'nullable|string|max:255',
+            'picture' => 'nullable|string',
+            'type' => 'string'
         ];
     }
 }

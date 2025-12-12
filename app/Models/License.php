@@ -11,5 +11,8 @@ class License extends Model
         'quantity',
         'description',
         'picture',
+        'discount',
+        'discount_type',
+        'type'
     ];
 }

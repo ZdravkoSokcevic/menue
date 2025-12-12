@@ -31,8 +31,15 @@ class CompaniesController extends Controller
     {
         $data = $r->only(Company::getFillableFields());
         $result = $this->companyRepository->create($data);
+
         // check if created
         if($result instanceof Company) {
+            // Create an admin user for current company
+            $user = $result->createAdmin();
+            if($user == false) {
+                $result->delete();
+                return new CreateResponse(false, 'Could not create company, admin creation failed');
+            }else 
             return new CreateResponse(true, ['resource' => 'Company']);
         }else {
             // Error

@@ -24,7 +24,7 @@ class CompanyCreateRequest extends FormRequest
     {
         return [
             'name' => 'required:string|max:80',
-            'email' => 'required:email',
+            'email' => 'required:email|unique:companies,email|unique:users,email',
             'description' => 'required:text',
             'logo' => '',
             'phone' => 'string|max:20',

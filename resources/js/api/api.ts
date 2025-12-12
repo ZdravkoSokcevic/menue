@@ -10,14 +10,14 @@ import { toast } from 'react-toastify';
 
 AxiosApiInstance.interceptors.request.use(
     async config => {
-        const tokenObj: IGetResult = await localStorage.get({ key: 'token' });
-        const token: string = tokenObj.value ?? '';
+        const tokenObj: string = await localStorage.getItem( 'access_token' ) as string;
+        const token: string = tokenObj ?? '';
         config.withCredentials = true;
         config.withXSRFToken = true;
         // @ts-ignore
         config.headers = {
-            authorization: token, 
-            ...config.headers
+            Authorization: token, 
+            ...config.headers,
         }
         return config;
     },
@@ -25,6 +25,17 @@ AxiosApiInstance.interceptors.request.use(
         Promise.reject(error);
     }
 )
+
+AxiosApiInstance.interceptors.response.use((response: AxiosResponse<any, any>) => {
+    console.log(response);
+    return response;
+}, (error: any) => {
+    if(error.response && error.response.status === 401) {
+        console.error('Unauthorized');
+        
+    }
+})
+console.log(AxiosApiInstance);
 
 export default class Api {
     static apiUrl   = API_BASE_URL;
@@ -47,9 +58,7 @@ export default class Api {
             if(response && response.data) {
                 // response.data.map((category:Category,index) => category.selected = 0);
                 return Promise.resolve(response.data);
-            }
-    
-            return Promise.resolve([]);
+            }else return Promise.resolve([]);
         }catch(e) {
             return Promise.resolve([]);
         }
