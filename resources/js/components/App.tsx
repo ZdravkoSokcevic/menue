@@ -7,7 +7,7 @@ import { Container, createRoot } from 'react-dom/client';
 
 import Home from "../pages/Home";
 import About from "../pages/About";
-import { PrivateRoute } from './PrivateRoute';
+import ProtectedRoute, { PrivateRoute } from './ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
 import Login from '@/pages/admin/Login';
 import Admin from '@/pages/Admin';
@@ -51,12 +51,12 @@ const App: React.FC = () => {
                 <Route path="/home" element={<Home />} />
                 <Route path="/about" element={ <About nesto="to nesto" /> }></Route>
                 <Route path="/settings" element= {
-                    <PrivateRoute Children={<About nesto="nesto" />}></PrivateRoute>
+                    <ProtectedRoute children={<About nesto="nesto" />}></ProtectedRoute>
                 }/>
 
                 {/* ADMIN COMPONENTS */}
                 <Route path="/admin" element = {
-                    <PrivateRoute Children={<Admin />}> </PrivateRoute>
+                    <ProtectedRoute children={<Admin />}> </ProtectedRoute>
                 } />
 
                 {/*<Route path="/admin" element = {
