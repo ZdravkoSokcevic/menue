@@ -1,0 +1,35 @@
+.form-modal {
+    min-width: 800px;
+    min-height: 300px;
+    max-width: 700px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: white;
+    height: 90%;
+
+    button.close-btn {
+        position: absolute;
+        top: 8pt;
+        right: 5pt;
+    }
+
+    .controls {
+        position: absolute;
+        right: 10pt;
+        bottom: 10pt;
+        font-size: 25pt;
+    }
+
+    .submit {
+        border: none;
+        background-color: white;
+        cursor: pointer;
+    }
+}
+
+div.form-page .row > div {
+    height: 75vh;
+}

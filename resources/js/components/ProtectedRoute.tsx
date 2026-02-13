@@ -1,6 +1,10 @@
-import React, { Component, ReactNode, useState } from "react";
+import React, { Component, ReactNode, useEffect, useState } from "react";
 import { JSX } from "react";
 import { Navigate } from "react-router-dom";
+import { appSlice, setDefaultCompany } from "@/reducers/appSlice";
+import { Store } from "@/reducers/Store";
+
+import TUser from "@/types/TUser";
 
 interface PrivateRouteProps {
     Children: ReactNode;
@@ -29,24 +33,76 @@ interface PrivateRouteProps {
 import { ReactElement } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth'; // Your custom auth hook
+import Storage from "@/helpers/Storage";
+import { TCompany } from "@/types/TCompanies";
 
 interface ProtectedRouteProps {
   children: ReactElement;
 }
 
+
+
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { user } = useAuth();
   const location = useLocation();
+  const [user, setUser] = React.useState(null as null | TUser);
+  const [company, setCompany] = React.useState(null as null | TCompany)
+  const [isDataFetched, setIsDataFetched] = React.useState(false);
 
-  if (user) {
-    return <div>Loading...</div>; // Show a spinner while checking auth status
+  const fetchAuth = async() => {
+      let uStr   = await Storage.get("user");
+      if(uStr) {
+        let u: TUser = JSON.parse(uStr);
+        if(u)
+          setUser(u);
+      }
+      
+      return Promise.resolve();
+  };
+
+  const fetchSelectedCompany = async() => {
+    let company = await Storage.get('default_company');
+    // If exists put it to app Store
+    try {
+      if(company) {
+        Store.dispatch(setDefaultCompany({ value: JSON.parse(company) }));
+        setCompany(JSON.parse(company));
+        return Promise.resolve();
+      }
+    }catch(err) {
+      console.error('Cannot parse company');
+      // Doesn't make sense, but we will use Promise.all()
+      // that's how we'll know that function is finished
+      return Promise.resolve();
+    }
+
+  }
+  // bit complicated structure
+  // but is necessary to finish all loading
+  // before we turn off loader
+  // Bcs of preventing additional renders
+  useEffect(() => {
+    setIsDataFetched(false);
+    let fAuth = fetchAuth();
+    let fCompany = fetchSelectedCompany();
+    Promise.all([ fAuth, fCompany])
+      .then(() => {
+        setIsDataFetched(true);
+      });
+  }, [1]);
+
+  // Here is solved problem of double rendering this page
+  // That's why isDataFetched is included bcs
+  // Because conditions works even before data is fetched from localStorage
+  if (user && company && company.id != '' && location.pathname == '/companies' && isDataFetched) {
+    return <Navigate to="/admin" state={{ from: location }} replace />;
   }
 
-  if (!user) {
-    // Redirect to login, but save the current location to redirect back after login
-    return <Link to="/login" state={{ from: location }} replace />;
-  }
 
+  if ((user == null || (user && user.id == '') && location.pathname != '/login') && isDataFetched) {
+      // Redirect to login, but save the current location to redirect back after login
+    return <Navigate to="/login" state={{ from: location }} replace />
+  }
+  
   return children;
 };
 

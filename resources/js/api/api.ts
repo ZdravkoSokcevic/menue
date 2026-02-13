@@ -16,7 +16,7 @@ AxiosApiInstance.interceptors.request.use(
         config.withXSRFToken = true;
         // @ts-ignore
         config.headers = {
-            Authorization: token, 
+            Authorization: `Bearer ${token}`, 
             ...config.headers,
         }
         return config;
@@ -162,7 +162,7 @@ export default class Api {
 
             if(response)
                 return Promise.resolve(response);
-            else return Promise.reject(null);
+            else return Promise.reject(res.data);
         }catch(e) {
             console.error('Request failed to: ' + path)
             return Promise.reject(e);

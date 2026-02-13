@@ -8,6 +8,7 @@ export default defineConfig({
             // buildDirectory: 'js/app',
             input: [
                 'resources/sass/app.scss',
+                'resources/sass/menu.scss',
                 'resources/js/app.ts',
             ],
             refresh: true,

@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('location_lat')->nullable();
             $table->string('location_lng')->nullable();
+
+            // Need to add Settings by company (theme, colors, default lang ? (maybe that can be choosed per user), )
             $table->timestamps();
         });
     }

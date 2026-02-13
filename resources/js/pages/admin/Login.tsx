@@ -3,6 +3,7 @@ import SimpleReactValidator from 'simple-react-validator';
 import '../../../css/components/Login.css'; // Add this file for styles
 import LoginAPI from '../../api/Login';
 import { useNavigate } from 'react-router-dom';
+import TUser from '@/types/TUser';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -52,10 +53,14 @@ const Login = () => {
                 console.log('Logging in with:', credentials);
                 let success = await LoginAPI.login(creds);
                 if(success && success.user && success.access_token) {
+                    let u : TUser = success.user;
+                    // debugger;
                     // store access token
                     localStorage.setItem('accessToken', success.access_token)
                     localStorage.setItem('user', JSON.stringify(success.user));
-                    navigate('/home');
+                    if(u.role == 'admin')
+                        navigate('/admin');
+                    else navigate('/home');
                     setKey(Math.random());
 
                 }

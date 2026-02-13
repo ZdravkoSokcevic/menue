@@ -10,16 +10,19 @@ use App\Models\Menu;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Http\Repositories\MenuRepository;
+use App\Services\MediaService;
 use Response;
 use \App\Interfaces\MenuRepositoryInterface;
 
 class MenuController extends Controller
 {
     protected MenuRepositoryInterface $menuRepository;
+    protected MediaService $mediaService;
 
-    public function __construct(MenuRepository $me)
+    public function __construct(MenuRepository $me, protected MediaService $ms)
     {
         $this->menuRepository = $me;
+        $this->mediaService = $ms;
     }
 
     /**
@@ -35,7 +38,15 @@ class MenuController extends Controller
     public function insert(MenuCreateRequest $r): CreateResponse
     {
         $data = $r->only((new Menu)->getFillable());
-        // dd($data);
+        // 1. Insert menu image and return picture path
+        // 2. Replace data image path
+        $picture_path = '';
+        if($r->file('picture'))
+            $picture_path = $this->mediaService->uploadPhoto($r->file('picture'), 'menu');
+        if($picture_path != '') {
+            $data['picture'] = $picture_path;
+        }
+        
         $success = $this->menuRepository->store($data);
         if($success)
             return new CreateResponse(true, 'Created successfully!');

@@ -10,7 +10,8 @@ Route::get('test', function () {
 });
 
 Route::view('/{url?}', 'app')
-    ->where('url', '^(?!api).*$');
+    ->where('url', '^(?!api).*$')
+    ->except([ 'storage' ]);
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');

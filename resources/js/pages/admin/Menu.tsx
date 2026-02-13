@@ -1,14 +1,13 @@
 import React from "react";
-import Navigation from "./admin/Navigation";
+import Navigation from "../admin/Navigation";
 import TUser from "@/types/TUser";
-import { useEffect } from "react";
 
 interface IProps {};
 interface IState {
     user: TUser | null;
 };
 
-class Admin extends React.Component<IProps, IState>
+class Menu extends React.Component<IProps, IState>
 {
 
     constructor(props: IProps) {
@@ -26,11 +25,11 @@ class Admin extends React.Component<IProps, IState>
                 <Navigation />
 
                 <div className="main-content">
-                    <p>Admin page</p>
+                    <p>Menu page</p>
                 </div>
             </div>
         )
     }
 }
 
-export default Admin;
+export default Menu;
