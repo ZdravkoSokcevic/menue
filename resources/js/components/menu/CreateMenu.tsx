@@ -98,7 +98,6 @@ class CreateMenu extends React.Component<IProps, IState>
     }
 
     closeModal() {
-        debugger;
         this.props.closeCreateMenuModal();
     }
 
@@ -197,7 +196,7 @@ class CreateMenu extends React.Component<IProps, IState>
 
 
                     <h2>Create menu</h2>
-                    <button className="close-btn" onClick={()=>{}}>x</button>
+                    <button className="close-btn" onClick={() => this.closeModal()}>x</button>
 
                     <Formik 
                         initialValues={initialValues}
@@ -309,7 +308,7 @@ class CreateMenu extends React.Component<IProps, IState>
         let data: unknown = {
             name: form['name'].value,
             description: form['description'].value,
-            file: this.state.imageFile,
+            picture: this.state.imageFile,
             quantity: form['quantity'].value,
             company_id: Store.getState().app.defaultCompany.id
         }

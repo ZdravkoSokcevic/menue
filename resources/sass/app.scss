@@ -13,6 +13,11 @@
     font-family: 'Roboto';
 }
 
+html, body {
+  height: 100%;
+  margin: 0; /* Optional: remove default margins */
+}
+
 // CSS FOR ANY COMPONENT
 body {
     visibility: visible;
@@ -52,6 +57,7 @@ div.loading > *:not(.main-loader) {
 
     .sidebar {
     min-height: 100vh;
+    width: 150px;
     background: #fff;
     border-right: 1px solid #ddd;
     position: fixed;
@@ -69,8 +75,9 @@ div.loading > *:not(.main-loader) {
     }
 
     .main-content {
-        width: calc(100% - 200px);
-        margin-left: 200px;
+        width: calc(100% - 150px);
+        margin-left: 150px;
+        height: 100vh;
     }
 
     .data-table {

@@ -8,6 +8,7 @@ class MenuAPI extends Api
 {
     static async createMenu(data: TMenu) 
     {
+        debugger;
         try {
             let success = await this.post('/api/menu/create', data, {}, true);
             if(success)

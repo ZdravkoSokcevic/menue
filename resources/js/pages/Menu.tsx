@@ -2,6 +2,11 @@ import React, { ReactNode } from "react";
 import { Table, TableBody, TableRow, TableHead, TableContainer, TableCell } from "@mui/material";
 import Navigation from "./admin/Navigation";
 import { CiCirclePlus } from "react-icons/ci"
+import { IoEye } from "react-icons/io5";
+import { HiMiniPencilSquare } from "react-icons/hi2";
+import { MdDelete } from "react-icons/md";
+
+
 
 import "../../sass/menu.scss"
 import CreateMenu from "@/components/menu/CreateMenu";
@@ -32,15 +37,15 @@ class Menu extends React.Component<IProps, IState> {
             <div className="admin-nav-c">
                 <Navigation />
 
-                <div className="main-content">
-                    <div className="p-5">
+                <div className="main-content p-5">
+                    {/* <div className="p-5"> */}
                         <div className="w-12 d-flex justify-content-between">
                             <h4>Menu</h4>
                             <h3>{'Exchange <- ->'}</h3>
                         </div>
 
                         {/* MAIN CONTAINER */}
-                        <div className="w-12 d-flex justify-content-start">
+                        <div className="col-12 mt-5 main-container">
 
                             {/* MAIN CONTAINER ITEMS */}
                             <div className="rounded-dotted-div backgr m-2">
@@ -51,10 +56,19 @@ class Menu extends React.Component<IProps, IState> {
                                 let picPath: String = item.picture as String;
                                 if(picPath)
                                     return <div className="rounded-dotted-div m-2" style={{backgroundImage: `url(${'/storage/' + picPath.replaceAll('\'', '')})`}} data-path={`${picPath}`}>
-                                        <span>{item.name}</span> 
+                                        <span className="name">{item.name}</span> 
+                                        <div className="menu-info">
+                                            <span>{item.name}</span> 
+                                            <span>{item.description}</span>
+                                            <div className="d-flex flex-direction-column card-actions">
+                                                <IoEye />
+                                                <HiMiniPencilSquare />
+                                                <MdDelete />
+                                            </div>
+                                        </div>
                                     </div>
                                 else return <div className="rounded-dotted-div backgr m-2">
-                                    <span>{item.name}</span> 
+                                    <span className="name">{item.name}</span> 
                                 </div>
                             })}
 
@@ -70,7 +84,7 @@ class Menu extends React.Component<IProps, IState> {
                         </div>
                         
                     </div>
-                </div>
+                {/* </div> */}
                 <CreateMenu isOpen={this.state.isCreateMenuModalOpened} type="modal" closeCreateMenuModal={this.closeCreateMenuModal} />
             </div>
 
