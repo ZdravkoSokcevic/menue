@@ -74,6 +74,10 @@ div.loading > *:not(.main-loader) {
     background: #e9ecef;
     }
 
+    .sidebar a.active {
+        color: blue;
+    }
+
     .main-content {
         width: calc(100% - 150px);
         margin-left: 150px;

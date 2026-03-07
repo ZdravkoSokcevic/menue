@@ -18,7 +18,7 @@ class Storage
     }
 
     static async remove(options: StorageGetOptions) {
-        localStorage.remove(options);
+        localStorage.removeItem(options.key);
     }
 }
 

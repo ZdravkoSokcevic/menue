@@ -16,6 +16,8 @@
 
         public function toResponse($data)
         {
+            // data bag is used for success message also
+            $data_bag = $this->custom_message != '' ? $this->custom_message : '';
             $error_message = [
                 'message' => ($data['resource']) ? 
                 sprintf("Error creating resource %s", $data['resource']) : 
@@ -24,9 +26,14 @@
             $success_message = [
                 'message' => ($data['resource']) ?
                 sprintf(sprintf('%s created successfully', $data['resource'])) :
-                'Resource created successfully'
+                'Resource created successfully',
             ];
-            // dd($this->success);
+
+            if(is_array($data_bag)) {
+                foreach($data_bag as $k => $v) {
+                    $success_message[$k] = $v;
+                }
+            } else $success_message['data'] = $data_bag;
 
             return ($this->success) ?
                 new JsonResponse($success_message) :

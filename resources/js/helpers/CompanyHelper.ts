@@ -1,25 +1,26 @@
 import { TCompany } from "@/types/TCompanies";
 import Storage from "./Storage";
+import { Store } from "@/reducers/Store";
+import { removeDefaultCompany, setDefaultCompany } from "@/reducers/appSlice";
 
 class CompanyHelper
 {
     static async storeDefaultCompany(company: TCompany)
     {
-        Storage.set({key: 'default_company', value: JSON.stringify(company)});
+        // Moved to persisted redux store instead of localStorage 
+        Store.dispatch(setDefaultCompany(company));
     }
 
     static async loadDefaultCompany(): Promise<TCompany | null>
     {
-        let company = await Storage.get('default_company');
-        try {
-            if(company)
-                return Promise.resolve(JSON.parse(company));
-            else return Promise.resolve(null);
-        }catch(err) {
-            if(typeof company == 'object')
-                return Promise.resolve(company);
-            return Promise.resolve(null);
-        }
+        // Moved to persisted redux store instead of localStorage
+        let company = await Store.getState().app.defaultCompany;
+        return Promise.resolve(company);
+    }
+
+    static async removeSelectedCompany() {
+        Store.dispatch(removeDefaultCompany({}));
+        // Storage.remove({key: 'default_company'});
     }
 }
 

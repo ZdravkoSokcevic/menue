@@ -23,13 +23,15 @@ class CompanyCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required:string|max:80',
-            'email' => 'required:email|unique:companies,email|unique:users,email',
-            'description' => 'required:text',
-            'logo' => '',
-            'phone' => 'string|max:20',
-            'location_lat' => 'required|between:-90,90',
-            'location_lng' => 'required|between:-180,180',
+            'name'          => 'required:string|max:80',
+            'email'         => 'required:email|unique:companies,email|unique:users,email',
+            'description'   => 'required:text',
+            'logo'          => '',
+            'phone'         => 'string|max:20',
+            'location_lat'  => 'required|between:-90,90',
+            'location_lng'  => 'required|between:-180,180',
+            'currency_id'   => 'exists:currencies,id',
+            'language_id'   => 'exists:languages,id' 
         ];
     }
 

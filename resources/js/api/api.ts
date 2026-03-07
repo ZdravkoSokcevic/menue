@@ -1,16 +1,21 @@
 
-import Axios, { AxiosResponse } from "axios";
+import Axios, { AxiosError, AxiosResponse } from "axios";
 import {root as API_BASE_URL, root} from "../config"
 const AxiosApiInstance = Axios.create();
 // import toast from "react-hot-toast";
 import { IApiErrorMessage } from "../types/Api";
 import { IGetResult } from "@/types/Storage";
 import { toast } from 'react-toastify';
+import { Store } from "@/reducers/Store";
 // import { ServerResponse } from "../types/ServerResponse"
 
 AxiosApiInstance.interceptors.request.use(
     async config => {
-        const tokenObj: string = await localStorage.getItem( 'access_token' ) as string;
+        const tokenObj: string = await Store.getState().user.token as string;
+        // console.log('### TOKEN OBJECT API MIDDLEWARE ###')
+        // console.log(tokenObj);
+        // console.log('////### TOKEN OBJECT API MIDDLEWARE ###')
+
         const token: string = tokenObj ?? '';
         config.withCredentials = true;
         config.withXSRFToken = true;
@@ -29,10 +34,14 @@ AxiosApiInstance.interceptors.request.use(
 AxiosApiInstance.interceptors.response.use((response: AxiosResponse<any, any>) => {
     console.log(response);
     return response;
-}, (error: any) => {
+}, (error: AxiosError) => {
     if(error.response && error.response.status === 401) {
         console.error('Unauthorized');
-        
+        toast('Unauthorized');
+    }else if(error.response && error.response.status === 422) {
+        const errors: {errors: []} = error.response.data as {errors: []};
+        debugger;
+        toast(error.response.statusText, { type: 'error' });
     }
 })
 console.log(AxiosApiInstance);
@@ -68,14 +77,14 @@ export default class Api {
      * @param(queryParams) : Object
      */
     static async get<T=any, R= AxiosResponse<T>>(path: string, queryParams: object, headers: object): Promise<AxiosResponse> {
-        // console.log(Api.apiUrl)
         try {
             let response = await AxiosApiInstance(Api.apiUrl + path, {
                 method: "GET",
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json"
-                }
+                },
+                params: queryParams
             })
 
             if(response && response.data) {

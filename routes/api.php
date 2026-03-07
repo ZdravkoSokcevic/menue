@@ -33,6 +33,7 @@
 			Route::get('/menu', '\App\Http\Controllers\MenuController@get');
 			Route::post('/menu/create', '\App\Http\Controllers\MenuController@insert');
 			Route::post('/menu/edit/{id}', '\App\Http\Controllers\MenuController@edit');
+			Route::get('/menu/delete/{id}', '\App\Http\Controllers\MenuController@delete');
 
 			// Categories routes
 			Route::get('/categories', '\App\Http\Controllers\CategoriesController@get');

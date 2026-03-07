@@ -9,7 +9,7 @@ import { Button, Input, TextField } from "@mui/material";
 import "../../../sass/modal.scss"
 import MediaHelper from "@/helpers/MediaHelper";
 import MenuAPI from "@/api/MenuAPI";
-import { TMenu } from "@/types/Menu";
+import { MenuCreateResponseItem, TMenu } from "@/types/Menu";
 import { Store } from "@/reducers/Store";
 import { disableLoading, enableLoading } from "@/reducers/appSlice";
 
@@ -18,6 +18,7 @@ interface IProps {
     type: 'modal', // can be modal or page
     isOpen?: boolean;
     closeCreateMenuModal: Function;
+    addNewMenuItem: Function;
 };
 interface IState {
     isDragging: boolean;
@@ -50,12 +51,6 @@ const menuValidationSchema = Yup.object().shape({
         .min(20, 'Description is too short')
         .max(255, 'Description is too long')
         .required('Required'),
-    // picture: Yup.mixed()
-    //     .test('dynamicFileSize', 'File not exists', (value, context) => {
-    //         debugger;
-    //     }),
-    // Picture/file validation actually will not work
-    // because file is always empty
     picture: Yup.mixed()
         .required('A picture is required')
         .test(
@@ -207,7 +202,7 @@ class CreateMenu extends React.Component<IProps, IState>
 
                     {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty }) => (
 
-                        <Form onSubmit={this.onSubmit} encType="multipart/form-data">
+                        <Form encType="multipart/form-data">
                         <div className="container-fluid">
                             <div className="row">
 
@@ -241,7 +236,6 @@ class CreateMenu extends React.Component<IProps, IState>
                                                 onChange={(event: any) => this.handleFileChange(event as ChangeEventHandler<HTMLInputElement>)}
                                                 // Hide the actual input element, but keep it accessible to screen readers using opacity: 0
                                                 style={{ opacity: 0, height: 0, width: 0, position: 'absolute' }}
-                                                required
                                             />
                                         </div>
                                         {errors.picture && touched.picture ? (
@@ -280,10 +274,10 @@ class CreateMenu extends React.Component<IProps, IState>
                                         <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
                                     </div>
 
-                                    {'Is submitting: ' + isSubmitting}<br />
+                                    {/* {'Is submitting: ' + isSubmitting}<br />
                                     {'Is valid: ' + isValid} <br />
                                     {'Is dirty: ' + dirty} <br />
-                                    { 'Errors: ' + JSON.stringify(errors) }
+                                    { 'Errors: ' + JSON.stringify(errors) } */}
                                     <div className="controls">
                                         <button className="submit" disabled={isSubmitting || !isValid || !dirty}>
                                             <FaSave />
@@ -301,23 +295,31 @@ class CreateMenu extends React.Component<IProps, IState>
     }
 
     onSubmit = async(event: any) => {
-        (event as Event).stopPropagation();
-        (event as Event).preventDefault();
-
+        // (event as Event).stopPropagation();
+        // (event as Event).preventDefault();
         let form = event.target;
         let data: unknown = {
-            name: form['name'].value,
-            description: form['description'].value,
+            name: event.name,
+            description: event.description,
             picture: this.state.imageFile,
-            quantity: form['quantity'].value,
-            company_id: Store.getState().app.defaultCompany.id
+            quantity: event.quantity,
+            company_id: Store.getState().app.defaultCompany?.id
         }
+        debugger;
         Store.dispatch(enableLoading({}));
-        let success = await MenuAPI.createMenu(data as TMenu);
+        const response = await MenuAPI.createMenu(data as TMenu);
         setTimeout(() => {
             Store.dispatch(disableLoading({}));
         })
-        this.closeModal();
+        if(response && response.success == true) {
+            // update menu items
+            this.closeModal();
+            const data: MenuCreateResponseItem = response.data as MenuCreateResponseItem;
+            this.props.addNewMenuItem(data.item);
+        }
+        else {
+            alert('Unexpected error occured');
+        }
     }
 }
 

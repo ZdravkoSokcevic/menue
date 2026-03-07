@@ -1,5 +1,5 @@
 import TUser from "@/types/TUser";
-import {createSlice} from "@reduxjs/toolkit"
+import {createSlice, PayloadAction} from "@reduxjs/toolkit"
 export const initialUser: TUser = {
     id: '',
     name: '',
@@ -12,20 +12,21 @@ export const initialUser: TUser = {
     role: 'admin'
 }
 export const userSlice = createSlice({
-    name: 'User',
+    name: 'user',
     initialState: {
         user:initialUser as TUser,
         token: '' as string,
         isLoggedIn: false as boolean
     },
     reducers: {
-        login: (state, action: any) => {
+        setLoggedIn: (state, action: PayloadAction<{user: TUser}>) => {
             state.user = Object.assign({}, action.payload.user);
+            state.isLoggedIn = true;
         },
-        logout: (state, action) => {
+        removeLoggedIn: (state, action) => {
             state.user = initialUser;
         },
-        setToken: (state, action: any) => {
+        setToken: (state, action: PayloadAction<{token: string}>) => {
             state.token = action.payload.token as string;
         },
         removeToken: (state, action: any) => {
@@ -38,8 +39,8 @@ export const userSlice = createSlice({
 })
 
 export const { 
-    login, 
-    logout, 
+    setLoggedIn, 
+    removeLoggedIn, 
     setIsLoggedIn,
     setToken,
     removeToken 

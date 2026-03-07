@@ -54,7 +54,6 @@ const Login = () => {
                 let success = await LoginAPI.login(creds);
                 if(success && success.user && success.access_token) {
                     let u : TUser = success.user;
-                    // debugger;
                     // store access token
                     localStorage.setItem('accessToken', success.access_token)
                     localStorage.setItem('user', JSON.stringify(success.user));

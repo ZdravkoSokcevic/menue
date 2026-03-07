@@ -37,7 +37,8 @@ import Storage from "@/helpers/Storage";
 import { TCompany } from "@/types/TCompanies";
 
 interface ProtectedRouteProps {
-  children: ReactElement;
+  children?: ReactElement;
+  path?: string;
 }
 
 
@@ -49,32 +50,12 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [isDataFetched, setIsDataFetched] = React.useState(false);
 
   const fetchAuth = async() => {
-      let uStr   = await Storage.get("user");
-      if(uStr) {
-        let u: TUser = JSON.parse(uStr);
-        if(u)
-          setUser(u);
-      }
-      
-      return Promise.resolve();
+    let user = Store.getState().user.user;
+    setUser(user);
   };
 
   const fetchSelectedCompany = async() => {
-    let company = await Storage.get('default_company');
-    // If exists put it to app Store
-    try {
-      if(company) {
-        Store.dispatch(setDefaultCompany({ value: JSON.parse(company) }));
-        setCompany(JSON.parse(company));
-        return Promise.resolve();
-      }
-    }catch(err) {
-      console.error('Cannot parse company');
-      // Doesn't make sense, but we will use Promise.all()
-      // that's how we'll know that function is finished
-      return Promise.resolve();
-    }
-
+    return new Promise((resolve, reject) => resolve(Store.getState().app.defaultCompany));
   }
   // bit complicated structure
   // but is necessary to finish all loading
@@ -102,7 +83,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       // Redirect to login, but save the current location to redirect back after login
     return <Navigate to="/login" state={{ from: location }} replace />
   }
-  
+  // debugger;
   return children;
 };
 

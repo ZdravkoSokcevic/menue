@@ -9,6 +9,6 @@ interface MenuRepositoryInterface
 {
 		public function all();
 		public function store(Array $data): Array|Menu;
-		public function edit($id, Array $data): bool;
+		public function edit($id, Array $data): bool | Menu;
 		public function delete($id): bool|null;
 }

@@ -5,7 +5,7 @@ import TUser from "@/types/TUser";
 import { IoArrowRedoCircle } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import { GrView } from "react-icons/gr";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import {
     Table, 
     TableBody,
@@ -150,9 +150,9 @@ class Companies extends React.Component<IProps, IState>
                             <a href="#">
                                 <GrView />
                             </a>
-                            <a href="#" title={'Act as ' + company.name} onClick={() => this.switchToCompany(company)}>
+                            <Link to={"/admin"} title={'Act as ' + company.name} onClick={() => this.switchToCompany(company)} >
                                 <IoArrowRedoCircle />
-                            </a>
+                            </Link>
                             <a href="">
                                 <CiEdit />
                             </a>
@@ -171,7 +171,7 @@ class Companies extends React.Component<IProps, IState>
     switchToCompany = async(company: TCompany) => {
         console.log('Switch to company');
         CompanyHelper.storeDefaultCompany(company);
-        Store.dispatch(setDefaultCompany(company));
+        // Store.dispatch(setDefaultCompany(company));
         this.setState({ isVisitAllowed: false });
         Store.dispatch(animatedRefresh({}));
         

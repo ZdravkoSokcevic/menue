@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('company_license_payments', function (Blueprint $table) {
+        Schema::create('company_licence_payments', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('company_id')->unsigned();
             $table->integer('amount');
             $table->dateTime('date');
             $table->timestamps();
         });
-        Schema::table('company_license_payments', function($table) {
+        Schema::table('company_licence_payments', function($table) {
             $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('company_license_payments');
+        Schema::dropIfExists('company_licence_payments');
     }
 };

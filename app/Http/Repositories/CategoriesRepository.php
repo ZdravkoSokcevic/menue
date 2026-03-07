@@ -23,11 +23,12 @@ class CategoriesRepository implements CategoriesRepositoryInterface
         $this->category->save();
         return $this->category;
     }
-    public function edit($id, Array $data): bool
+    public function edit($id, Array $data): Category | bool
     {
         $row = $this->category->find($id);
-        if($row)
-            return $row->update($data);
+        $row->fill($data);
+        if($row->save())
+            return $row->fresh();
         return false;
     }
     public function delete($id): bool | null

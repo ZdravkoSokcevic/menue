@@ -2,12 +2,13 @@
 namespace App\Interfaces;
 
 use Illuminate\Database\Eloquent\Collection;
+use App\Models\Category;
 
 interface CategoriesRepositoryInterface
 {
     public function all(): Collection;
     public function store(Array $data);
-    public function edit($id, Array $data): bool;
+    public function edit($id, Array $data): Category | bool;
     public function delete($id): bool | null;
 }
 

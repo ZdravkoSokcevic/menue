@@ -16,10 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('picture')->nullable();
             $table->bigInteger('parent_id')->unsigned()->nullable();
+            $table->bigInteger('company_id')->unsigned()->nullable();
             $table->timestamps();
         });
         Schema::table('categories', function(Blueprint $table) {
             $table->foreign('parent_id')->references('id')->on('categories')->onUpdate('set null')->onDelete('cascade');
+            $table->foreign(columns: 'company_id')->references('id')->on('companies')->onUpdate('set null')->onDelete('cascade');
         });
     }
 
@@ -30,6 +32,7 @@ return new class extends Migration
     {
         Schema::table('categories', function(Blueprint $table) {
             $table->dropForeign('parent_id');
+            $table->dropForeign('company_id');
         });
         Schema::dropIfExists('categories');
     }

@@ -1,10 +1,10 @@
 import {TCompany, TCompaniesArr} from "@/types/TCompanies";
 // import TComp from "@/types/TCompanies";
 
-import {createSlice} from "@reduxjs/toolkit"
+import {createSlice, PayloadAction} from "@reduxjs/toolkit"
 
 export const appSlice = createSlice({
-    name: 'Store',
+    name: 'app',
     initialState: {
         refreshKey: Math.random(),
         animationRefreshKey: Math.random(),
@@ -16,15 +16,27 @@ export const appSlice = createSlice({
         } as TCompany,
         settings: {
             theme: '',
-            style: ''
+            style: '',
+            useModals: true,
         }
     },
     reducers: {
         animatedRefresh(state, action) {
             state.animationRefreshKey = Math.random();
         },
-        setDefaultCompany(state, action) {
-            state.defaultCompany = action.payload.value;
+        setDefaultCompany(state, action: PayloadAction<TCompany>) {
+            console.log('setDefaultCompany');
+            console.log(action.payload);
+            console.log('setDefaultCompany');
+            state.defaultCompany = action.payload;
+        },
+        removeDefaultCompany(state,action) {
+            console.log('removeDefaultCompany');
+            state.defaultCompany = {
+                id: '',
+                name: '',
+                email: ''
+            } 
         },
         enableLoading(state, action) {
             state.isLoading = true;
@@ -32,14 +44,23 @@ export const appSlice = createSlice({
         disableLoading(state, action) {
             state.isLoading = false;
         },
+        enableModals(state, action) {
+            state.settings.useModals = true;
+        },
+        disableModals(state, action) {
+            state.settings.useModals = false;
+        }
     }
 })
 
 export const {  
     animatedRefresh,
     setDefaultCompany,
+    removeDefaultCompany,
     enableLoading,
-    disableLoading
+    disableLoading,
+    enableModals,
+    disableModals
 } = appSlice.actions;
 
 export default appSlice.reducer;

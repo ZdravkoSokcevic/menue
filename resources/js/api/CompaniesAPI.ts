@@ -8,13 +8,6 @@ class CompaniesAPI extends Api
     {
         let companies: TCompaniesArr = [];
         try {
-            // Means that we have local access token,
-            // but we need to check on backend too
-            let creds = await localStorage.getItem('access_token');
-            if(!creds || creds == null) {
-                console.error('Unauthorized!');
-                return Promise.resolve([]);
-            }
             let companiesRes = await this.get('/api/companies/all', {}, {});
             if(typeof companiesRes !== undefined && companiesRes.data.length) {
                 companiesRes.data.forEach((company:any)=> companies.push(company));

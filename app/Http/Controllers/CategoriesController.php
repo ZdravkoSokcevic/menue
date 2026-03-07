@@ -9,6 +9,7 @@ use App\Http\Responses\EditResponse;
 use App\Interfaces\CategoriesRepositoryInterface;
 use App\Models\Category;
 use \App\Http\Repositories\CategoriesRepository;
+use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Response;
@@ -16,9 +17,11 @@ use Response;
 class CategoriesController extends Controller
 {
     protected CategoriesRepositoryInterface $categoriesRepository;
-    public function __construct(CategoriesRepository $ce)
+    protected MediaService $mediaService;
+    public function __construct(CategoriesRepository $ce, MediaService $ms)
     {
         $this->categoriesRepository = $ce;
+        $this->mediaService = $ms;
     }  
 
     /**
@@ -34,23 +37,42 @@ class CategoriesController extends Controller
     public function insert(CategoriesCreateRequest $r): CreateResponse
     {
         $data = $r->only((new Category())->getFillable());
+
+        $picture_path = '';
+        if($r->file('picture'))
+            $picture_path = $this->mediaService->uploadPhoto($r->file('picture'), 'categories');
+        if($picture_path != '') {
+            $data['picture'] = $picture_path;
+        }
+
         // dd($data);
         $success = $this->categoriesRepository->store($data);
         if($success)
-            return new CreateResponse(true, 'Created successfully!');
+            return new CreateResponse(true,  [ 'item' => $success ]);
         else return new CreateResponse(false, 'Could not create Menu!');
     }
 
     public function edit($id, CategoriesEditRequest $r): EditResponse
     {
         $data = $r->only((new Category)->getFillable());
-        $menu = Category::find($id);
-        if(!$menu)
-            return new EditResponse(success: false, custom_message: 'Company not found!');
+        $category = Category::find($id);
+        if(!$category)
+            return new EditResponse(success: false, custom_message: 'Category not found!');
         else {
+        // only if picture is preset
+            if($r->hasFile('picture')) {
+                $picture_path = '';
+                $old_picture_path = $category->picture;
+                if($r->file('picture'))
+                    $picture_path = $this->mediaService->replacePhoto($old_picture_path, $r->file('picture'), 'categories');
+                if($picture_path != '') {
+                    $data['picture'] = $picture_path;
+                }
+            }
+
             $success = $this->categoriesRepository->edit($id, $data);
             if($success)
-                return new EditResponse(true);
+                return new EditResponse(true, ['item' => $success]);
             else return new EditResponse(false, 'Could not edit menu!');
         }
     }

@@ -1,15 +1,21 @@
+import AppHelper from '@/helpers/AppHelper';
+import CompanyHelper from '@/helpers/CompanyHelper';
 import { RootState, Store } from '@/reducers/Store';
+import { withLocation } from '@/routes/withLocation';
 import { TCompany } from '@/types/TCompanies';
 import TUser, { TUserSettings } from '@/types/TUser';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
+
 
 interface IProps {
     userSettings: TUserSettings;
     defaultCompany: TCompany
+    location?: Location;
 };
 interface IState {
-
+    refreshKey: number
 };
 
 const mapStateToProps = (state: RootState) => {
@@ -30,6 +36,7 @@ class Navigation extends React.Component<IProps, IState>
     constructor(props: IProps) {
         super(props);
         this.state = {
+            refreshKey: Math.random()
             // userSettings: {
             //     user: {
             //         id: '',
@@ -51,6 +58,7 @@ class Navigation extends React.Component<IProps, IState>
             //     email: ''
             // }
         }
+        console.log(this.props.userSettings);
     }
 
     // UNSAFE_componentWillReceiveProps() {
@@ -62,27 +70,76 @@ class Navigation extends React.Component<IProps, IState>
     //     // debugger;
     // }
 
-    render(): React.ReactNode {
+    isAllowedToRenderCategories = (): boolean => {
+        // return true;
         let {defaultCompany} = this.props;
+        const userSettings = this.props.userSettings;
+        // debugger;
+        return userSettings && 
+            userSettings.isLoggedIn &&
+            (userSettings.user.role == 'admin' || userSettings.user.role == 'company_admin' || userSettings.user.role == 'agent') 
+                ? true
+                : false;
+    }
+
+    isAllowedToRenderCompanies = (): boolean => {
+        // return true;
+        let {defaultCompany} = this.props;
+        const userSettings = this.props.userSettings;
+        // let allowed = userSettings && 
+        //     userSettings.isLoggedIn && 
+        //     userSettings.user.role == 'admin' && 
+        //     (Store.getState().app.defaultCompany.id == '') ;
+        //     debugger;
+        return userSettings && 
+            userSettings.isLoggedIn && 
+            userSettings.user.role == 'admin' && 
+            (Store.getState().app.defaultCompany?.id == '') 
+            ? true
+            : false;
+    }
+
+    goToAllCompanies = (e: any): void => {
+        CompanyHelper.removeSelectedCompany();
+        // eslint-disable-next-line
+        this.setState({ refreshKey: Math.random() });
+    }
+
+    render(): React.ReactNode {
         // debugger;
         return (
-            // <nav>
-            //     <a href="#">Navitem1</a>
-            //     <a href="#">Navitem2</a>
-            // </nav>
-        <div id="sidebar" className="sidebar p-3" data-key={this.props.userSettings.user.id}>
-        <h4 className="fw-bold mb-4">Navigation</h4>
-        <a href="/dashboard">Dashboard</a>
-        {this.props.userSettings && this.props.userSettings.user && this.props.userSettings.user.role == 'admin' && (Store.getState().app.defaultCompany.id == '') && <a href="/companies">Companies</a>}
-        <a href="/menu">Menu</a>
-        <a href="/regression">Regression</a>
-        <a href="/fap">FAP</a>
-        <a href="/users">Users</a>
-        <a href="/settings">Settings</a>
-        </div>
+            <div id="sidebar" className="sidebar p-3" key={this.state.refreshKey}>
+                <h4 className="fw-bold mb-4">Navigation</h4>
+                <Link 
+                    to="/admin"
+                    className={this.props.location?.pathname === '/admin' ? 'active': '' }      
+                >Dashboard</Link>
+                {this.isAllowedToRenderCategories() && <Link 
+                    to="/categories"
+                    className={this.props.location?.pathname === '/categories' ? 'active': '' }  
+                >
+                        Categories
+                </Link>}
+                {this.isAllowedToRenderCompanies() && <Link 
+                    to="/companies"
+                    className={this.props.location?.pathname === '/companies' ? 'active': '' }  
+                >
+                    Companies
+                </Link>}
+                <Link 
+                    to="/menu"
+                    className={this.props.location?.pathname === '/menu' ? 'active': '' }  
+                >
+                    Menu
+                </Link>
+                {/* <a href="/fap">FAP</a> */}
+                {/* <a href="/users">Users</a> */}
+                <Link to="/settings">Settings</Link>
+                <Link to="#" onClick={(e: any) =>this.goToAllCompanies(e)}>Exit to all companies</Link>
+            </div>
         )
     }
 }
 
 // @ts-ignore
-export default connect(mapStateToProps)(Navigation);
+export default connect(mapStateToProps)(withLocation(Navigation));

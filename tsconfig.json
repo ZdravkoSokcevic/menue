@@ -124,7 +124,9 @@
         "resources/js/**/*.ts",
         "resources/js/**/*.d.ts",
         "resources/js/**/*.tsx", 
-        "resources/js/**/*.jsx"
+        "resources/js/**/*.jsx",
+        "./node_modules/redux-persist/types",
+        "declarations.d.ts"
     ],
     "exclude": ["node_modules"]
 }

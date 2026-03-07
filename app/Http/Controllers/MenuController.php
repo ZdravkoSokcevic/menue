@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MenuCreateRequest;
 use App\Http\Requests\MenuEditRequest;
+use App\Http\Requests\MenuRequest;
 use App\Http\Responses\CreateResponse;
 use App\Http\Responses\EditResponse;
 use App\Models\Menu;
@@ -30,9 +31,16 @@ class MenuController extends Controller
      * @return Collection
      *  Needs to be changed to return tables only for company
      */
-    public function get(): Collection
+    public function get(MenuRequest $r): Collection
     {
-        return $this->menuRepository->all();
+        $user = $r->user();
+        // dd($r->user()->isAdmin());
+        if($user->isAdmin())
+            return $this->menuRepository->all();
+        // company admin can see only
+        else if($user->isCompanyAdmin())
+            return $this->menuRepository->all();
+
     }
 
     public function insert(MenuCreateRequest $r): CreateResponse
@@ -49,7 +57,7 @@ class MenuController extends Controller
         
         $success = $this->menuRepository->store($data);
         if($success)
-            return new CreateResponse(true, 'Created successfully!');
+            return new CreateResponse(true,   ['item'=> $success]);
         else return new CreateResponse(false, 'Could not create Menu!');
     }
 
@@ -60,9 +68,20 @@ class MenuController extends Controller
         if(!$menu)
             return new EditResponse(success: false, custom_message: 'Menu not found!');
         else {
+            // only if picture is preset
+            if($r->hasFile('picture')) {
+                $picture_path = '';
+                $old_picture_path = $menu->picture;
+                if($r->file('picture'))
+                    $picture_path = $this->mediaService->replacePhoto($old_picture_path, $r->file('picture'), 'menu');
+                if($picture_path != '') {
+                    $data['picture'] = $picture_path;
+                }
+            }
+
             $success = $this->menuRepository->edit($id, $data);
             if($success)
-                return new EditResponse(true);
+                return new EditResponse(true, ['item' => $success]);
             else return new EditResponse(false, 'Could not edit menu!');
         }
     }

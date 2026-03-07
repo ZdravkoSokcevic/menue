@@ -25,6 +25,28 @@
             // dd($path);
             return $path;
         }
+
+        public function replacePhoto(string $old_file_path, UploadedFile $file, string $folder)
+        {
+
+            $filename = $file->hashName();
+
+            $disk = config('filesystems.default') == 'local' ? 'public' : 's3';
+
+            if($folder == 'menu')
+                $file = $this->resizeCropAndOptimizeMenuPicture($file);
+
+            $path = $file->storeAs($folder, $filename, $disk);
+
+            if($path) {
+                // remove old photo
+                $file = Storage::disk($disk)->get($old_file_path);
+                $fileExists = Storage::disk($disk)->exists($old_file_path);
+                if($fileExists)
+                    Storage::disk($disk)->delete($old_file_path);
+            }
+            return $path;
+        } 
     }
 
 ?>

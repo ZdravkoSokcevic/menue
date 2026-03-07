@@ -26,7 +26,7 @@ class CategoriesEditRequest extends FormRequest
         return [
             'name'          => 'string|max:30',
             'category_id'   => Rule::exists('categories', 'id'),
-            'picture'       => 'string|nullable'
+            'picture' => ['required', 'extensions:jpg,png,jpeg']
         ];
     }
 }

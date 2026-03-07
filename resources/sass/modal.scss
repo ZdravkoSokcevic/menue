@@ -1,14 +1,17 @@
 .form-modal {
     min-width: 800px;
-    min-height: 300px;
+    // min-height: 300px;
     max-width: 700px;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    padding: 3rem;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
 
     background-color: white;
-    height: 90%;
+    // height: 90%;
 
     button.close-btn {
         position: absolute;

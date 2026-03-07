@@ -25,17 +25,19 @@ class MenuRepository implements MenuRepositoryInterface
         return $this->menu;
     }
 
-    public function edit($id, array $data): bool
+    public function edit($id, array $data): bool | Menu
     {
         $row = $this->menu->find($id);
-        if($row)
-            return $row->update($data);
+        $row->fill($data);
+        if($row->save())
+            return $row->fresh();
         return false;
     }
 
     public function delete($id): bool|null
     {
-        return $this->menu->find($id)->delete();
+        $menu = $this->menu->find($id);
+        return !is_null($menu) ? $menu->delete() : false;
     }
 }
 

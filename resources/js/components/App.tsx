@@ -1,6 +1,7 @@
 "use client"
 import { BrowserRouter, Routes, Route, Link, useLocation, Location } from 'react-router-dom';
 import { Provider, useStore } from "react-redux";
+import { PersistGate } from 'redux-persist/integration/react'
 
 import React, { useEffect, useRef, useState } from 'react';
 // @ts-ignore
@@ -14,14 +15,16 @@ import ProtectedRoute from './ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
 import Login from '@/pages/admin/Login';
 import Admin from '@/pages/Admin';
-import Menu from '@/pages/Menu';
+import Menu from '@/pages/admin/Menu';
+import Categories from '@/pages/admin/Categories';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import Storage from '@/helpers/Storage';
 import '../../sass/app.scss';
 import Companies from '@/pages/admin/Companies';
-import {Store, RootState } from "../reducers/Store";
+import {Store, RootState, persistor } from "../reducers/Store";
 import { DotLoader } from "react-spinners"
 import ReactModal from 'react-modal';
+import { setLoggedIn } from '@/reducers/userSlice';
 
 
 
@@ -34,6 +37,7 @@ const App: React.FC = () => {
     useEffect(() => {
         // // debugger;
         getLoggedIn()
+        loadStorageIntoStore();
         if(location.pathname == '/login' ||( user == null ))
             setShowNavigation(false);
     }, [1]);
@@ -42,12 +46,15 @@ const App: React.FC = () => {
 
     }, [(Store.getState() as RootState).app.animationRefreshKey]);
 
+    // Potential issue, this isn't loading first
     const getLoggedIn = async() => {
-        let userStr = await Storage.get('user');
-        if(userStr) {
-            let u: TUser = JSON.parse(userStr);
-            setUser(u);
-        }
+        // let userStr = await Storage.get('user');
+        const user = await Store.getState().user.user;
+        setUser(user);
+    }
+
+    const loadStorageIntoStore = () => {
+        // debugger;
     }
 
 
@@ -85,7 +92,15 @@ const App: React.FC = () => {
                     } />
 
                     <Route path="/menu" element = {
-                        <ProtectedRoute children={<Menu />} />
+                        <ProtectedRoute>
+                            <Menu />
+                        </ProtectedRoute>
+                    } />
+
+                    <Route path="/categories" element = {
+                        <ProtectedRoute>
+                            <Categories />
+                        </ProtectedRoute>
                     } />
 
                     <Route path="/companies" element = {
@@ -119,7 +134,9 @@ if (document.getElementById('root')) {
     Index.render(
         <React.StrictMode>
             <Provider store={ Store}>
-                <App />
+                <PersistGate loading={null} persistor={persistor}>
+                    <App />
+                </PersistGate>
             </Provider>
         </React.StrictMode>
     )

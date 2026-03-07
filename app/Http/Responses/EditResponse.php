@@ -2,6 +2,7 @@
     namespace App\Http\Responses;
     use Illuminate\Http\JsonResponse;
     use Illuminate\Contracts\Support\Responsable;
+    use Illuminate\Support\Collection;
 
     class EditResponse implements Responsable
     {
@@ -19,6 +20,7 @@
 
         public function toResponse($data)
         {
+            $data_bag = $this->custom_message != '' ? $this->custom_message : '';
             $error_message = [
                 'message' => ($data['resource']) ? 
                 sprintf("Error during edit resource %s", $data['resource']) : 
@@ -29,6 +31,12 @@
                 sprintf(sprintf('%s edited successfully', $data['resource'])) :
                 'Resource edited successfully'
             ];
+
+            if(is_array($data_bag)) {
+                foreach($data_bag as $k => $v) {
+                    $success_message[$k] = $v;
+                }
+            } else $success_message['data'] = $data_bag;
 
             return ($this->success) ?
                 new JsonResponse($success_message) :

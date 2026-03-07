@@ -21,9 +21,49 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('location_lat')->nullable();
             $table->string('location_lng')->nullable();
+            $table->bigInteger('language_id')->unsigned()->nullable();
+            $table->bigInteger('currency_id')->unsigned()->nullable();
+            $table->bigInteger('country_id')->unsigned()->nullable();
+            $table->bigInteger('licence_id')->unsigned()->nullable();
+
+            // Make sure to know who created company
+            $table->bigInteger('creator_id')->nullable()->unsigned();
 
             // Need to add Settings by company (theme, colors, default lang ? (maybe that can be choosed per user), )
             $table->timestamps();
+        });
+
+        // avoid circular relations
+        Schema::table('companies', function (Blueprint $table) {
+            $table->foreign('creator_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
+
+            $table->foreign('language_id')
+                ->references('id')
+                ->on('languages')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
+
+            $table->foreign('currency_id')
+                ->references('id')
+                ->on('currencies')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
+
+            $table->foreign('country_id')
+                ->references('id')
+                ->on('currencies')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
+
+            $table->foreign('licence_id')
+                ->references('id')
+                ->on('licences')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
         });
     }
 
@@ -32,6 +72,14 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropForeign('creator_id');
+            $table->dropForeign('language_id');
+            $table->dropForeign('currency_id');
+            $table->dropForeign('country_id');
+            $table->dropForeign('licence_id');
+
+        });
         Schema::dropIfExists('companies');
     }
 };
