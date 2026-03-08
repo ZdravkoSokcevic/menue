@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('picture')->nullable();
+            $table->tinyInteger('is_default')->default(0);
             $table->bigInteger('parent_id')->unsigned()->nullable();
             $table->bigInteger('company_id')->unsigned()->nullable();
             $table->timestamps();

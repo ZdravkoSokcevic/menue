@@ -7,6 +7,8 @@ use App\Http\Requests\CompanyEditRequest;
 use App\Http\Responses\EditResponse;
 use App\Models\Company;
 
+use App\Models\User;
+use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Responses\CreateResponse;
@@ -14,9 +16,11 @@ use App\Http\Responses\CreateResponse;
 class CompaniesController extends Controller
 {
     private CompanyRepository $companyRepository;
-    public function __construct(CompanyRepository $cs)
+    private MediaService $mediaService;
+    public function __construct(CompanyRepository $cs, MediaService $ms)
     {
         $this->companyRepository = $cs;
+        $this->mediaService = $ms;
     }
     public function home()
     {
@@ -30,17 +34,27 @@ class CompaniesController extends Controller
     public function create(CompanyCreateRequest $r)
     {
         $data = $r->only(Company::getFillableFields());
+
+        if($r->file('logo'))
+            $picture_path = $this->mediaService->uploadPhoto($r->file('logo'), 'companies');
+        if($picture_path != '') {
+            $data['logo'] = $picture_path;
+        }
+
+
         $result = $this->companyRepository->create($data);
 
         // check if created
         if($result instanceof Company) {
             // Create an admin user for current company
-            $user = $result->createAdmin();
+            $user = $result->createAdmin($r->only(User::getFillable()));
+            // create default categories
+            $this->companyRepository->createDefaultCategories($result);
             if($user == false) {
                 $result->delete();
                 return new CreateResponse(false, 'Could not create company, admin creation failed');
             }else 
-            return new CreateResponse(true, ['resource' => 'Company']);
+            return new CreateResponse(true, ['resource' => 'Company', 'item' => $result]);
         }else {
             // Error
             if($result['message'])
@@ -56,9 +70,9 @@ class CompaniesController extends Controller
         if(!$company)
             return new EditResponse(success: false, custom_message: 'Company not found!');
         else {
-            $success = $this->companyRepository->edit($id, $data);
+            $success = $this->companyRepository->edit($id, data: $data);
             if($success)
-                return new EditResponse(true, ['Company edited successfully']);
+                return new EditResponse(true, ['message' => 'Company edited successfully', 'item' => $success]);
             else return new EditResponse(false, 'Could not edit company!');
         }
     }

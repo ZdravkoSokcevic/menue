@@ -70,9 +70,9 @@ class CategoriesController extends Controller
                 }
             }
 
-            $success = $this->categoriesRepository->edit($id, $data);
-            if($success)
-                return new EditResponse(true, ['item' => $success]);
+            $company = $this->categoriesRepository->edit($id, $data);
+            if($company)
+                return new EditResponse(true, ['item' => $company]);
             else return new EditResponse(false, 'Could not edit menu!');
         }
     }

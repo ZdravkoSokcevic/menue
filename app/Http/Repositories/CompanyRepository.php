@@ -1,6 +1,7 @@
 <?php 
 	namespace App\Http\Repositories;
 
+	use App\Models\Category;
 	use Illuminate\Http\Request;
 	use App\Interfaces\TableRepositoryInterface;
 	use App\Interfaces\CompanyRepositoryInterface;
@@ -11,9 +12,9 @@
 
 class CompanyRepository implements CompanyRepositoryInterface 
 {
-	private Company $company;
-	public function __construct() {
-		$this->company = new Company();
+	protected Company $company;
+	public function __construct(Company $c) {
+		$this->company = $c;
 	}
 	public function create($data)
 	{
@@ -24,11 +25,24 @@ class CompanyRepository implements CompanyRepositoryInterface
 		return $this->company::create($data);
 	}
 
-	public function edit($id, $data) 
+	public function createDefaultCategories(Company $c)
+	{
+		$default_categories = config('categories.default');
+		foreach($default_categories as $category) {
+			$category['company_id'] = $c->id;
+		}
+
+		$success = Category::insert($default_categories);
+		return $success;
+	}
+
+	public function edit($id, $data): Company | bool
 	{
 		$company = Company::find($id);
 		$this->company = $company;
-		return $this->company->update($data);
+		if($this->company->update($data))
+			return $this->company;
+		else return false;
 	}
 
 	public function delete($id)

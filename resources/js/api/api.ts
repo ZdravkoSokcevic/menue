@@ -7,7 +7,10 @@ import { IApiErrorMessage } from "../types/Api";
 import { IGetResult } from "@/types/Storage";
 import { toast } from 'react-toastify';
 import { Store } from "@/reducers/Store";
+import { redirect, useNavigate } from "react-router-dom";
 // import { ServerResponse } from "../types/ServerResponse"
+
+// const navigate = useNavigate();
 
 AxiosApiInstance.interceptors.request.use(
     async config => {
@@ -38,6 +41,9 @@ AxiosApiInstance.interceptors.response.use((response: AxiosResponse<any, any>) =
     if(error.response && error.response.status === 401) {
         console.error('Unauthorized');
         toast('Unauthorized');
+        // not working here
+        // navigate('/admin');
+        // ('/login');
     }else if(error.response && error.response.status === 422) {
         const errors: {errors: []} = error.response.data as {errors: []};
         debugger;

@@ -40,6 +40,7 @@ class MenuController extends Controller
         // company admin can see only
         else if($user->isCompanyAdmin())
             return $this->menuRepository->all();
+        else return $this->menuRepository->all();
 
     }
 

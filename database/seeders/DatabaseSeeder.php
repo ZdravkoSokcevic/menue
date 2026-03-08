@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $this->call(LicencesTableSeeder::class);
         $this->call(CompaniesTableSeeder::class);
+        $this->call(CategoriesSeeder::class);
 
         Artisan::call('app:countries-data-sync');
 

@@ -20,6 +20,7 @@ class Company extends Model
         'name',
         'email',
         'phone',
+        'logo',
         'description',
         'location_lat',
         'location_lng',
@@ -62,7 +63,7 @@ class Company extends Model
     }
 
     // review this method
-    public function createAdmin(): bool | User
+    public function createAdmin(array $data): bool | User
     {
         $email = $this->email;
         $name = $this->name . ' ' . 'Admin';
