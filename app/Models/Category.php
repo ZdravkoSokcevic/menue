@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Traits\Translatable;
 
-class Category extends Model
+class Category extends BaseModel
 {
     use Translatable;
     protected $fillable = [

@@ -1,21 +1,35 @@
 // Fonts
-// @import url('https://fonts.bunny.net/css?family=Nunito');
-@import url('../fonts/JosefinSans.woff');
-@import url('../fonts/Roboto.woff');
+// @use '../fonts/JosefinSans.woff' as style;
+// @use '../fonts/Roboto.woff';
 
 // Variables
-@import 'variables';
+@use 'variables';
 
 // Bootstrap
-@import 'bootstrap/scss/bootstrap';
+@use 'bootstrap/scss/bootstrap';
+
+@font-face {
+    font-family: 'JosefinSans';
+    src: url('../fonts/JosefinSans.ttf');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto.ttf');
+    font-weight: 400;
+    font-style: normal;
+}
 
 * {
-    font-family: 'Roboto';
+    font-family: 'JosefinSans', sans-serif;
 }
 
 html, body {
   height: 100%;
   margin: 0; /* Optional: remove default margins */
+  font-family: 'JosefinSans';
 }
 
 // CSS FOR ANY COMPONENT
@@ -45,6 +59,8 @@ div.loading > *:not(.main-loader) {
 .admin-nav-c {
     display: flex;
     flex-direction: row;
+    position: absolute;
+    width: 100%;
 
     nav {
         width: 200px;
@@ -78,20 +94,39 @@ div.loading > *:not(.main-loader) {
         color: blue;
     }
 
-    .main-content {
-        width: calc(100% - 150px);
-        margin-left: 150px;
-        height: 100vh;
-    }
+    div.motion-div {
+        width: 100%;
+        &:not(.login) {
+            width: calc(100% - 150px);
+            margin-left: 150px;
+        }
 
-    .data-table {
-        tbody {
-            td {
-                font-size: 1rem;
+
+
+        div.page {
+            position: relative;
+            width: 100%;
+        }
+
+
+        .main-content {
+            height: 100vh;
+            position: relative;
+        }
+
+        .data-table {
+            tbody {
+                td {
+                    font-size: 1rem;
+                }
+                td.MuiTableCell-root a{
+                    font-size: 1.875rem !important;
+                }
             }
-            td.MuiTableCell-root a{
-                font-size: 1.875rem !important;
-            }
+        }
+
+        .country-input {
+            color: red !important;
         }
     }
 }

@@ -21,10 +21,12 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('location_lat')->nullable();
             $table->string('location_lng')->nullable();
+            $table->string('street')->nullable();
+            $table->string('website')->nullable();
             $table->bigInteger('language_id')->unsigned()->nullable();
             $table->bigInteger('currency_id')->unsigned()->nullable();
             $table->bigInteger('country_id')->unsigned()->nullable();
-            $table->bigInteger('licence_id')->unsigned()->nullable();
+            $table->bigInteger('license_id')->unsigned()->nullable();
 
             // Make sure to know who created company
             $table->bigInteger('creator_id')->nullable()->unsigned();
@@ -55,13 +57,13 @@ return new class extends Migration
 
             $table->foreign('country_id')
                 ->references('id')
-                ->on('currencies')
+                ->on('countries')
                 ->onUpdate('cascade')
                 ->onDelete('set null');
 
-            $table->foreign('licence_id')
+            $table->foreign('license_id')
                 ->references('id')
-                ->on('licences')
+                ->on('licenses')
                 ->onUpdate('cascade')
                 ->onDelete('set null');
         });
@@ -77,7 +79,7 @@ return new class extends Migration
             $table->dropForeign('language_id');
             $table->dropForeign('currency_id');
             $table->dropForeign('country_id');
-            $table->dropForeign('licence_id');
+            $table->dropForeign('license_id');
 
         });
         Schema::dropIfExists('companies');

@@ -15,9 +15,9 @@ use App\Http\Repositories\TableRepository;
 
 class TablesController extends Controller
 {
-    private TableRepository $tableRepository;
+    private TableRepositoryInterface $tableRepository;
 
-    public function __construct(TableRepositoryInterface $t) 
+    public function __construct(TableRepository $t) 
     {
         $this->tableRepository = $t;
     }
@@ -27,7 +27,7 @@ class TablesController extends Controller
         
     }
 
-    public function get(): Collection
+    public function get(Request $r): Collection
     {
         return $this->tableRepository->getTables();
     }
@@ -36,17 +36,22 @@ class TablesController extends Controller
     {
         $data = $r->only(['name', 'company_id']);
         $success = $this->tableRepository->storeTable($data);
-        if($success)
-            return new CreateResponse(true);
+        // generate qrcode
+        if($success) {
+            $qrcode = $this->tableRepository->generateQRCode($success);
+            $model = Table::with('code')->where('id', $success->id)->first();
+            return new CreateResponse(true, ['item'=> $model]);
+        }
         else return new CreateResponse(false, 'Cannot create table!');
     }
 
-    public function edit($id, TableEditRequest $r): EditResponse
+    public function edit($id, TableEditRequest $r): EditResponse 
     {
         $data = $r->only(Table::getFillableFields());
         $success = $this->tableRepository->edit($id, $data);
+        // dd($success);
         if($success)
-            return new EditResponse(true, 'Successfully edited', ['data' => $this->tableRepository->findOne($id)]);
+            return new EditResponse(true, [ 'message' => 'Successfully edited', 'item' => $success]);
         else return new EditResponse(false, 'Cannot edit row!');
     }
 
@@ -54,7 +59,7 @@ class TablesController extends Controller
     {
         $success = $this->tableRepository->deleteTable($id);
         if($success)
-            return new JsonResponse(['success'=> true, 'message' => 'Table deleted!'], 200);
+            return new JsonResponse(['success'=> true, 'message' => 'success'], 200);
         else return new JsonResponse(['success' => false, 'message'=> 'Cannot delete table!'], 500);
     }
 }

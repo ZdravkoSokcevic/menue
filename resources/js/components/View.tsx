@@ -8,6 +8,10 @@ import { WithRouterProps } from "@/types/WithRouterProps";
 import ViewMenu from "./menu/ViewMenu";
 import { TMenu } from "@/types/Menu";
 import ViewCategory from "./categories/ViewCategory";
+import ViewCompany from "./companies/ViewCompany";
+import { TCompany } from "@/types/TCompanies";
+import ViewCompanyTable from "./tables/ViewCompanyTable";
+import { ICompanyTable } from "@/types/TCompanyTables";
 
 interface IProps {
     isOpen?: boolean;
@@ -52,6 +56,8 @@ class View extends React.Component<IProps & WithRouterProps, IState>
                 <ModalOrPage isOpen={this.props.isOpen as boolean} closeModal={this.closeModal}>
                     {this.props.type == 'menu' && <ViewMenu currentItem={this.props.currentItem as TMenu} />}
                     {this.props.type == 'category' && <ViewCategory currentItem={this.props.currentItem as TMenu} />}
+                    {this.props.type == 'company' && <ViewCompany currentItem={this.props.currentItem as TCompany} />}
+                    {this.props.type == 'table' && <ViewCompanyTable currentItem={this.props.currentItem as ICompanyTable} />}
                 </ModalOrPage>
             </>
         )

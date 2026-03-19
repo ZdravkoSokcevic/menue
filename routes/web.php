@@ -2,12 +2,26 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Livewire\HomePage;
+use App\Livewire\DetailsPage;
 
 Route::view('/admin/login', 'app')->name('login');
 
 Route::get('test', function () {
     return Response::json([ 'message' => 'There you go' ]);
 });
+
+
+
+Route::get('/', HomePage::class)->name('homepage');
+
+Route::get('/details', DetailsPage::class);
+Route::get('/details/{page}', DetailsPage::class);
+
+// not working with livewire
+// Route::get('/shorts/{code}', '\App\Http\Controllers\HomeController@index');
+Route::get('/shorts/{code}', HomePage::class);
+
 
 Route::view('/{url?}', 'app')
     ->where('url', '^(?!api).*$');

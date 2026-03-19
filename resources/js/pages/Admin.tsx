@@ -22,8 +22,8 @@ class Admin extends React.Component<IProps, IState>
 
     render() {
         return (
-            <div className="admin-nav-c">
-                <Navigation />
+            <div className="admin-page page">
+                {/* <Navigation /> */}
 
                 <div className="main-content">
                     <p>Admin page</p>

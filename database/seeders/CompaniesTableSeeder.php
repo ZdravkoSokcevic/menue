@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Licence;
+use App\Models\License;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Company;
@@ -89,10 +89,10 @@ class CompaniesTableSeeder extends Seeder
         if($defaultCountry)
             $country = $defaultCountry->id;
 
-        $superadmin_licence = Licence::where(['type' => 'superadmin'])->first();
-        $basic_licence = Licence::where('type', 'basic')->first();
-        $premium_licence = Licence::where('type', 'premium')->first();
-        $enterprise_licence = Licence::where('type', 'enterprise')->first();
+        $superadmin_license = License::where(['type' => 'superadmin'])->first();
+        $basic_license = License::where('type', 'basic')->first();
+        $premium_license = License::where('type', 'premium')->first();
+        $enterprise_license = License::where('type', 'enterprise')->first();
         
         $adminCompany = [
                 'name'      => 'SuperAdmin company',
@@ -100,48 +100,48 @@ class CompaniesTableSeeder extends Seeder
                 'currency_id'   => $currency,
                 'language_id'   => $language,
                 'country_id'    => $country,
-                'licence_id'    => $superadmin_licence->id,
+                'license_id'    => $superadmin_license->id,
                 // creator_id is id of agent who makes company
                 'creator_id'    => $superadmin->id
         ];
         Company::insert($adminCompany);
 
-        // we don't need demo licence there, we're just use demo company
+        // we don't need demo license there, we're just use demo company
         
-        $basicLicenceCompany = [
+        $basicLicenseCompany = [
                 'name'      => 'Basic',
                 'email'     => 'basic@menue.com', 
                 'currency_id'   => $currency,
                 'language_id'   => $language,
                 'country_id'    => $country,
-                'licence_id'    => $basic_licence->id,
+                'license_id'    => $basic_license->id,
                 // creator_id is id of agent who makes company
                 'creator_id'    => $demoBasicUser->id   
         ];
-        Company::insert($basicLicenceCompany);
+        Company::insert($basicLicenseCompany);
 
-        $premiumLicenceCompany = [
+        $premiumLicenseCompany = [
                 'name'      => 'Premium',
                 'email'     => 'premium@menue.com', 
                 'currency_id'   => $currency,
                 'language_id'   => $language,
                 'country_id'    => $country,
-                'licence_id'    => $basic_licence->id,
+                'license_id'    => $basic_license->id,
                 // creator_id is id of agent who makes company
                 'creator_id'    => $demoPremiumUser->id  
         ];
-        Company::insert($premiumLicenceCompany);
+        Company::insert($premiumLicenseCompany);
 
-        $enterpriseLicenceCompany = [
+        $enterpriseLicenseCompany = [
                 'name'      => 'Enterprise',
                 'email'     => 'enterprise@menue.com', 
                 'currency_id'   => $currency,
                 'language_id'   => $language,
                 'country_id'    => $country,
-                'licence_id'    => $basic_licence->id,
+                'license_id'    => $basic_license->id,
                 // creator_id is id of agent who makes company
                 'creator_id'    => $demoEnterpriseUser->id  
         ];
-        Company::insert($enterpriseLicenceCompany);
+        Company::insert($enterpriseLicenseCompany);
     }
 }

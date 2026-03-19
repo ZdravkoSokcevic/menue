@@ -24,10 +24,10 @@ class LicenseCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:40',
-            'quantity' => 'string',
             'description' => 'nullable|string|max:255',
             'picture' => 'nullable|string',
-            'type' => 'string'
+            'type' => 'string',
+            'quantity' => 'required|numeric|min:0.01|max:10000',
         ];
     }
 }

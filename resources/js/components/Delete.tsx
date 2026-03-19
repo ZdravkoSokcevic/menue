@@ -38,7 +38,8 @@ class Delete extends React.Component<IProps & WithRouterProps, IState>
                 isOpen={this.props.isOpen as boolean} 
                 // isOpen={true}
                 onRequestClose={() => this.closeModal()}
-                className={"form-modal"}
+                overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
+                className="form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none"
                 contentLabel="Example"
             >
                 <h2>Delete item</h2>

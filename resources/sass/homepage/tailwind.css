@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* v4 uses @source to find your classes */
+@source "../../views/**/*.blade.php"; 
+@source "../../views/**/*.svelte";
+@source "../js/**/*.svelte";

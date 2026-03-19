@@ -9,6 +9,7 @@
 	use App\Models\Company;
 	use Illuminate\Database\Eloquent\Collection;
 	use Illuminate\Validation\ValidationException;
+	use Log;
 
 class CompanyRepository implements CompanyRepositoryInterface 
 {
@@ -18,10 +19,11 @@ class CompanyRepository implements CompanyRepositoryInterface
 	}
 	public function create($data)
 	{
-		$exists = Company::whereLike('name', '%' . $data['name'] . '%')->first();
+		$exists = Company::whereLike('name',  trim($data['name']))->first();
 		if($exists) {
 			return ['success' => false, 'message' => 'Company exists'];
 		}
+		// Log::info(json_encode(['data' => $data]));
 		return $this->company::create($data);
 	}
 
@@ -57,6 +59,6 @@ class CompanyRepository implements CompanyRepositoryInterface
 
 	public function all(): Collection 
 	{
-		return Company::all();
+		return Company::with(['license', 'currency', 'language', 'creator', 'admin'])->get();
 	}
 }

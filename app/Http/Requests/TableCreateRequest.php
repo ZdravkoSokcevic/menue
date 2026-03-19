@@ -24,14 +24,14 @@ class TableCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'company_id' => 'exists:companies:id'
+            // 'company_id' => 'exists:companies,id'
         ];
     }
 
     public function messages() {
         return [
             'name.max' => 'The name has exceeded the limit',
-            'company.exists' => 'Company doesn\'t exists',
+            // 'company.exists' => 'Company doesn\'t exists',
         ];
     }
 }

@@ -7,7 +7,8 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
-        './resources/js/**/*.{vue,js,ts,jsx,tsx}',
+        './resources/views/**/*.svelte',
+        './resources/js/**/*.{vue,js,ts,jsx,tsx,svelte}',
     ],
     theme: {
         extend: {

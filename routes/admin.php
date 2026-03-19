@@ -1,9 +1,11 @@
 <?php
 	// use Response;
-	Route::get('/', function() {
-		return Response::json([
-			'message' => 'Admin route'
-		]);
-	});
+
+	// Route::get('/', function() {
+	// 	dd('here');
+	// 	return Response::json([
+	// 		'message' => 'Admin routes'
+	// 	]);
+	// });
 
 ?>

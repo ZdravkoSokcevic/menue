@@ -29,7 +29,7 @@ export const userSlice = createSlice({
         setToken: (state, action: PayloadAction<{token: string}>) => {
             state.token = action.payload.token as string;
         },
-        removeToken: (state, action: any) => {
+        removeToken: (state, action) => {
             state.token = '';
         },
         setIsLoggedIn(state, action) {

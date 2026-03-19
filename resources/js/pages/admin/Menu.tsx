@@ -46,8 +46,8 @@ class Menu extends React.Component<IProps, IState> {
 
     render(): ReactNode {
         return (
-            <div className="admin-nav-c" key={Math.random()}>
-                <Navigation />
+            <div className="menu-page page" key={Math.random()}>
+                {/* <Navigation /> */}
 
                 <div className="main-content p-5">
                     {/* <div className="p-5"> */}

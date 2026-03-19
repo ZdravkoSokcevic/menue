@@ -44,9 +44,12 @@ AxiosApiInstance.interceptors.response.use((response: AxiosResponse<any, any>) =
         // not working here
         // navigate('/admin');
         // ('/login');
+        window.location.href = "/login";
     }else if(error.response && error.response.status === 422) {
         const errors: {errors: []} = error.response.data as {errors: []};
-        debugger;
+        // debugger;
+        toast(error.response.statusText, { type: 'error' });
+    }else if(error.response && error.response.status === 404) {
         toast(error.response.statusText, { type: 'error' });
     }
 })

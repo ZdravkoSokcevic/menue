@@ -170,7 +170,8 @@ class CreateCategory extends React.Component<IProps, IState>
             <Modal 
                 isOpen={this.props.isOpen as boolean} 
                 onRequestClose={() => this.closeModal()}
-                className={"form-modal p-5"}
+                overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
+                className="form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none"
                 style={{}}
                 contentLabel="Example"
             >

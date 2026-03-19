@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Traits\Translatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use \App\Models\Licence;
-use App\Models\CompanyLicences;
+use \App\Models\License;
+use App\Models\CompanyLicenses;
 
-class Company extends Model
+class Company extends BaseModel
 {
     use Translatable;
     protected $fillable = [
@@ -24,11 +25,13 @@ class Company extends Model
         'description',
         'location_lat',
         'location_lng',
+        'street',
+        'website',
         'language_id',
         'currency_id',
         'country_id',
-        'licence_id',
-        'licence_expire',
+        'license_id',
+        'license_expire',
         // creator_id is id of agent who makes company
         'creator_id'
     ];
@@ -39,7 +42,7 @@ class Company extends Model
 
     public function currency(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Currency::class, 'id', 'currency_id');
+        return $this->belongsTo(\App\Models\Currency::class, 'currency_id', 'id');
     }
 
     public function language(): BelongsTo
@@ -47,15 +50,25 @@ class Company extends Model
         return $this->belongsTo(\App\Models\Language::class, 'language_id', 'id');
     }
 
-    public function licence(): BelongsTo
+    public function license(): BelongsTo
     {
-        return $this->belongsTo(Licence::class);
+        return $this->belongsTo(License::class);
     }
 
     // creator_id is id of agent who makes company
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'creator_id', 'id');
+    }
+
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'creator_id', 'id')->where('users.role', 'admin');
+    }
+
+    public function menu(): HasMany
+    {
+        return $this->hasMany(Menu::class);
     }
 
     public static function getFillableFields() {
@@ -66,16 +79,30 @@ class Company extends Model
     public function createAdmin(array $data): bool | User
     {
         $email = $this->email;
-        $name = $this->name . ' ' . 'Admin';
-        $password = config('app.default_pass');
+        $name = isset($data['first_name']) && isset($data['last_name']) ? $data['first_name'] . $data['last_name'] : $this->name . ' ' . 'Admin';
+        $first_name = (
+            count($data) &&
+            array_key_exists('first_name', $data) &&
+            !empty($data['first_name'])
+        ) 
+            ? $data['first_name']
+            : $this->name;
+        $last_name = (
+            count($data) &&
+            array_key_exists('last_name', $data) &&
+            !empty($data['last_name'])
+        ) 
+            ? $data['last_name']
+            : $this->name;
+        $password = (isset($data) && array_key_exists('password', $data) && !empty($data['password'])) ? $data['password'] : config('app.default_pass');
 
 
         $user = new User();
         $user->email = $email;
         $user->name = $this->name . ' ' . 'Admin';
         $user->password = Hash::make($password);
-        $user->first_name = $this->name;
-        $user->last_name = ' ' . 'Admin';
+        $user->first_name = $first_name;
+        $user->last_name = $last_name;
         $user->username = strtolower($this->name . '_' . 'admin');
         $user->role = 'admin';
         $user->company_id = $this->id;

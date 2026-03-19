@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('table', function (Blueprint $table) {
+        Schema::create('tables', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->id();
              $table->bigInteger('company_id')->unsigned()->index();
+            $table->boolean('availability')->default(1);
             $table->string('name')->nullable(false);
 
             $table->timestamps();
         });
 
-        Schema::table('table', function($table) {
+        Schema::table('tables', function($table) {
             $table->engine = 'InnoDB';
             // $table->foreignIdFor(Companies::class)->constrained();
             $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete();
@@ -33,9 +34,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('table', function($table) {
+        Schema::table('tables', function($table) {
             $table->dropForeign('company_id');
         });
-        Schema::dropIfExists('table');
+        Schema::dropIfExists('tables');
     }
 };

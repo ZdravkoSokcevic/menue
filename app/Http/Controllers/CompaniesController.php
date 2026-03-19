@@ -12,6 +12,8 @@ use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Responses\CreateResponse;
+use Illuminate\Support\Facades\Auth;
+use Log;
 
 class CompaniesController extends Controller
 {
@@ -34,12 +36,16 @@ class CompaniesController extends Controller
     public function create(CompanyCreateRequest $r)
     {
         $data = $r->only(Company::getFillableFields());
-
+        $picture_path = '';
         if($r->file('logo'))
             $picture_path = $this->mediaService->uploadPhoto($r->file('logo'), 'companies');
         if($picture_path != '') {
             $data['logo'] = $picture_path;
         }
+
+        // add creator of company
+        $data['creator_id'] = auth('sanctum')->user()->id;
+
 
 
         $result = $this->companyRepository->create($data);
@@ -47,14 +53,17 @@ class CompaniesController extends Controller
         // check if created
         if($result instanceof Company) {
             // Create an admin user for current company
-            $user = $result->createAdmin($r->only(User::getFillable()));
+            $user = $result->createAdmin(array_diff_assoc( $r->admin, (new User)->getFillable()));
+            Log::info(json_encode([ 'user:companies:create'=>$user]));
             // create default categories
             $this->companyRepository->createDefaultCategories($result);
             if($user == false) {
                 $result->delete();
                 return new CreateResponse(false, 'Could not create company, admin creation failed');
-            }else 
-            return new CreateResponse(true, ['resource' => 'Company', 'item' => $result]);
+            }else  {
+                $item = Company::with('creator', 'currency', 'language', 'license', 'admin')->where('id', $result->id)->first();
+                return new CreateResponse(true, ['resource' => 'Company', 'item' => $item]);
+            }
         }else {
             // Error
             if($result['message'])

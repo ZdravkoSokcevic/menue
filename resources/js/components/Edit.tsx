@@ -9,6 +9,10 @@ import { TMenu } from "@/types/Menu";
 import EditMenu from "./menu/EditMenu";
 import EditCategory from "./categories/EditCategory";
 import { ICategory } from "@/types/Categories";
+import EditCompany from "./companies/EditCompany";
+import { TCompany } from "@/types/TCompanies";
+import EditCompanyTable from "./tables/EditCompanyTable";
+import { ICompanyTable } from "@/types/TCompanyTables";
 
 interface IProps {
     isOpen?: boolean;
@@ -59,6 +63,16 @@ class Edit extends React.Component<IProps & WithRouterProps, IState>
                     />}
                     {this.props.type == 'category' && <EditCategory
                         currentItem={this.props.currentItem as ICategory}
+                        closeModal={this.closeModal}
+                        editCurrentItem={this.props.editCurrentItem as Function}
+                    />}
+                    {this.props.type == 'company' && <EditCompany
+                        currentItem={this.props.currentItem as TCompany}
+                        closeModal={this.closeModal}
+                        editCurrentItem={this.props.editCurrentItem as Function}
+                    /> }
+                    {this.props.type == 'table' && <EditCompanyTable
+                        currentItem={this.props.currentItem as ICompanyTable}
                         closeModal={this.closeModal}
                         editCurrentItem={this.props.editCurrentItem as Function}
                     />}

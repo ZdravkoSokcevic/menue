@@ -12,3 +12,7 @@ export interface IPostMessage {
 export interface GetResult {
     data: any;
 }
+
+export interface IResponseItem<T=any> {
+    item: T
+}

@@ -25,6 +25,9 @@
 		Route::post('/companies/create', '\App\Http\Controllers\CompaniesController@create');
 		Route::post('/companies/edit/{id}', [\App\Http\Controllers\CompaniesController::class , 'edit']);
 		Route::middleware(['auth:sanctum'])->group(function($router) {
+
+			// logout
+			Route::get('/logout', '\App\Http\Controllers\UsersController@logout');
 			
 			// Companies routes
 			Route::get('/companies/delete/{id}', '\App\Http\Controllers\CompaniesController@delete');
@@ -52,6 +55,14 @@
 			Route::post('/users/create', action: '\App\Http\Controllers\UsersController@create');
 			Route::post('/users/edit/{id}', action: '\App\Http\Controllers\UsersController@edit');
 			Route::get('/users/delete/{id}', action: '\App\Http\Controllers\UsersController@delete');
+
+			Route::get('/tables', '\App\Http\Controllers\TablesController@get');
+			Route::post('/tables/create', action: '\App\Http\Controllers\TablesController@create');
+			Route::post('/tables/edit/{id}', action: '\App\Http\Controllers\TablesController@edit');
+			Route::get('/tables/delete/{id}', action: '\App\Http\Controllers\TablesController@delete');
+
+			// Countries
+			Route::get('/countries', '\App\Http\Controllers\CountriesController@all');
 
 
 			Route::get('/testificate', function() {

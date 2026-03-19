@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repositories\OrderRepository;
 use App\Http\Requests\OrderCreateRequest;
 use App\Http\Requests\OrderEditRequest;
 use App\Http\Responses\CreateResponse;
 use App\Http\Responses\EditResponse;
+use App\Interfaces\OrderRepositoryInterface;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
-use OrderRepository;
-use OrderRepositoryInterface;
 use Response;
 
 class OrderController extends Controller

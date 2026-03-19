@@ -1,9 +1,34 @@
-import { TCompaniesArr } from "@/types/TCompanies";
+import { CompanyResponseItem, TCompaniesArr, TCompany } from "@/types/TCompanies";
 import Api from "./api";
 import Storage from "@/helpers/Storage";
+import { AxiosResponse } from "axios";
+import { Store } from "@/reducers/Store";
 
 class CompaniesAPI extends Api
 {
+
+    static async createCompany(data: any)
+    {
+        try {
+            let success: AxiosResponse<CompanyResponseItem> = await this.post('/api/companies/create', data, {}, true);
+            if(success)
+                return Promise.resolve({ success:true, data: success.data });
+        }catch(err) {
+            return Promise.resolve({ success:false, data: {}, reason: (err as Error).cause })
+        }
+    }
+
+    static async editMenu(data: TCompany) 
+    {
+        try {
+            const success: AxiosResponse<CompanyResponseItem> = await this.post(`/api/companies/edit/${data.id}`, data, {}, true);
+            if(success)
+                return Promise.resolve({ success:true, data: success.data });
+        }catch(err) {
+            return Promise.resolve({ success:false, data: {}, reason: (err as Error).cause })
+        }
+    }
+
     static async getCompanies(): Promise<TCompaniesArr>
     {
         let companies: TCompaniesArr = [];
@@ -17,6 +42,21 @@ class CompaniesAPI extends Api
             return Promise.resolve([]);
         } finally {
             return Promise.resolve(companies);
+        }
+    }
+
+    static async deleteCompany(id: string)
+    {
+        const user = Store.getState().user.user;
+        if(!user || !(user.id) || user.role != 'admin')
+            return Promise.resolve({ success: false, data: {}, reason: 'Not found' });
+        try {
+            const res = await this.get(`/api/companies/delete/${id}`, {}, {});
+            if(res && res.status == 200 && res.data && res.data.message == 'success')
+                return Promise.resolve({ success: true });
+            else return Promise.resolve({ success: false, data: {}, reason: 'Not found' });
+        }catch(err) {
+            return Promise.resolve({ success: false, data: {}, reason: (err as Error).cause });
         }
     }
 }

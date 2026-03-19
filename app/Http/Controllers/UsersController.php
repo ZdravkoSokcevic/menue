@@ -34,6 +34,14 @@ class UsersController extends Controller
         
     }
 
+    public function logout(Request $request)
+    {
+        // Revoke the specific token used in the current request
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(['message' => 'Logged out successfully']);
+    }
+
     public function all()
     {
         if(Auth::user()->role != 'admin')

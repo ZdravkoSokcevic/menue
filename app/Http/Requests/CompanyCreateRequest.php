@@ -28,10 +28,11 @@ class CompanyCreateRequest extends FormRequest
             'description'   => 'required:text',
             'logo'          => '',
             'phone'         => 'string|max:20',
-            'location_lat'  => 'required|between:-90,90',
-            'location_lng'  => 'required|between:-180,180',
+            // 'location_lat'  => 'required|between:-90,90',
+            // 'location_lng'  => 'required|between:-180,180',
             'currency_id'   => 'exists:currencies,id',
-            'language_id'   => 'exists:languages,id' 
+            'language_id'   => 'exists:languages,id',
+            'country_id'    => 'exists:countries,id'
         ];
     }
 

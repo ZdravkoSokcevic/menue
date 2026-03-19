@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Request;
+
 abstract class Controller
 {
     // Here's guard for all routes in app,

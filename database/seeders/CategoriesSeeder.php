@@ -14,7 +14,6 @@ class CategoriesSeeder extends Seeder
     public function run(): void
     {
         $default_categories = config('categories.default');
-
         $categories = Category::insert($default_categories);
     }
 }

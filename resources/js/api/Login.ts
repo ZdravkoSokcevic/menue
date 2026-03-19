@@ -1,7 +1,7 @@
 import { Store } from "@/reducers/Store";
 import Api from "./api";
 import Storage from "@/helpers/Storage";
-import { setIsLoggedIn, setLoggedIn, setToken } from "@/reducers/userSlice";
+import { removeLoggedIn, removeToken, setIsLoggedIn, setLoggedIn, setToken } from "@/reducers/userSlice";
 import TUser from "@/types/TUser";
 
 class Login extends Api
@@ -25,6 +25,17 @@ class Login extends Api
         }
     }
 
+    static async logout()
+    {
+        let success = await this.get('/api/logout', {},{});
+        if(success && success.data) {
+            Store.dispatch(removeLoggedIn({}));
+            Store.dispatch(removeToken({}));
+            Store.dispatch(setIsLoggedIn({value: false}));
+            return true;
+        }else return false;
+    }
+
     static async isLoggedIn()
     {
         return Store.getState().user.isLoggedIn;
@@ -34,6 +45,7 @@ class Login extends Api
     {
         return Store.getState().user.user;
     }
+
 }
 
 export default Login;
