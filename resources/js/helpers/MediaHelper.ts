@@ -1,3 +1,4 @@
+import { WidthHeight } from "@/types/Media";
 
 class MediaHelper
 {
@@ -19,6 +20,21 @@ class MediaHelper
     }
     return dataTransfer.files;
     }
+
+    static getFileDimensions(file: File): Promise<WidthHeight> {
+        const url = window.URL.createObjectURL(file);
+        return new Promise<WidthHeight>((resolve, reject) => {
+        const img = new Image();
+        img.src = url;
+        img.onerror = reject;
+        img.onload = () => {
+            resolve({ width: img.naturalWidth, height: img.naturalHeight } as WidthHeight);
+        };
+        }).finally(() => {
+        // Release the object URL once dimensions are obtained
+        window.URL.revokeObjectURL(url);
+    });
+}
 }
 
 export default MediaHelper;

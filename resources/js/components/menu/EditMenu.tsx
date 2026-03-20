@@ -13,6 +13,7 @@ import { MenuCreateResponseItem, TMenu } from "@/types/Menu";
 import { Store } from "@/reducers/Store";
 import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import { AxiosResponse } from "axios";
+import { WidthHeight } from "@/types/Media";
 
 interface IProps {
     // can be page or modal
@@ -75,7 +76,23 @@ picture: Yup.mixed()
 
         // 3. If no old one exists, 'value' cannot be null or undefined
         return value !== null && value !== undefined;
-    }),
+    })
+    .test(
+    'aspect-ratio',
+    'The image aspect ratio must be 4:3',
+    async (value) => {
+        if (!value) return true; // Allows optional field to pass this specific test if empty
+
+        try {
+        const { width, height }: WidthHeight = await MediaHelper.getFileDimensions(value as File);
+        const aspectRatio = width / height;
+        // Check if the aspect ratio is approximately 16/9 (approx due to potential float errors)
+        return Math.abs(aspectRatio - (4 / 3)) < 0.01; 
+        } catch (error) {
+        return false; // Return false if dimensions cannot be read
+        }
+    }
+    ),
     quantity: Yup.number()
         .min(1, 'At least one is required')
         .max(15, 'Cannot order more than 15 portions')
@@ -240,8 +257,6 @@ class EditMenu extends React.Component<IProps, IState>
                                             textAlign: "center",
                                             borderRadius: "10px",
                                             backgroundColor: this.state.isDragging ? "#f0f8ff" : "#fff",
-                                            height: '200px',
-                                            width: '200px',
                                             backgroundImage: 
                                                 (this.props.currentItem.picture && !this.state.image) ? 
                                                     `url(/storage/${this.props.currentItem.picture})` : 
@@ -249,6 +264,7 @@ class EditMenu extends React.Component<IProps, IState>
                                             backgroundSize: 'cover',
                                             position: 'relative'
                                         }}
+                                        className="placeholder-4-3"
                                         >
                                             <p>Drag file here</p>
 

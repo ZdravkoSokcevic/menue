@@ -37,7 +37,7 @@
 
         <!-- </div> -->
 
-        @vite(['resources/js/homepage.js'])
+        @vite(['resources/js/homepage.js'], ['data-navigate-track' => true])
         <!-- 
         <div class="categories">
             <button class="cat-btn active" onclick="filterItems('all', this)">All</button>

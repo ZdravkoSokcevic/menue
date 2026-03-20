@@ -12,6 +12,7 @@ import MenuAPI from "@/api/MenuAPI";
 import { MenuCreateResponseItem, TMenu } from "@/types/Menu";
 import { Store } from "@/reducers/Store";
 import { disableLoading, enableLoading } from "@/reducers/appSlice";
+import { WidthHeight } from "@/types/Media";
 
 interface IProps {
     // can be page or modal
@@ -66,7 +67,24 @@ const menuValidationSchema = Yup.object().shape({
             value => {
                 if (!value) return true; // Skip if null (handled by .required)
                 return value && MediaHelper.SUPPORTED_IMAGE_FORMATS.includes((value as File).type) }
+        )
+        .test(
+        'aspect-ratio',
+        'The image aspect ratio must be 4:3',
+        async (value) => {
+            if (!value) return true; // Allows optional field to pass this specific test if empty
+
+            try {
+            const { width, height }: WidthHeight = await MediaHelper.getFileDimensions(value as File);
+            const aspectRatio = width / height;
+            // Check if the aspect ratio is approximately 16/9 (approx due to potential float errors)
+            return Math.abs(aspectRatio - (4 / 3)) < 0.01; 
+            } catch (error) {
+            return false; // Return false if dimensions cannot be read
+            }
+        }
         ),
+
     quantity: Yup.number()
         .min(1, 'At least one is required')
         .max(15, 'Cannot order more than 15 portions')
@@ -210,6 +228,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                 <div className="col-md-6 border-end p-5">
                                     <div className="form-group">
                                         <label>Choose picture</label>
+                                        {/* image should be 4:3 */}
                                         <div
                                         onDrop={this.handleDrop}
                                         onDragOver={this.handleDragOver}
@@ -222,12 +241,11 @@ class CreateMenu extends React.Component<IProps, IState>
                                             textAlign: "center",
                                             borderRadius: "10px",
                                             backgroundColor: this.state.isDragging ? "#f0f8ff" : "#fff",
-                                            height: '200px',
-                                            width: '200px',
                                             backgroundImage: this.state.image ? `url(${this.state.image.src})` : '',
                                             backgroundSize: 'cover',
                                             position: 'relative'
                                         }}
+                                        className="placeholder-4-3"
                                         >
                                             <p>Drag file here</p>
 
@@ -239,7 +257,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                                 style={{ opacity: 0, height: 0, width: 0, position: 'absolute' }}
                                             />
                                         </div>
-                                        {errors.picture && touched.picture ? (
+                                        {errors.picture  ? (
                                             <><small id="pictureHelp" className="form-text text-danger">{errors.picture}</small><br /></>
                                         ) : null}
                                     </div>

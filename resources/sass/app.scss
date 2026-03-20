@@ -48,6 +48,17 @@ div.loading > *:not(.main-loader) {
     opacity: 0.5;
 }
 
+.placeholder-4-3 {
+  aspect-ratio: 4 / 3;
+  background-color: lightgray; /* Optional: for visibility */
+}
+
+.placeholder-4-3w100 {
+  width: 100%; /* or any desired width */
+  aspect-ratio: 4 / 3;
+  background-color: lightgray; /* Optional: for visibility */
+}
+
 .main-loader {
     position: absolute !important;
     top: 50%;

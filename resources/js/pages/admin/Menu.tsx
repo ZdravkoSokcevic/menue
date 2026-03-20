@@ -49,7 +49,7 @@ class Menu extends React.Component<IProps, IState> {
             <div className="menu-page page" key={Math.random()}>
                 {/* <Navigation /> */}
 
-                <div className="main-content p-5">
+                <div className="main-content p-5 container">
                     {/* <div className="p-5"> */}
                         <div className="w-12 d-flex justify-content-between">
                             <h4>Menu</h4>
@@ -57,7 +57,7 @@ class Menu extends React.Component<IProps, IState> {
                         </div>
 
                         {/* MAIN CONTAINER */}
-                        <div className="col-12 mt-5 main-container">
+                        <div className="col-12 mt-5 main-container row">
 
 
                             {/* MAIN CONTAINER ITEMS */}
@@ -65,7 +65,7 @@ class Menu extends React.Component<IProps, IState> {
                                 let picPath: String = item.picture as String;
                                 const picFullPath = (picPath) ? "url('/storage/" + picPath.replaceAll('\'', '') + "')" : '';
                                 return <div 
-                                            className="rounded-dotted-div m-2" 
+                                            className="m-2 placeholder-4-3 col-3 rounded-dotted-div" 
                                             style={{backgroundImage: picFullPath ? picFullPath : ''}}
                                             key={Math.random()}
                                         >
@@ -83,7 +83,7 @@ class Menu extends React.Component<IProps, IState> {
                             })}
 
                             {/* TEMPLATE CONTAINER ITEM */}
-                            <div className="rounded-dotted-div m-2 add-template">
+                            <div className="rounded-dotted-div m-2 col-3 add-template placeholder-4-3">
                                 
                                 <div className="temp-overlay">
                                     <CiCirclePlus onClick={this.openCreateModal}/>
