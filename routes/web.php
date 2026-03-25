@@ -24,7 +24,7 @@ Route::get('/shorts/{code}', HomePage::class);
 
 
 Route::view('/{url?}', 'app')
-    ->where('url', '^(?!api).*$');
+    ->where('url', '^(?!api|shorts|details).*$');
     // ->except([ 'storage' ]);
 
 Route::get('dashboard', function () {

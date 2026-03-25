@@ -14,6 +14,10 @@ import { Store } from "@/reducers/Store";
 import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import { AxiosResponse } from "axios";
 import { WidthHeight } from "@/types/Media";
+import CategoriesAPI from "@/api/CategoriesAPI";
+import { Option } from "@/types/App";
+import { ICategory, TCategories } from "@/types/Categories";
+import FormikSearchSelect from "../FormikSelectSearch";
 
 interface IProps {
     // can be page or modal
@@ -27,6 +31,8 @@ interface IState {
     // Error with image type
     // @ts-ignore
     image?: Image | null;
+    categories: TCategories;
+    categoryOptions: Array<Option>;
 };
 
 interface IintiialValues {
@@ -78,21 +84,23 @@ picture: Yup.mixed()
         return value !== null && value !== undefined;
     })
     .test(
-    'aspect-ratio',
-    'The image aspect ratio must be 4:3',
-    async (value) => {
-        if (!value) return true; // Allows optional field to pass this specific test if empty
+        'aspect-ratio',
+        'The image aspect ratio must be 4:3',
+        async (value) => {
+            if (!value) return true; // Allows optional field to pass this specific test if empty
 
-        try {
-        const { width, height }: WidthHeight = await MediaHelper.getFileDimensions(value as File);
-        const aspectRatio = width / height;
-        // Check if the aspect ratio is approximately 16/9 (approx due to potential float errors)
-        return Math.abs(aspectRatio - (4 / 3)) < 0.01; 
-        } catch (error) {
-        return false; // Return false if dimensions cannot be read
+            try {
+            const { width, height }: WidthHeight = await MediaHelper.getFileDimensions(value as File);
+            const aspectRatio = width / height;
+            // Check if the aspect ratio is approximately 16/9 (approx due to potential float errors)
+            return Math.abs(aspectRatio - (4 / 3)) < 0.01; 
+            } catch (error) {
+            return false; // Return false if dimensions cannot be read
+            }
         }
-    }
     ),
+    category: Yup.mixed()
+        .required(),
     quantity: Yup.number()
         .min(1, 'At least one is required')
         .max(15, 'Cannot order more than 15 portions')
@@ -103,6 +111,7 @@ class EditMenu extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
     private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private categoryInputRef = React.createRef<HTMLSelectElement>();
 
     private initialValues = {
         name: '',
@@ -115,7 +124,9 @@ class EditMenu extends React.Component<IProps, IState>
     constructor(props: IProps) {
         super(props);
         this.state = {
-            isDragging: false
+            isDragging: false,
+            categories: [],
+            categoryOptions: []
         }
         // this.handleImageLoad = this.handleImageLoad.bind(this);
         // this.handleFileLoad = this.handleFileLoad.bind(this);
@@ -190,6 +201,10 @@ class EditMenu extends React.Component<IProps, IState>
         }
     }
 
+    onCategoryChange(e: React.SyntheticEvent<HTMLSelectElement>) {
+
+    }
+
     handleImageLoad(event: any) {
 
     }
@@ -202,6 +217,10 @@ class EditMenu extends React.Component<IProps, IState>
         if(this.props.closeModal)
             this.props.closeModal();
     }
+
+    componentDidMount(): void {
+        this.fetchCategories();
+    }
     
 
     render(): React.ReactNode {
@@ -212,11 +231,12 @@ class EditMenu extends React.Component<IProps, IState>
             description: this.props.currentItem.description || '',
             quantity: Number(this.props.currentItem.quantity) || 1,
             picture: null,
-            picture_exists: hasExistingPicture // Boolean
+            picture_exists: hasExistingPicture, // Boolean
         };
         this.formikRef.current?.setFieldTouched('name', true);
         this.formikRef.current?.setFieldTouched('description');
         this.formikRef.current?.setFieldTouched('quantity');
+        this.formikRef.current?.setFieldValue('category', this.props.currentItem.category_id);
 
         return (
                 <div className="form-page">
@@ -332,11 +352,24 @@ class EditMenu extends React.Component<IProps, IState>
                                         <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
                                     </div>
 
+                                    {/* CATEGORY */}
+                                    <div className="form-group">
+                                        <label>Category</label>
+                                        <FormikSearchSelect
+                                            options={(this.state.categoryOptions as unknown) as Option[]}
+                                            name="category"
+                                            id="category"
+                                            aria-describedby="categoryHelp"
+                                            ref={this.categoryInputRef}
+                                            onChange={this.onCategoryChange}
+                                        />
+                                    </div>
+
                                     {/* {'Is submitting: ' + isSubmitting}<br />
                                     {'Is valid: ' + isValid} <br />
                                     {'Is dirty: ' + dirty} <br />
-                                    { 'Errors: ' + JSON.stringify(errors) } */}
-                                    {/* { 'CurrentItem' + JSON.stringify(this.props.currentItem) } */}
+                                    { 'Errors: ' + JSON.stringify(errors) }
+                                    { 'CurrentItem' + JSON.stringify(this.props.currentItem) } */}
                                     <div className="controls">
                                         <button className="submit" type="submit" disabled={false}>
                                             <FaSave />
@@ -363,7 +396,8 @@ class EditMenu extends React.Component<IProps, IState>
             name: event.name,
             description: event.description,
             quantity: event.quantity,
-            company_id: Store.getState().app.defaultCompany?.id
+            company_id: Store.getState().app.defaultCompany?.id,
+            category_id: event.category
         }
         // debugger;
         if(event.picture != null && typeof event.picture != undefined && typeof (event.picture.name) == 'string')
@@ -383,6 +417,23 @@ class EditMenu extends React.Component<IProps, IState>
         else {
             alert('Unexpected error occured!');
             // this.closeModal();
+        }
+    }
+
+    async fetchCategories() {
+        const categories = await CategoriesAPI.getItems();
+        if(categories && categories.length) {
+            const options: Array<Option> = [];
+            this.setState({ categories: categories as TCategories });
+            categories.forEach((category: ICategory) => {
+                options.push({
+                    id: category.id,
+                    label: category.name,
+                    value: category.id,
+                    name: category.name,
+                })
+            })
+            this.setState({ categoryOptions: options });
         }
     }
 }

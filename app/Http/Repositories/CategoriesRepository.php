@@ -5,6 +5,7 @@ use App\Interfaces\CategoriesRepositoryInterface;
 use App\Models\Categories;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 
 class CategoriesRepository implements CategoriesRepositoryInterface
 {
@@ -13,9 +14,17 @@ class CategoriesRepository implements CategoriesRepositoryInterface
     {
         $this->category = new Category();
     }
-    public function all(): Collection
+    public function all(Request $r): Collection
     {
-        return $this->category->all();
+			$isAdmin = auth('sanctum')->user()->isAdmin();
+			// allow admin and demo users to see every company list
+			$isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
+			$q = Category::query();
+			if($isNotAdmin)
+				$q->where('company_id', $r->input('company_id'));
+			else if ($r->filled('company_id'))
+				$q->where('company_id', $r->input('company_id'));
+			return $q->get();
     }
     public function store(Array $data)
     {

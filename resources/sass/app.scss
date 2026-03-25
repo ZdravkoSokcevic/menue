@@ -88,9 +88,14 @@ div.loading > *:not(.main-loader) {
     background: #fff;
     border-right: 1px solid #ddd;
     position: fixed;
+        .nav-link {
+            font-size: 15px;
+            line-height: 18px;
+            // color: red !important;
+        }
     }
     .sidebar a {
-    padding: 12px 16px;
+    padding: 8px 12px;
     display: block;
     color: #333;
     text-decoration: none;

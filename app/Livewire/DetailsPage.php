@@ -3,22 +3,30 @@
 namespace App\Livewire;
 
 use Illuminate\Http\Request;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
-
+#[Layout('layouts.app')]
 class DetailsPage extends Component
 {
     public $page;
     public $code;
-    public function mount($page, Request $r)
+    public function mount(Request $r)
     {
-        $this->page = $page;
+        $item = $r->item;
+        $this->item = $item;
         $this->code= $r->code;
     }
 
-    // public function render()
-    // {
-    //     dd('here');
-    //     return view('livewire.details-page')
-    //         ->([ 'page' => $this->page ]);
-    // }
+    public function render(Request $r)
+    {
+
+        $data = [
+            'code' => $r->code,
+            'page' => $this->page
+        ];
+        // dd('here');
+        return view('livewire.details-page')
+            ->layout('layouts.app', $data)
+            ->with($data);
+    }
 }

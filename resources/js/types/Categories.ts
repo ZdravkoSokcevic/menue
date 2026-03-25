@@ -7,6 +7,8 @@ export interface ICategory extends TComponentProps{
     company_id?: string;
 }
 
+export type TCategories = Array<ICategory>
+
 export interface ICategoriesResponseItem {
     item: ICategory
 }

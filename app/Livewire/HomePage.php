@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Code;
 use Illuminate\Http\Request;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 class HomePage extends Component
@@ -14,10 +15,7 @@ class HomePage extends Component
     public $table;
 
     public $code;
-    public function index($code, Request $r)
-    {
 
-    }
     public function mount($code, Request $r)
     {
         $ip = $r->ip();
@@ -26,24 +24,24 @@ class HomePage extends Component
         // $ip_record = $reader->Fetch($ip);
         $record = Code::with('table')->where('code', $code)->first();
         if(!$record)
-            return response(403);
+            return abort(403);
         
         $table = $record->table;
+        // dd($record);
         if(!$table) 
-            return response(403);
+            return abort(403);
         $company = $table->company;
         if(!$company)
-            return response(403);
+            return abort(403);
 
         $menu = $company->menu()->with('category')->get();
-
         $creator = $company->creator;
         if(!$creator)
-            return response(403);
+            return abort(403);
 
         $license = $company->license;
         if(!$license)
-            return response(403);
+            return abort(403);
 
         // Modify 403 response to show page
         // with instructions for user to login to local network
@@ -63,10 +61,21 @@ class HomePage extends Component
         foreach ($dataForLayout as $key => $val) {
             $this->$key = $val;
         }
+        
+
+        // dd('here');
     }
 
     public function render()
     {
-        return view('livewire.home-page', ['code' => 'code1']);
+        
+        $data = [];
+        if($this->code != '')
+            $data['code'] = $this->code;
+        if($this->menuItems)
+            $data['menuItems'] = $this->menuItems;
+        return view('livewire.home-page')
+            ->layout('layouts.app', $data)
+            ->with($data);
     }
 };

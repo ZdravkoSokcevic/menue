@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Http\Repositories\MenuRepository;
 use App\Services\MediaService;
+use Illuminate\Support\Facades\Gate;
 use Response;
 use \App\Interfaces\MenuRepositoryInterface;
 
@@ -33,14 +34,10 @@ class MenuController extends Controller
      */
     public function get(MenuRequest $r): Collection
     {
-        $user = $r->user();
-        // dd($r->user()->isAdmin());
-        if($user->isAdmin())
-            return $this->menuRepository->all();
-        // company admin can see only
-        else if($user->isCompanyAdmin())
-            return $this->menuRepository->all();
-        else return $this->menuRepository->all();
+        if(Gate::denies('view-menu',  $r)) {
+            return response(null,403);
+        }
+        return $this->menuRepository->all($r);
 
     }
 

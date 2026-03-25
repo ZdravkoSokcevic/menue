@@ -25,7 +25,8 @@ class MenuEditRequest extends FormRequest
     {
         return [
             'name'=> 'required|string|max:30',
-            'picture' => ['required', 'extensions:jpg,png,jpeg'],
+            // it is not mandatory in edit
+            'picture' => ['extensions:jpg,png,jpeg'],
             'description' => 'string|max:255',
             'quantity' => '',
             'company_id' => [

@@ -13,6 +13,10 @@ import { MenuCreateResponseItem, TMenu } from "@/types/Menu";
 import { Store } from "@/reducers/Store";
 import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import { WidthHeight } from "@/types/Media";
+import CategoriesAPI from "@/api/CategoriesAPI";
+import { ICategory, TCategories } from "@/types/Categories";
+import FormikSearchSelect from "../FormikSelectSearch";
+import { Option } from "@/types/App";
 
 interface IProps {
     // can be page or modal
@@ -27,6 +31,8 @@ interface IState {
     // Error with image type
     // @ts-ignore
     image?: Image | null;
+    categories: TCategories;
+    categoryOptions: Array<Option>;
 };
 
 const initialValues = {
@@ -83,7 +89,9 @@ const menuValidationSchema = Yup.object().shape({
             return false; // Return false if dimensions cannot be read
             }
         }
-        ),
+    ),
+    category: Yup.mixed()
+        .required(),
 
     quantity: Yup.number()
         .min(1, 'At least one is required')
@@ -95,10 +103,13 @@ class CreateMenu extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
     private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private categoryInputRef = React.createRef<HTMLSelectElement>();
     constructor(props: IProps) {
         super(props);
         this.state = {
-            isDragging: false
+            isDragging: false,
+            categories: [],
+            categoryOptions: []
         }
         this.handleImageLoad = this.handleImageLoad.bind(this);
         this.handleFileLoad = this.handleFileLoad.bind(this);
@@ -181,6 +192,11 @@ class CreateMenu extends React.Component<IProps, IState>
         }
     }
 
+    onCategoryChange(e: React.SyntheticEvent<HTMLSelectElement>) {
+        // const value = e.target as HTMLSelectElement;
+        // this.setState({ selectedCategory })
+    }
+
     handleImageLoad(event: any) {
 
     }
@@ -193,6 +209,10 @@ class CreateMenu extends React.Component<IProps, IState>
     validateFile = async(f: File) => {
         // let f = this.state.imageFile;
 
+    }
+
+    componentDidMount(): void {
+        this.fetchCategories();
     }
     
 
@@ -245,7 +265,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                             backgroundSize: 'cover',
                                             position: 'relative'
                                         }}
-                                        className="placeholder-4-3"
+                                    className="placeholder-4-3"
                                         >
                                             <p>Drag file here</p>
 
@@ -284,6 +304,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                         <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
                                     </div>
 
+                                    {/* DESCRIPTION */}
                                     <div className="form-group">
                                         <label>Description</label>
                                         <Field type="text" className="form-control" name="description" aria-describedby="descriptionHelp" rows={6} placeholder="Enter a description" />
@@ -291,6 +312,19 @@ class CreateMenu extends React.Component<IProps, IState>
                                             <><small id="descriptionHelp" className="form-text text-danger">{errors.description}</small><br /></>
                                         ) : null}
                                         <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                    </div>
+
+                                    {/* CATEGORY */}
+                                    <div className="form-group">
+                                        <label>Category</label>
+                                        <FormikSearchSelect 
+                                            options={(this.state.categoryOptions as unknown) as Option[]}
+                                            name="category"
+                                            id="category"
+                                            aria-describedby="categoryHelp"
+                                            ref={this.categoryInputRef}
+                                            onChange={this.onCategoryChange}
+                                        />
                                     </div>
 
                                     {/* {'Is submitting: ' + isSubmitting}<br />
@@ -322,6 +356,7 @@ class CreateMenu extends React.Component<IProps, IState>
             description: event.description,
             picture: this.state.imageFile,
             quantity: event.quantity,
+            category_id: event.category,
             company_id: Store.getState().app.defaultCompany?.id
         }
         // debugger;
@@ -338,6 +373,23 @@ class CreateMenu extends React.Component<IProps, IState>
         }
         else {
             alert('Unexpected error occured');
+        }
+    }
+
+    async fetchCategories() {
+        const categories = await CategoriesAPI.getItems();
+        if(categories && categories.length) {
+            const options: Array<Option> = [];
+            this.setState({ categories: categories as TCategories });
+            categories.forEach((category: ICategory) => {
+                options.push({
+                    id: category.id,
+                    label: category.name,
+                    value: category.id,
+                    name: category.name,
+                })
+            })
+            this.setState({ categoryOptions: options });
         }
     }
 }

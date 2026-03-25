@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Repositories\TableRepository;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class TablesController extends Controller
 {
@@ -27,9 +29,12 @@ class TablesController extends Controller
         
     }
 
-    public function get(Request $r): Collection
+    public function get(Request $r): Collection | Response
     {
-        return $this->tableRepository->getTables();
+        if(Gate::denies('view-table',  $r)) {
+            return response(null,403);
+        }
+        return $this->tableRepository->getTables($r);
     }
 
     public function create(TableCreateRequest $r): CreateResponse

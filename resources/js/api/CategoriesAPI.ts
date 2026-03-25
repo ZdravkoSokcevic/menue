@@ -6,7 +6,7 @@ import { Store } from "@/reducers/Store";
 import { AxiosResponse } from "axios";
 import { ICategoriesResponseItem, ICategory } from "@/types/Categories";
 
-class MenuAPI extends Api
+class CategoriesAPI extends Api
 {
     static async createCategory(data: ICategory) 
     {
@@ -69,4 +69,4 @@ class MenuAPI extends Api
     }
 }
 
-export default MenuAPI;
+export default CategoriesAPI;

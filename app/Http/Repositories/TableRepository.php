@@ -16,9 +16,17 @@
 		{
 			$this->table = new Table();
 		}
-		public function getTables()
+		public function getTables(Request $r)
 		{
-			return Table::with('code')->get();
+			$isAdmin = auth('sanctum')->user()->isAdmin();
+			// allow admin and demo users to see every company list
+			$isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
+			$q = Table::with('code');
+			if($isNotAdmin)
+				$q->where('company_id', $r->input('company_id'));
+			else if ($r->filled('company_id'))
+				$q->where('company_id', $r->input('company_id'));
+			return $q->get();
 		}
 
 		public function findOne($id): Table | null

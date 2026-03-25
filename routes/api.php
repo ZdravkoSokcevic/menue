@@ -55,6 +55,7 @@
 			Route::post('/users/create', action: '\App\Http\Controllers\UsersController@create');
 			Route::post('/users/edit/{id}', action: '\App\Http\Controllers\UsersController@edit');
 			Route::get('/users/delete/{id}', action: '\App\Http\Controllers\UsersController@delete');
+			Route::get('/users/me', '\App\Http\Controllers\UsersController@me');
 
 			Route::get('/tables', '\App\Http\Controllers\TablesController@get');
 			Route::post('/tables/create', action: '\App\Http\Controllers\TablesController@create');

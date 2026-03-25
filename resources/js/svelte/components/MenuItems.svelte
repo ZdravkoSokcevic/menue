@@ -1,4 +1,6 @@
 <script>
+    import { cart } from '../store.svelte'
+
     let { menuItems = [] } = $props();
 
     let activeCategory = $state({name: 'All'});
@@ -6,19 +8,31 @@
     let filteredItems = $derived(
         activeCategory.name === 'All'
             ? menuItems
-            : menuItems.filter(menuItem => menuItem.category.name == activeCategory)
+            : menuItems.filter(menuItem => menuItem.category.name == activeCategory.name)
     )
 
     const cat = [{name: 'All', id: '0'}];
     menuItems.forEach(menuItem => {
         if(menuItem.category && menuItem.category.id) {
-            cat.push(menuItem.category)
+            let exists = false;
+            cat.forEach((existsCat) => {
+                if(existsCat.id == menuItem.category.id)
+                    exists = true;
+            })
+            if(!exists)
+                cat.push(menuItem.category)
         }
     })
 
     // const categories = ['All', ...new Set(menuItems.map(i => i.category).filter(Boolean))];
     let categories = cat;
-  console.log(filteredItems);
+    
+
+    function onItemClicked(menuItem) {
+        // debugger;
+        cart.add(menuItem);
+    }
+
 </script>
 
 <div class="mx-auto max-w-7xl px-4 py-8">
@@ -36,10 +50,10 @@
             </button>
         {/each}
     </div>
-
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:gap-5">
+    <div class="mx-auto max-w-2xl">
+    <div class="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(260px,320px))]">
         {#each filteredItems as item (item.id || item.name)}
-            <div class="group flex w-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+            <div class="group flex flex-col w-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
                 
                 <div 
                     class="relative aspect-video w-full overflow-hidden bg-gray-200 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
@@ -60,7 +74,10 @@
                         {item.description}
                     </p>
 
-                    <button class="mt-auto w-full rounded-xl bg-blue-600 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700 active:scale-95">
+                    <button 
+                        class="mt-auto w-full rounded-xl bg-blue-600 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700 active:scale-95"
+                        onclick={(e) => onItemClicked(item)}    
+                    >
                         Add to Order +
                     </button>
                 </div>
@@ -70,5 +87,6 @@
                 No items found in {activeCategory}.
             </div>
         {/each}
+    </div>
     </div>
 </div>  

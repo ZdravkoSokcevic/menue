@@ -9,13 +9,20 @@
         'resources/sass/homepage/app.scss'
     ])
     @yield('styles')
+    @stack('scripts')
 </head>
 <body>
 
 
-    @yield('nav')
+    <!-- Navbar content -->
+    <div id="app-navbar" wire:ignore wire:key="svelte-navbar-unique"></div>
+    
+    <!-- @yield('content') -->
+    {{ $slot }}
+    <!-- @yield('nav') -->
 
-    @yield('content')
+
+    @vite(['resources/js/svelte/App.js'])
 
 </body>
 </html>

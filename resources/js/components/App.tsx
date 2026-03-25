@@ -29,6 +29,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Outlet } from 'react-router-dom';
 import Navigation from '@/pages/admin/Navigation';
 import Tables from '@/pages/admin/Tables';
+import { disableLoading } from '@/reducers/appSlice';
 
 const pageVariants = {
     initial: { opacity: 0, x: "-100vw" },
@@ -180,6 +181,8 @@ export default App;
 ReactModal.setAppElement('#root');
 
 if (document.getElementById('root')) {
+    // in case that spinner won't turn off
+    // Store.dispatch(disableLoading({}));
     const Index = createRoot(document.getElementById("root") as Container);
 
     Index.render(

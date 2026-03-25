@@ -12,6 +12,7 @@ use \App\Http\Repositories\CategoriesRepository;
 use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Response;
 
 class CategoriesController extends Controller
@@ -29,9 +30,12 @@ class CategoriesController extends Controller
      * @return Collection
      *  Needs to be changed to return tables only for company
      */
-    public function get(): Collection
+    public function get(Request $r): Collection
     {
-        return $this->categoriesRepository->all();
+        if(Gate::denies('view-categories',  $r)) {
+            return response(null,403);
+        }
+        return $this->categoriesRepository->all($r);
     }
 
     public function insert(CategoriesCreateRequest $r): CreateResponse

@@ -59,4 +59,13 @@ class UsersController extends Controller
     {
         return Response::json(['message' => 'Edited!']);
     }
+
+    public function me(): JsonResponse
+    {
+        $u = auth('sanctum')->user();
+        if(!$u)
+            return response(null, 404);
+        $user = User::find($u->id);
+        return new JsonResponse($user);
+    }
 }

@@ -1,9 +1,6 @@
-@extends('layouts.app')
-
-@section('nav')
+<div>
     @include('components.navbar', [ 'code' => $code ])
-@endsection
-
-@section('content')
+    
+    <div id="app-navbar" wire:ignore wire:key="svelte-navbar-unique"></div>
     This is page {{ $page }}
-@endsection
+</div>

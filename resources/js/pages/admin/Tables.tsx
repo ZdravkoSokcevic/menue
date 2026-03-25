@@ -82,7 +82,6 @@ class Tables extends React.Component<IProps, IState>
         console.log('Did update');
         if(prevState.animationRefreshKey != this.state.animationRefreshKey) {
             // Do the component animation
-            console.log('Razlicito je');
             // debugger;
             (async() => {
             // debugger;
@@ -90,7 +89,6 @@ class Tables extends React.Component<IProps, IState>
                 let el = document.body;
                 if(el)
                 {
-                    debugger;
                     el.classList.add('fadeInOut');
                     setTimeout(() => {
                         el.classList.remove('fadeInOut');

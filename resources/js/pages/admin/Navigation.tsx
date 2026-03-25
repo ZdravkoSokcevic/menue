@@ -5,9 +5,17 @@ import { RootState, Store } from '@/reducers/Store';
 import { withLocation } from '@/routes/withLocation';
 import { TCompany } from '@/types/TCompanies';
 import TUser, { TUserSettings } from '@/types/TUser';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
+import { IoIosExit } from "react-icons/io";
+import { MdOutlineRestaurantMenu } from "react-icons/md";
+import { BiCategory } from "react-icons/bi";
+import { PiDeskBold } from "react-icons/pi";
+import { BiDish } from "react-icons/bi";
+import { MdDashboard } from "react-icons/md";
+import { MdSettings } from 'react-icons/md';
+import { GrRestaurant } from "react-icons/gr";
 
 
 interface IProps {
@@ -75,27 +83,18 @@ class Navigation extends React.Component<IProps, IState>
         // return true;
         let {defaultCompany} = this.props;
         const userSettings = this.props.userSettings;
-        // debugger;
-        return userSettings && 
-            userSettings.isLoggedIn &&
-            (userSettings.user.role == 'admin' || userSettings.user.role == 'company_admin' || userSettings.user.role == 'agent') 
-                ? true
-                : false;
+        return userSettings.isLoggedIn && (Store.getState().app.defaultCompany.id != '')
+            ? true
+            : false;
     }
 
     isAllowedToRenderCompanies = (): boolean => {
-        // return true;
         let {defaultCompany} = this.props;
         const userSettings = this.props.userSettings;
-        // let allowed = userSettings && 
-        //     userSettings.isLoggedIn && 
-        //     userSettings.user.role == 'admin' && 
-        //     (Store.getState().app.defaultCompany.id == '') ;
-        //     debugger;
         return userSettings && 
             userSettings.isLoggedIn && 
             userSettings.user.role == 'admin' && 
-            (Store.getState().app.defaultCompany?.id == '') 
+            Store.getState().app.defaultCompany?.id == '' 
             ? true
             : false;
     }
@@ -104,17 +103,49 @@ class Navigation extends React.Component<IProps, IState>
         // return true;
         let {defaultCompany} = this.props;
         const userSettings = this.props.userSettings;
-        // let allowed = userSettings && 
-        //     userSettings.isLoggedIn && 
-        //     userSettings.user.role == 'admin' && 
-        //     (Store.getState().app.defaultCompany.id == '') ;
-        //     debugger;
-        return userSettings && 
-            userSettings.isLoggedIn && 
-            userSettings.user.role == 'admin' && 
-            !(Store.getState().app.defaultCompany?.id == '') 
+        let store = Store.getState().app;
+
+        return userSettings.isLoggedIn && (Store.getState().app.defaultCompany.id != '')
             ? true
             : false;
+    }
+
+    isAllowedToRenderMenus = (): boolean => {
+        let {defaultCompany} = this.props;
+        const userSettings = this.props.userSettings;
+        // console.log('#### MENU PERMISSION FUNCTION::USER SETTINGS ####')
+        // console.log(userSettings);
+        // console.log('#### /MENU PERMISSION FUNCTION::/USER SETTINGS ####')
+
+        // console.log('#### MENU PERMISSION FUNCTION::DEFAULT COMPANY ####')
+        // console.log(Store.getState().app.defaultCompany);
+        // console.log('#### /MENU PERMISSION FUNCTION::/DEFAULT COMPANY ####')
+        return userSettings.isLoggedIn && (Store.getState().app.defaultCompany.id != '')
+            ? true
+            : false;
+    }
+
+    renderCompanySidebarInfo = (): ReactNode => {
+        const company = Store.getState().app.defaultCompany;
+        return (
+            <div className="mb-4 pb-3 border-bottom">
+                <div
+                className="w-100 rounded mb-3"
+                style={{
+                    height: '120px',
+                    backgroundImage: `url('/storage/${company.logo}')`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    backgroundSize: 'contain'
+                }}
+                ></div>
+
+                <div className="text-center">
+                <h5 className="mb-0 fw-bold">{company.name}</h5>
+                <small className="text-muted">Admin Panel</small>
+                </div>
+            </div> 
+        )
     }
 
     goToAllCompanies = (e: any): void => {
@@ -132,55 +163,83 @@ class Navigation extends React.Component<IProps, IState>
 
     render(): React.ReactNode {
         // debugger;
+        const defaultCompany = Store.getState().app.defaultCompany;
         return (
-            <div id="sidebar" className={`sidebar p-3 ${this.props.location?.pathname == '/login' ? 'd-none' : ''}` } key={this.state.refreshKey}>
-                <h4 className="fw-bold mb-4">Navigation</h4>
-                <Link 
-                    to="/admin"
-                    className={this.props.location?.pathname === '/admin' ? 'active': '' }      
-                    viewTransition
-                >Dashboard</Link>
-                {this.isAllowedToRenderCompanies() && <Link 
-                    to="/companies"
-                    className={this.props.location?.pathname === '/companies' ? 'active': '' }  
-                    viewTransition
-                >
-                    Companies
-                </Link>}
-                {this.isAllowedToRenderCategories() && <Link 
-                    to="/categories"
-                    className={this.props.location?.pathname === '/categories' ? 'active': '' }  
-                    viewTransition
-                >
-                        Categories
-                </Link>}
-                {this.isAllowedToRenderTables() && <Link 
-                    to="/tables"
-                    className={this.props.location?.pathname === '/tables' ? 'active': '' }  
-                    viewTransition
-                >
-                        Tables
-                </Link>}
+            <div id="sidebar" className={`sidebar px-2 py-3 d-flex flex-column h-100 p-3 ${this.props.location?.pathname == '/login' ? 'd-none' : ''}` } key={this.state.refreshKey}>
+                {defaultCompany.id == '' && <div className="text-center"><h4 className="fw-bold mb-4">Admin Panel</h4></div>}
+                {defaultCompany.id && this.renderCompanySidebarInfo()}
+                {/* TOP CONTENT */}
+                <div>
+                    <Link 
+                        to="/admin"
+                        className={this.props.location?.pathname === '/admin' ? 'nav-link active': 'nav-link' }      
+                        viewTransition
+                    >
+                        <MdDashboard /> Dashboard
+                    </Link>
+                    {this.isAllowedToRenderCompanies() && <Link 
+                        to="/companies"
+                        className={this.props.location?.pathname === '/companies' ? 'nav-link active': 'nav-link' }  
+                        viewTransition
+                    >
+                        <GrRestaurant /> Companies
+                    </Link>}
+                    {this.isAllowedToRenderCategories() && <Link 
+                        to="/categories"
+                        className={this.props.location?.pathname === '/categories' ? 'nav-link active': 'nav-link' }  
+                        viewTransition
+                    >
+                            <BiCategory /> Categories
+                    </Link>}
+                    {this.isAllowedToRenderTables() && <Link 
+                        to="/tables"
+                        className={this.props.location?.pathname === '/tables' ? 'nav-link active': 'nav-link' }  
+                        viewTransition
+                    >
+                            <PiDeskBold /> Tables
+                    </Link>}
 
-                <Link 
-                    to="/menu"
-                    className={this.props.location?.pathname === '/menu' ? 'active': '' }  
-                    viewTransition
-                >
-                    Menu
-                </Link>
-                {/* <a href="/fap">FAP</a> */}
-                {/* <a href="/users">Users</a> */}
-                <Link to="/settings" viewTransition>Settings</Link>
-                <Link to="#" onClick={(e: any) =>this.goToAllCompanies(e)} viewTransition>Exit to all companies</Link>
-                <Link to="#" onClick={(e: any) =>this.logout(e)} viewTransition>Logout</Link>
+                    {this.isAllowedToRenderMenus() && <Link 
+                        to="/menu"
+                        className={this.props.location?.pathname === '/menu' ? 'nav-link active': 'nav-link' }  
+                        viewTransition
+                    >
+                        <MdOutlineRestaurantMenu /> <span style={{lineHeight: '15px'}}>Menu</span>
+                    </Link>}
+                    {/* <a href="/fap">FAP</a> */}
+                    {/* <a href="/users">Users</a> */}
+                    <Link 
+                        className={this.props.location?.pathname === '/settings' ? 'nav-link active': 'nav-link' } 
+                        to="/settings" 
+                        viewTransition
+                    >
+                        <MdSettings /> Settings
+                    </Link>
+                </div>
 
-                <div style={{position: 'absolute', bottom: '20pt', fontSize: '20pt', left: '50%', transform: 'translateX(-50%)'}}>&copy;</div>
-                <div style={{position: 'absolute', bottom: '10pt', width: '100%', left: '0'}}>
-                    <div style={{textAlign: 'center', justifyContent: 'center', width: '100%'}}>
-                        Menue 2026
+                <div className="mt-auto">
+                    <div className="small text-muted mb-2">
+                        <Link 
+                            className='text-small' 
+                            to="#" 
+                            onClick={(e: any) =>this.goToAllCompanies(e)} 
+                            viewTransition
+                        ><IoIosExit /> Exit company</Link>
+                    </div>
+                    <div>
+                        <Link className='fs-5' to="#" onClick={(e: any) =>this.logout(e)} viewTransition><IoIosExit /> Logout</Link>
+                    </div>
+                    <div className='pt-2 border-top'>
+                        <div className='text-center fs-3'>&copy;</div>
+                        <div>
+                            <div style={{textAlign: 'center', justifyContent: 'center', width: '100%'}}>
+                                Menue 2026
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
             </div>
         )
     }

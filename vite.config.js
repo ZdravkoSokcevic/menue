@@ -15,7 +15,7 @@ export default defineConfig({
                 'resources/sass/homepage/app.scss',
                 'resources/sass/menu.scss',
                 'resources/js/app.ts', // React admin entry
-                'resources/js/homepage.js', // Svelte entry
+                'resources/js/svelte/App.js', // Svelte entry
                 'resources/js/libs/alpine.js',
             ],
             refresh: true,

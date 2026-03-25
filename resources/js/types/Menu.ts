@@ -7,6 +7,7 @@ export interface TMenu extends TComponentProps{
     picture?: File | String | null;
     quantity: string;
     company_id?: string;
+    category_id: string;
 }
 
 export interface MenuCreateResponseItem {

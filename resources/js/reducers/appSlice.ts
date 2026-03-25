@@ -13,6 +13,10 @@ export const appSlice = createSlice({
             id: '',
             name: '',
             email: '',
+            language_id: '',
+            country_id: '',
+            license_id: '',
+            street: ''
         } as TCompany,
         settings: {
             theme: '',
@@ -35,11 +39,20 @@ export const appSlice = createSlice({
             state.defaultCompany = {
                 id: '',
                 name: '',
-                email: ''
+                email: '',
+                language_id: '',
+                country_id: '',
+                license_id: '',
+                street: ''
             } 
         },
         enableLoading(state, action) {
             state.isLoading = true;
+            setTimeout(() => {
+                // 10s loading
+                // We need to disable it after
+                state.isLoading = false;
+            }, 10000);
         },
         disableLoading(state, action) {
             state.isLoading = false;

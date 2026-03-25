@@ -59,12 +59,30 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function isAdminOrDemo() {
+        return $this->role === 'admin' ||
+            $this->role === 'demo';
+    }
+
+    public function isNotAdmin() {
+        return $this->role !== 'admin';
+    }
+
+    public function isNotAdminOrDemo() {
+        return $this->role !== 'admin' &&
+            $this->role !== 'demo';
+    }
+
     public function isAgent(): bool {
         return $this->role === 'agent';
     }
 
     public function isCompanyAdmin(): bool {
         return $this->role === 'company_admin';
+    }
+
+    public function isDemo(): bool {
+        return $this->role === 'demo';
     }
 
     // public function (): HasMany

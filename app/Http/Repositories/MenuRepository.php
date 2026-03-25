@@ -5,6 +5,7 @@ namespace App\Http\Repositories;
 use App\Models\Menu;
 use Illuminate\Database\Eloquent\Collection;
 use App\Interfaces\MenuRepositoryInterface;
+use Illuminate\Http\Request;
 
 class MenuRepository implements MenuRepositoryInterface
 {
@@ -13,9 +14,17 @@ class MenuRepository implements MenuRepositoryInterface
     {
         $this->menu = new Menu();
     }
-    public function all(): Collection
+    public function all(Request $r): Collection
     {
-        return $this->menu->all();
+        $isAdmin = auth('sanctum')->user()->isAdmin();
+        // allow admin and demo users to see every company list
+        $isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
+        $q = Menu::query();
+        if($isNotAdmin)
+            $q->where('company_id', $r->input('company_id'));
+        else if ($r->filled('company_id'))
+            $q->where('company_id', $r->input('company_id'));
+        return $q->get();
     }
 
     public function store(array $data): array|Menu
