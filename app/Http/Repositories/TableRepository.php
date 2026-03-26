@@ -45,8 +45,11 @@
 		{
 			$code = \sha1(time());
 			$app_url = config('app.url');
-			$url = $app_url  . '/shorts/'. $code . '.svg';
+			$local_path = '/shorts/'. $code;
+			$url = $app_url  . $local_path;
 			$disk = config('filesystems.default') == 'local' ? 'public' : 's3';
+			// added .svg for file save
+			$local_file_path = '/shorts/'. $code . '.svg';
 			// dd([
 			// 	'code' => $code,
 			// 	'url' => $app_url,
@@ -54,10 +57,10 @@
 			// ]);
 
 			$qr_code = QrCode::size(300)->generate($url);
-			$path = Storage::disk($disk)->put($url, $qr_code );
+			$path = Storage::disk($disk)->put($local_file_path, $qr_code );
 			$code = new Code([
 				'code' => $code,
-				'qr_code' => $url,
+				'qr_code' => $local_path,
 				'table_id' => $t->id
 			]);
 

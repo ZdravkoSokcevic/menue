@@ -2,17 +2,42 @@
 
 namespace App\Livewire;
 
+use App\Models\Code;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 #[Layout('layouts.app')]
 class DetailsPage extends Component
 {
-    public $page;
+    public $item;
     public $code;
-    public function mount(Request $r)
+    public function mount(Request $r, $id)
     {
-        $item = $r->item;
+        $item = Menu::with('category')->whereId($id)->first();
+        if(!$item)
+            return abort(403);
+
+        $record = Code::with('table')->where('code', $r->code)->first();
+        if(!$record)
+            return abort(403);
+        
+        $table = $record->table;
+        if(!$table) 
+            return abort(403);
+        $company = $table->company;
+        if(!$company)
+            return abort(403);
+
+        $creator = $company->creator;
+        if(!$creator)
+            return abort(403);
+
+        $license = $company->license;
+        if(!$license)
+            return abort(403);
+
+
         $this->item = $item;
         $this->code= $r->code;
     }
@@ -22,7 +47,7 @@ class DetailsPage extends Component
 
         $data = [
             'code' => $r->code,
-            'page' => $this->page
+            'item' => $this->item
         ];
         // dd('here');
         return view('livewire.details-page')

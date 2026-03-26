@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\QRCodeDownloadRequest;
 use App\Http\Requests\TableCreateRequest;
 use App\Http\Requests\TableEditRequest;
 use App\Http\Responses\CreateResponse;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Http\Repositories\TableRepository;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class TablesController extends Controller
 {
@@ -66,5 +68,31 @@ class TablesController extends Controller
         if($success)
             return new JsonResponse(['success'=> true, 'message' => 'success'], 200);
         else return new JsonResponse(['success' => false, 'message'=> 'Cannot delete table!'], 500);
+    }
+
+    public function downloadQRCodeImage(QRCodeDownloadRequest $r, $id)
+    {
+        $table = $this->tableRepository->findOne($id);
+        
+        $code = $table->code;
+        // dd($code);
+
+        if($code->qr_code) {
+            $link = '/shorts/' . $code->code . '.svg';
+            $disk = config('filesystems.default') == 'local' ? 'public' : 's3';
+            $public_link = 'storage' . $link;
+
+            // dd([
+            //     'static_path' => 'storage/shorts/65c61786db72c7f45a6e023a97694c71764c1702.svg',
+            //     'link' => $public_link
+            // ]);
+
+            // return response()->download(public_path('storage/shorts/65c61786db72c7f45a6e023a97694c71764c1702.svg'));
+            // dd($link);
+            // dd($code);
+            if(Storage::disk($disk)->exists($link))
+                return response()->download($public_link, $table->name . '.svg');
+            else return response(null, 404);
+        }else return response(null, 404);
     }
 }

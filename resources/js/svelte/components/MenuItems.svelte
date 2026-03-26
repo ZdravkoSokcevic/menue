@@ -1,9 +1,11 @@
 <script>
     import { cart } from '../store.svelte'
+    import { globalState } from '../store.svelte.js';
 
     let { menuItems = [] } = $props();
 
     let activeCategory = $state({name: 'All'});
+    console.log(menuItems);
 
     let filteredItems = $derived(
         activeCategory.name === 'All'
@@ -33,6 +35,10 @@
         cart.add(menuItem);
     }
 
+    function getItemClickLink(item) {
+        return "/details/" + item.id;
+    }
+
 </script>
 
 <div class="mx-auto max-w-7xl px-4 py-8">
@@ -51,9 +57,11 @@
         {/each}
     </div>
     <div class="mx-auto max-w-2xl">
-    <div class="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(260px,320px))]">
+    <div class="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
         {#each filteredItems as item (item.id || item.name)}
-            <div class="group flex flex-col w-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+            <div
+                class="group flex flex-col w-full overflow-hidden md:max-w-[320px] rounded-2xl border border-gray-100 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
+            >
                 
                 <div 
                     class="relative aspect-video w-full overflow-hidden bg-gray-200 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
@@ -63,12 +71,16 @@
                 </div>
 
                 <div class="flex flex-1 flex-col p-5">
-                    <div class="mb-1 flex items-start justify-between">
+                    <a 
+                        class="mb-1 flex items-start justify-between"
+                        href='/details/{item.id}/{globalState.code}'   
+                        wire:navigate 
+                    >
                         <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
                             {item.name}
                         </h3>
                         <span class="text-lg font-black text-blue-600">${item.price}</span>
-                    </div>
+                    </a>
                     
                     <p class="mb-5 text-sm leading-relaxed text-gray-500 line-clamp-2">
                         {item.description}

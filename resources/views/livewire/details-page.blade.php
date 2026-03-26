@@ -1,6 +1,21 @@
 <div>
-    @include('components.navbar', [ 'code' => $code ])
+    @push('scripts')
+        @vite([
+            'resources/sass/homepage/details.scss'
+        ])
+        <script>
+            window.LaravelData = {
+                code: "{{ $code }}",
+                item: "{{ $item }}"
+            };
+        </script>
+    @endpush
+
+    <script id="menuitem-data"  type="application/ld+json">
+        {!! json_encode($item) !!}
+    </script>
     
     <div id="app-navbar" wire:ignore wire:key="svelte-navbar-unique"></div>
-    This is page {{ $page }}
+
+    <div id="menu-details" wire:ignore></div>   
 </div>

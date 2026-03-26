@@ -1,6 +1,7 @@
 import { mount, unmount } from 'svelte';
 import Navbar from './components/Navbar.svelte'
 import MenuItems from './components/MenuItems.svelte';
+import MenuDetails from './components/MenuDetails.svelte'
 import { globalState } from './store.svelte.js'
 
 
@@ -26,7 +27,7 @@ function initSvelteApp() {
     // 2. Read and parse the JSON data from the data-items attribute
     const dataElement = document.getElementById('menu-data');
     const menuItems = JSON.parse(dataElement.textContent);
-
+    
     if(dataElement) {
       menuTarget.dataset.mounted = "true";
       // 3. Mount the Svelte 5 component with the data as props
@@ -35,13 +36,32 @@ function initSvelteApp() {
         props: { menuItems }
       });
     }
+  }
 
+  const menuDetailsTarget = document.getElementById('menu-details');
+  console.log(menuDetailsTarget);
+  if(menuDetailsTarget && !menuDetailsTarget.dataset.mounted) {
+    const dataElement = document.getElementById('menuitem-data');
+    const menuItem = JSON.parse(dataElement.textContent);
+
+    if(dataElement) {
+      menuDetailsTarget.dataset.mounted = "true";
+      mount(MenuDetails, {
+        target: menuDetailsTarget,
+        props: { menuItem }
+      });
+    }
   }
 
 }
 
 if (!window.svelteInitialized) {
     document.addEventListener('livewire:navigated', () => {
+      // Necessary bcs we won't to double components
+      // using livewire:navigation
+      // Prevent double svelte instances
+      // destroyNavbar();
+      // destroyMenu();
         initSvelteApp();
     });
     window.svelteInitialized = true;

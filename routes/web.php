@@ -16,7 +16,7 @@ Route::get('test', function () {
 Route::get('/', HomePage::class)->name('homepage');
 
 Route::get('/details', DetailsPage::class);
-Route::get('/details/{page}', DetailsPage::class);
+Route::get('/details/{id}/{code}', DetailsPage::class);
 
 // not working with livewire
 // Route::get('/shorts/{code}', '\App\Http\Controllers\HomeController@index');

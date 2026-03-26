@@ -61,6 +61,7 @@
 			Route::post('/tables/create', action: '\App\Http\Controllers\TablesController@create');
 			Route::post('/tables/edit/{id}', action: '\App\Http\Controllers\TablesController@edit');
 			Route::get('/tables/delete/{id}', action: '\App\Http\Controllers\TablesController@delete');
+			Route::get('/tables/download_qr/{id}', '\App\Http\Controllers\TablesController@downloadQRCodeImage');
 
 			// Countries
 			Route::get('/countries', '\App\Http\Controllers\CountriesController@all');

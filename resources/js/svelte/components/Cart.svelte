@@ -52,9 +52,18 @@
                     </div>
                 </div>
 
+                <!-- DESKTOP REMOVE BTN -->
                 <button
                     onclick={() => cart.remove(item.id)}
-                    class="text-xs font-bold uppercase tracking-tight text-red-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-600"
+                    class="text-xs font-bold uppercase tracking-tight text-red-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-600 lg:block sm:hidden"
+                >
+                    Remove
+                </button>
+
+                <!-- MOBILE REMOVE BTN -->
+                <button
+                    onclick={() => cart.remove(item.id)}
+                    class="text-xs font-bold uppercase tracking-tight text-red-400 lg:hidden sm:block"
                 >
                     Remove
                 </button>
