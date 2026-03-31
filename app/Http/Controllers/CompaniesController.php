@@ -55,6 +55,7 @@ class CompaniesController extends Controller
             // Create an admin user for current company
             $user = $result->createAdmin(array_diff_assoc( $r->admin, (new User)->getFillable()));
             Log::info(json_encode([ 'user:companies:create'=>$user]));
+            Log::info(json_encode([ 'company:companies:create'=>$result]));
             // create default categories
             $this->companyRepository->createDefaultCategories($result);
             if($user == false) {

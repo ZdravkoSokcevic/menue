@@ -20,11 +20,22 @@ return new class extends Migration
             $table->string('flag_svg')->nullable();
             $table->string('region')->nullable();
             $table->string('tld')->nullable();
-            $table->tinyInteger('frequent')->default(0)->index();
+            $table->tinyInteger('frequent')
+                ->default(0)
+                ->index();
+            $table->tinyInteger('use_imperial')
+                ->default(0)
+                ->index();
             // virtual foreign main language
-            $table->bigInteger('language_id')->unsigned()->nullable();
+            $table->bigInteger('language_id')
+                ->unsigned()
+                ->nullable()
+                ->index();
             // virtual foreign main currency
-            $table->bigInteger('currency_id')->unsigned()->nullable();
+            $table->bigInteger('currency_id')
+                ->unsigned()
+                ->nullable()
+                ->index();
             $table->timestamps();
         });
 

@@ -103,12 +103,13 @@
                 <span class="text-3xl font-black text-gray-900">${cart.total.toFixed(2)}</span>
             </div>
 
-            <button 
-                class="w-full rounded-2xl bg-blue-600 py-4 font-bold text-white transition-transform transition-colors hover:bg-blue-700 active:scale-95"
-                onclick={cart.add(item)}
+            <a
+                href="/cart" {...{'wire:navigate': true }}
+                class="block w-full rounded-2xl bg-blue-600 py-4 text-center font-bold text-white transition-transform transition-colors hover:bg-blue-700 active:scale-95"
+                // onclick|preventDefault={() => cart.add(item)}
             >
-                Complete Order
-            </button>
+                View cart
+            </a>
         </div>
     {/if}
 </div>

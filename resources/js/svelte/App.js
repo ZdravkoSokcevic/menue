@@ -39,7 +39,6 @@ function initSvelteApp() {
   }
 
   const menuDetailsTarget = document.getElementById('menu-details');
-  console.log(menuDetailsTarget);
   if(menuDetailsTarget && !menuDetailsTarget.dataset.mounted) {
     const dataElement = document.getElementById('menuitem-data');
     const menuItem = JSON.parse(dataElement.textContent);
@@ -62,6 +61,7 @@ if (!window.svelteInitialized) {
       // Prevent double svelte instances
       // destroyNavbar();
       // destroyMenu();
+        globalState.setCartModalSelectedItem(null);
         initSvelteApp();
     });
     window.svelteInitialized = true;

@@ -1,6 +1,8 @@
 <script>
     import { cart } from '../store.svelte'
+    import AddToCartModal from './AddToCartModal.svelte';
     import { globalState } from '../store.svelte.js';
+
 
     let { menuItems = [] } = $props();
 
@@ -32,7 +34,8 @@
 
     function onItemClicked(menuItem) {
         // debugger;
-        cart.add(menuItem);
+        // cart.add(menuItem);
+        selectedItem = menuItem;
     }
 
     function getItemClickLink(item) {
@@ -62,13 +65,20 @@
             <div
                 class="group flex flex-col w-full overflow-hidden md:max-w-[320px] rounded-2xl border border-gray-100 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
             >
-                
-                <div 
-                    class="relative aspect-video w-full overflow-hidden bg-gray-200 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                    style="background-image: url('/storage/{item.picture}');"
-                >
-                    <div class="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
-                </div>
+                <a 
+                        class="mb-1 flex items-start justify-between"
+                        href='/details/{item.id}/{globalState.code}'   
+                        wire:navigate 
+                        aria-label={`View details for ${item.name}`}
+                    >
+                    
+                    <div 
+                        class="relative aspect-video w-full overflow-hidden bg-gray-200 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                        style="background-image: url('/storage/{item.picture}');"
+                    >
+                        <div class="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
+                    </div>
+                </a>
 
                 <div class="flex flex-1 flex-col p-5">
                     <a 
@@ -88,7 +98,9 @@
 
                     <button 
                         class="mt-auto w-full rounded-xl bg-blue-600 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700 active:scale-95"
-                        onclick={(e) => onItemClicked(item)}    
+                        onclick={() => {
+                            globalState.setCartModalSelectedItem(item)
+                        }}    
                     >
                         Add to Order +
                     </button>
@@ -102,3 +114,10 @@
     </div>
     </div>
 </div>  
+{#if globalState.cartModalSelectedItem}
+<h1>Test</h1>
+    <AddToCartModal
+        item={globalState.cartModalSelectedItem}
+        close={() => globalState.setCartModalSelectedItem(null)} 
+    />
+{/if}

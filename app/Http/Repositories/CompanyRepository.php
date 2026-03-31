@@ -29,11 +29,14 @@ class CompanyRepository implements CompanyRepositoryInterface
 
 	public function createDefaultCategories(Company $c)
 	{
+		// dd($c->id);
 		$default_categories = config('categories.default');
-		foreach($default_categories as $category) {
+		// dd($default_categories);
+		foreach($default_categories as &$category) {
 			$category['company_id'] = $c->id;
 		}
 
+		Log::info(json_encode([ 'CompanyRepository:createDefaultCategories'=>$default_categories]));
 		$success = Category::insert($default_categories);
 		return $success;
 	}

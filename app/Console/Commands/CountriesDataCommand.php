@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use ErrorException;
+use File;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Http;
 
@@ -26,6 +29,15 @@ class CountriesDataCommand extends Command
     * @var string
     */
     protected $description = 'Sync countries data from an external API';
+
+    protected $imperialCountryNames = [
+        'United States',
+        'Cook Islands',
+        'Liberia',
+        'Myanmar',
+        'United Kingdom',
+        'Canada'
+    ];
 
     protected function isFrequentCountry(string $name) {
         $frequent_array = [
@@ -138,7 +150,8 @@ class CountriesDataCommand extends Command
             'tld'           => $tld,
             'currency_id'   => $main_currency,
             'language_id'   => $main_language,
-            'frequent'      => $this->isFrequentCountry($countryData['name']['common'])
+            'frequent'      => $this->isFrequentCountry($countryData['name']['common']),
+            'use_imperial'  => in_array($countryData['name']['common'], $this->imperialCountryNames)
         ]);
 
         // dd($country->attributesToArray());
@@ -202,32 +215,59 @@ class CountriesDataCommand extends Command
      */
     public function handle()
     {
+        $res = null;
+        $countries = null;
         // $res = [ Http::get('https://restcountries.com/v3.1/all?fields=name,currencies,flags') ];
         // $res = [];
-        $res = Http::get($this->apiURL);
-
-        if($res->successful()) {
-            $countries = $res->json();
-
-            foreach($countries as $countryData) {
-                // dd($countryData);
-                $country = $this->insertCountry($countryData);
-
-                // return all currencies
-                $currencies = $this->insertCurrencies($countryData['currencies']);
-
-                // associate country model with all currencies
-                if(count($currencies))
-                    $country->currencies()->sync($currencies);
-
-                // associate country model with all languages
-                $languages = $this->insertLanguages($countryData['languages']);
-                if(count($languages))
-                    $country->languages()->sync($languages);
-
+        try {
+            $local_file_path = database_path('data/countries.json');
+            $json = File::get($local_file_path);
+            if($json) {
+                $countries = json_decode($json, true);
+            }else {
+                $res = Http::get($this->apiURL);
+                $success = $res->successful();
+                if($success) {
+                    $countries = $res->json();
+                    File::put($local_file_path, json_encode($countries));
+                }else {
+                    throw new ErrorException('Could not obtain countries list');
+                }
             }
-            
+        }catch (FileNotFoundException $e) {
+            $res = Http::get($this->apiURL);
+            $success = $res->successful();
+            if($success) {
+                $countries = $res->json();
+                File::put($local_file_path, json_encode($countries));
+            }else {
+                throw new ErrorException('Could not obtain countries list');
+            }
         }
+
+
+        if(is_null($countries)) {
+            throw new ErrorException('Could not obtain countries list');
+        }
+
+        foreach($countries as $countryData) {
+            // dd($countryData);
+            $country = $this->insertCountry($countryData);
+
+            // return all currencies
+            $currencies = $this->insertCurrencies($countryData['currencies']);
+
+            // associate country model with all currencies
+            if(count($currencies))
+                $country->currencies()->sync($currencies);
+
+            // associate country model with all languages
+            $languages = $this->insertLanguages($countryData['languages']);
+            if(count($languages))
+                $country->languages()->sync($languages);
+
+        }
+
 
         echo "Countries, currencies, languages created succesfully!\n";
 

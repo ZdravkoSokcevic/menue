@@ -1,7 +1,8 @@
+import { ICategory } from "@/types/Categories";
 import { TMenu } from "@/types/Menu";
 import React from "react";
 interface IProps {
-    currentItem: TMenu
+    currentItem: ICategory
 }
 interface IState {}
 

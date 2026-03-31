@@ -21,7 +21,6 @@ class AppHelper
         let img = await Api.get(imageSrc, {}, {});
         if(img && img.data) {
             const reader = new window.FileReader();
-            debugger;
             reader.readAsDataURL(img.data);
             reader.onload = () => {
                 const result = reader.result;
@@ -29,6 +28,25 @@ class AppHelper
                 // document?.getElementById("img").setAttribute("src", reader.result);
             }; 
         }else return Promise.resolve(null);
+    }
+
+    // TODO: read from store to obtain default company currency
+    static getDefaultCurrency(): string
+    {
+        return 'USD';
+    }
+
+    // TODO: read from store to obtain default weight
+    static getDefaultWeightMeasurment(): string
+    {
+        return 'g';
+    }
+
+    // TODO: read from store to obtain default company language
+    // TODO: upgrade: read first from user settings, and if not set, read from company
+    static getLanguage(): string
+    {
+        return 'en';
     }
 }
 

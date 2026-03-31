@@ -13,6 +13,10 @@ import EditCompany from "./companies/EditCompany";
 import { TCompany } from "@/types/TCompanies";
 import EditCompanyTable from "./tables/EditCompanyTable";
 import { ICompanyTable } from "@/types/TCompanyTables";
+import EditAllergen from "./allergen/EditAllergen";
+import { IAllergen } from "@/types/Allergen";
+import EditIngridient from "./ingridient/EditIngridient";
+import { IIngridient } from "@/types/Ingridient";
 
 interface IProps {
     isOpen?: boolean;
@@ -73,6 +77,17 @@ class Edit extends React.Component<IProps & WithRouterProps, IState>
                     /> }
                     {this.props.type == 'table' && <EditCompanyTable
                         currentItem={this.props.currentItem as ICompanyTable}
+                        closeModal={this.closeModal}
+                        editCurrentItem={this.props.editCurrentItem as Function}
+                    />}
+                    {this.props.type == 'allergen' && <EditAllergen 
+                        currentItem={this.props.currentItem as IAllergen}
+                        closeModal={this.closeModal}
+                        editCurrentItem={this.props.editCurrentItem as Function}
+                    />}
+
+                    {this.props.type == 'ingridient' && <EditIngridient 
+                        currentItem={this.props.currentItem as IIngridient}
                         closeModal={this.closeModal}
                         editCurrentItem={this.props.editCurrentItem as Function}
                     />}

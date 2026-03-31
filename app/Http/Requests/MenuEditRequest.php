@@ -13,7 +13,10 @@ class MenuEditRequest extends FormRequest
     public function authorize(): bool
     {
         $user = auth('sanctum')->user();
-        return $user && $user->role === 'admin';
+        return $user && (
+            $user->role === 'admin' ||
+            $user->role === 'company_admin'
+        );
     }
 
     /**
@@ -35,7 +38,8 @@ class MenuEditRequest extends FormRequest
             'category_id' => [
                 'nullable',
                 Rule::exists('categories', 'id')
-            ]
+            ],
+            'prep_time' => 'required|numeric'
         ];
     }
 }

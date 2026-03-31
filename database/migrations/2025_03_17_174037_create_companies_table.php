@@ -23,13 +23,28 @@ return new class extends Migration
             $table->string('location_lng')->nullable();
             $table->string('street')->nullable();
             $table->string('website')->nullable();
-            $table->bigInteger('language_id')->unsigned()->nullable();
-            $table->bigInteger('currency_id')->unsigned()->nullable();
-            $table->bigInteger('country_id')->unsigned()->nullable();
-            $table->bigInteger('license_id')->unsigned()->nullable();
+            $table->bigInteger('language_id')
+                ->unsigned()
+                ->nullable()
+                ->index();
+            $table->bigInteger('currency_id')
+                ->unsigned()
+                ->nullable()
+                ->index();
+            $table->bigInteger('country_id')
+                ->unsigned()
+                ->nullable()
+                ->index();
+            $table->bigInteger('license_id')
+                ->unsigned()
+                ->nullable()
+                ->index();
 
             // Make sure to know who created company
-            $table->bigInteger('creator_id')->nullable()->unsigned();
+            $table->bigInteger('creator_id')
+                ->nullable()
+                ->unsigned()
+                ->index();
 
             // Need to add Settings by company (theme, colors, default lang ? (maybe that can be choosed per user), )
             $table->timestamps();

@@ -1,4 +1,7 @@
 import {TCompany, TCompaniesArr} from "@/types/TCompanies";
+import { ICountry } from "@/types/TCountries";
+import { ICurrency } from "@/types/TCurrencies";
+import { ILanguage } from "@/types/TLanguages";
 // import TComp from "@/types/TCompanies";
 
 import {createSlice, PayloadAction} from "@reduxjs/toolkit"
@@ -16,7 +19,11 @@ export const appSlice = createSlice({
             language_id: '',
             country_id: '',
             license_id: '',
-            street: ''
+            street: '',
+            country: {} as ICountry,
+            language: {} as ILanguage,
+            currency: {} as ICurrency
+
         } as TCompany,
         settings: {
             theme: '',

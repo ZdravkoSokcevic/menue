@@ -23,6 +23,10 @@ export const addWholeItemsToPersistedStore  = cartItems => {
 export const globalState = $state({
     code: '',
     items: [],
+    cartModalSelectedItem: null,
+    setCartModalSelectedItem(item) {
+        this.cartModalSelectedItem = item;
+    },
     // This allows you to set the code from anywhere (Blade or Svelte)
     setCode(newCode) {
         this.code = newCode;
@@ -32,15 +36,16 @@ export const globalState = $state({
 
 export const cart = $state({
     items: get(appPreferences).cart,
-    add(newItem) {
+    add(newCartItem) {
+        const newItem = newCartItem.item;
         console.log('#### ADD CART ITEM ####');
         console.log(newItem);
         console.log('#### /ADD CART ITEM #####')
         // Check if item already exists in cart
         const existingItem = this.items.find(i =>
             i.id === newItem.id &&
-            i.portionSize === newItem.portionSize &&
-            i.specialOccasion === newItem.specialOccasion
+            i.portionSize === newCartItem.portionSize &&
+            i.specialOccasion === newCartItem.specialOccasion
         );
         
         if (existingItem) {

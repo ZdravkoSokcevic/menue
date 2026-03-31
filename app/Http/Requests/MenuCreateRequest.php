@@ -12,8 +12,15 @@ class MenuCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        // TODO: user can also add menu,
+        // but just for company that he belongs
+        // company 
         $user = auth('sanctum')->user();
-        return $user && $user->role === 'admin';
+        return $user && 
+        (
+            $user->role === 'admin' ||
+            $user->role === 'company_admin'
+        );
     }
 
     /**
@@ -34,7 +41,8 @@ class MenuCreateRequest extends FormRequest
             'category_id' => [
                 'nullable',
                 Rule::exists('categories', 'id')
-            ]
+            ],
+            'prep_time' => 'required|numeric'
         ];
     }
 }

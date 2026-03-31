@@ -30,6 +30,8 @@ import { Outlet } from 'react-router-dom';
 import Navigation from '@/pages/admin/Navigation';
 import Tables from '@/pages/admin/Tables';
 import { disableLoading } from '@/reducers/appSlice';
+import Allergens from '@/pages/admin/Allergens';
+import Ingridients from '@/pages/admin/Ingridients';
 
 const pageVariants = {
     initial: { opacity: 0, x: "-100vw" },
@@ -113,7 +115,7 @@ const App: React.FC = () => {
                     // exit="exit"
                     // variants={pageVariants}
                     // transition={pageTransition}
-                    class={`motion-div ${location.pathname.replace('/', '')}`}
+                    className={`motion-div ${location.pathname.replace('/', '')}`}
 
                     variants={variants}
                     initial="hidden"
@@ -153,6 +155,18 @@ const App: React.FC = () => {
 
                     <Route path='/tables' element = {
                         <ProtectedRoute children={<Tables />} />
+                    } />
+
+                    <Route path='/allergens' element = {
+                        <ProtectedRoute>
+                            <Allergens />
+                        </ProtectedRoute>
+                    }/>
+
+                    <Route path='/ingridients' element = {
+                        <ProtectedRoute>
+                            <Ingridients />
+                        </ProtectedRoute>
                     } />
 
                     {/*<Route path="/admin" element = {

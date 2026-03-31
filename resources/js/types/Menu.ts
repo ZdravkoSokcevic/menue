@@ -1,5 +1,7 @@
 import { AxiosResponse } from "axios";
 import { TComponentProps } from "./TComponentProps";
+import { Ingridients } from "./Ingridient";
+import { Preferences } from "./Preference";
 
 export interface TMenu extends TComponentProps{
     name: string;
@@ -8,6 +10,9 @@ export interface TMenu extends TComponentProps{
     quantity: string;
     company_id?: string;
     category_id: string;
+    prep_time: number | string;
+    ingridients?: Ingridients;
+    preferents: Preferences
 }
 
 export interface MenuCreateResponseItem {

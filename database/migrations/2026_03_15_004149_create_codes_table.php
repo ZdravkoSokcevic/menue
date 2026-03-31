@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('codes', function (Blueprint $table) {
             $table->id();
             $table->string('code')->index();
-            $table->text('qr_code')->index();
+            $table->text('qr_code');
             $table->bigInteger('table_id')->unsigned()->nullable();
             $table->timestamps();
         });

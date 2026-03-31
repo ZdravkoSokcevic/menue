@@ -3,6 +3,8 @@ export interface Option {
   label: string;
   value: string | number;
   name?: string;
+  selected?: boolean | number;
+  checked?: boolean | number;
 }
 
 export interface ICode {

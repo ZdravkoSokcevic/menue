@@ -15,7 +15,9 @@ return new class extends Migration
             $table->engine = 'InnoDB';
 
             $table->id();
-             $table->bigInteger('company_id')->unsigned()->index();
+             $table->bigInteger('company_id')
+                ->unsigned()
+                ->index();
             $table->boolean('availability')->default(1);
             $table->string('name')->nullable(false);
 

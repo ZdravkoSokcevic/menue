@@ -74,6 +74,20 @@ div.loading > *:not(.main-loader) {
     z-index: 500000;
 }
 
+// USED FOR LIST CARDS (IN INGRIDIENTS)
+.card-soft {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+}
+
+// .card-soft {
+//     transition: all 0.2s ease;
+// }
+
+// .card-soft:hover {
+//     transform: translateY(-4px);
+//     box-shadow: 0 1rem 2rem rgba(0,0,0,0.08);
+// }
+
 .admin-nav-c {
     display: flex;
     flex-direction: row;

@@ -16,13 +16,27 @@ return new class extends Migration
             $table->string('name');
             $table->string('picture')->nullable();
             $table->tinyInteger('is_default')->default(0);
-            $table->bigInteger('parent_id')->unsigned()->nullable();
-            $table->bigInteger('company_id')->unsigned()->nullable();
+            $table->bigInteger('parent_id')
+                ->unsigned()
+                ->nullable()
+                ->index();
+            $table->bigInteger('company_id')
+                ->unsigned()
+                ->nullable()
+                ->index();
             $table->timestamps();
         });
         Schema::table('categories', function(Blueprint $table) {
-            $table->foreign('parent_id')->references('id')->on('categories')->onUpdate('set null')->onDelete('cascade');
-            $table->foreign(columns: 'company_id')->references('id')->on('companies')->onUpdate('set null')->onDelete('cascade');
+            $table->foreign('parent_id')
+                ->references('id')
+                ->on('categories')
+                ->onUpdate('set null')
+                ->onDelete('cascade');
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onUpdate('set null')
+                ->onDelete('cascade');
         });
     }
 

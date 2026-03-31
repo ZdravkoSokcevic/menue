@@ -12,6 +12,8 @@ import ViewCompany from "./companies/ViewCompany";
 import { TCompany } from "@/types/TCompanies";
 import ViewCompanyTable from "./tables/ViewCompanyTable";
 import { ICompanyTable } from "@/types/TCompanyTables";
+import ViewAllergen from "./allergen/ViewAllergen";
+import { IAllergen } from "@/types/Allergen";
 
 interface IProps {
     isOpen?: boolean;
@@ -58,6 +60,7 @@ class View extends React.Component<IProps & WithRouterProps, IState>
                     {this.props.type == 'category' && <ViewCategory currentItem={this.props.currentItem as TMenu} />}
                     {this.props.type == 'company' && <ViewCompany currentItem={this.props.currentItem as TCompany} />}
                     {this.props.type == 'table' && <ViewCompanyTable currentItem={this.props.currentItem as ICompanyTable} />}
+                    {this.props.type == 'allergen' && <ViewAllergen currentItem={this.props.currentItem as IAllergen} />}
                 </ModalOrPage>
             </>
         )

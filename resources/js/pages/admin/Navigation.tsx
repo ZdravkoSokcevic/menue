@@ -16,6 +16,8 @@ import { BiDish } from "react-icons/bi";
 import { MdDashboard } from "react-icons/md";
 import { MdSettings } from 'react-icons/md';
 import { GrRestaurant } from "react-icons/gr";
+import { LiaAllergiesSolid } from "react-icons/lia";
+import { LuCookingPot } from "react-icons/lu";
 
 
 interface IProps {
@@ -89,6 +91,30 @@ class Navigation extends React.Component<IProps, IState>
     }
 
     isAllowedToRenderCompanies = (): boolean => {
+        let {defaultCompany} = this.props;
+        const userSettings = this.props.userSettings;
+        return userSettings && 
+            userSettings.isLoggedIn && 
+            userSettings.user.role == 'admin' && 
+            Store.getState().app.defaultCompany?.id == '' 
+            ? true
+            : false;
+    }
+
+    // TODO: rewiew allergen permissions
+    isAllowedToRenderAllergens = (): boolean => {
+        let {defaultCompany} = this.props;
+        const userSettings = this.props.userSettings;
+        return userSettings && 
+            userSettings.isLoggedIn && 
+            userSettings.user.role == 'admin' && 
+            Store.getState().app.defaultCompany?.id == '' 
+            ? true
+            : false;
+    }
+
+    // TODO: rewiew ingridients permissions
+    isAllowedToRenderIngridients = (): boolean => {
         let {defaultCompany} = this.props;
         const userSettings = this.props.userSettings;
         return userSettings && 
@@ -205,6 +231,20 @@ class Navigation extends React.Component<IProps, IState>
                         viewTransition
                     >
                         <MdOutlineRestaurantMenu /> <span style={{lineHeight: '15px'}}>Menu</span>
+                    </Link>}
+                    {this.isAllowedToRenderAllergens() || true && <Link 
+                        to="/allergens"
+                        className={this.props.location?.pathname === '/allergens' ? 'nav-link active': 'nav-link'}
+                        viewTransition
+                    >
+                        <LiaAllergiesSolid /> <span style={{lineHeight: '15px'}}>Allergens</span>
+                    </Link>}
+                    {this.isAllowedToRenderIngridients() || true && <Link
+                        to="/ingridients"
+                        className={this.props.location?.pathname === '/ingridients' ? 'nav-link active': 'nav-link'}
+                        viewTransition
+                    >
+                        <LuCookingPot /> <span style={{lineHeight: '15px'}}>Ingridients</span>
                     </Link>}
                     {/* <a href="/fap">FAP</a> */}
                     {/* <a href="/users">Users</a> */}

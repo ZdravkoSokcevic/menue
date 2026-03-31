@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('country_languages', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('country_id')->unsigned()->nullable();
-            $table->bigInteger('language_id')->unsigned()->nullable();
+            $table->bigInteger('country_id')
+                ->unsigned()
+                ->nullable()
+                ->index();
+            $table->bigInteger('language_id')
+                ->unsigned()
+                ->nullable()
+                ->index();
             $table->timestamps();
         });
 

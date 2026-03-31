@@ -71,6 +71,7 @@ const FormikSearchSelect: React.FC<FormikSearchSelectProps> = ({ label, options,
         isSearchable={props.isSearchable ? props.isSearchable: true}
         placeholder={props.placeholder}
         className='country-input'
+        // isMulti={props.multiple}
       />
       
       {/* Validation Error Display */}

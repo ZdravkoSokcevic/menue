@@ -188,7 +188,7 @@ class Companies extends React.Component<IProps, IState>
                 <TableCell><img src={"/storage/"+ company.logo as string} alt="" style={{width:'50px'}}/></TableCell>
                 <TableCell>{company.name}</TableCell>
                 <TableCell>{company.email}</TableCell>
-                <TableCell>{company.description}</TableCell>
+                <TableCell className="col-sm-5">{company.description}</TableCell>
                 <TableCell>{company.phone}</TableCell>
                 <TableCell>
                     {this.state.user?.role == 'admin' && (

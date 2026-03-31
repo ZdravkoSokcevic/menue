@@ -41,6 +41,7 @@ interface IintiialValues {
     picture: File[] | null;
     picture_exists: string | null;
     quantity: number;
+    prep_time: number;
 }
 
 const initialValues: IintiialValues = {
@@ -48,7 +49,8 @@ const initialValues: IintiialValues = {
     description: '',
     picture: null,
     picture_exists: 'false',
-    quantity:0
+    quantity:0,
+    prep_time: 0
 }
 
 const menuValidationSchema = Yup.object().shape({
@@ -118,7 +120,8 @@ class EditMenu extends React.Component<IProps, IState>
         description: '',
         picture: null as String | File | null | undefined,
         quantity: 0,
-        picture_exists: false
+        picture_exists: false,
+        prep_time: 0
     }
 
     constructor(props: IProps) {
@@ -237,6 +240,7 @@ class EditMenu extends React.Component<IProps, IState>
         this.formikRef.current?.setFieldTouched('description');
         this.formikRef.current?.setFieldTouched('quantity');
         this.formikRef.current?.setFieldValue('category', this.props.currentItem.category_id);
+        this.formikRef.current?.setFieldValue('prep_time', this.props.currentItem.prep_time);
 
         return (
                 <div className="form-page">
@@ -302,6 +306,7 @@ class EditMenu extends React.Component<IProps, IState>
                                         ) : null}
                                     </div>
 
+                                    {/* QUANTITY */}
                                     <div className="form-group">
                                         <label>Quantity</label>
                                         <Field 
@@ -316,6 +321,22 @@ class EditMenu extends React.Component<IProps, IState>
                                             <><small id="quantityHelp" className="form-text text-danger">{this.formikRef.current?.errors.quantity}</small><br /></>
                                         ) : null}
                                         <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                    </div>
+
+                                    {/* PREPARATION TIME */}
+                                    <div className="form-group">
+                                        <label>Preparation time:</label>
+                                        <Field 
+                                            name="prep_time" 
+                                            className="form-control" 
+                                            id="quantity" 
+                                            aria-describedby="prepTimeHelp" 
+                                            placeholder="Preparation time"
+                                        />
+                                        {errors.prep_time && touched.prep_time ? (
+                                            <><small id="prepTimeHelp" className="form-text text-danger">{this.formikRef.current?.errors.quantity}</small><br /></>
+                                        ) : null}
+                                        <small id="prepTimeHelp" className="form-text text-muted">Dish preparation time (in minutes)</small>
                                     </div>
                                     
                                 </div>
@@ -397,7 +418,8 @@ class EditMenu extends React.Component<IProps, IState>
             description: event.description,
             quantity: event.quantity,
             company_id: Store.getState().app.defaultCompany?.id,
-            category_id: event.category
+            category_id: event.category,
+            prep_time: event.prep_time
         }
         // debugger;
         if(event.picture != null && typeof event.picture != undefined && typeof (event.picture.name) == 'string')

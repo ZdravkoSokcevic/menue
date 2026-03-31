@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('company_license_payments', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('company_id')->unsigned();
+            $table->bigInteger('company_id')
+                ->unsigned()
+                ->index();
             $table->integer('amount');
             $table->dateTime('date');
             $table->timestamps();

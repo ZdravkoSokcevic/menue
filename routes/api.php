@@ -66,6 +66,18 @@
 			// Countries
 			Route::get('/countries', '\App\Http\Controllers\CountriesController@all');
 
+			// Allergens
+			Route::get('/allergens', '\App\Http\Controllers\AllergensController@all');
+			Route::post('/allergens/create', action: '\App\Http\Controllers\AllergensController@create');
+			Route::post('/allergens/edit/{id}', action: '\App\Http\Controllers\AllergensController@edit');
+			Route::get('/allergens/delete/{id}', action: '\App\Http\Controllers\AllergensController@delete');
+
+			// Ingridients
+			Route::get('/ingridients', '\App\Http\Controllers\IngridientsController@all');
+			Route::post('/ingridients/create', action: '\App\Http\Controllers\IngridientsController@create');
+			Route::post('/ingridients/edit/{id}', action: '\App\Http\Controllers\IngridientsController@edit');
+			Route::get('/ingridients/delete/{id}', action: '\App\Http\Controllers\IngridientsController@delete');
+
 
 			Route::get('/testificate', function() {
 				dd('Here in auth');

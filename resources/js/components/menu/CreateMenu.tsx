@@ -1,6 +1,6 @@
 import React, { BaseSyntheticEvent, ChangeEventHandler } from "react";
 import Modal from "react-modal";
-import { Formik, Form, Field, FormikProps } from 'formik';
+import { Formik, Form, Field, FormikProps, FieldArray } from 'formik';
 import * as Yup from "yup";
 
 import { FaSave } from "react-icons/fa";
@@ -17,6 +17,7 @@ import CategoriesAPI from "@/api/CategoriesAPI";
 import { ICategory, TCategories } from "@/types/Categories";
 import FormikSearchSelect from "../FormikSelectSearch";
 import { Option } from "@/types/App";
+import { GoPlus } from 'react-icons/go'
 
 interface IProps {
     // can be page or modal
@@ -33,21 +34,41 @@ interface IState {
     image?: Image | null;
     categories: TCategories;
     categoryOptions: Array<Option>;
+    key: number;
 };
 
-const initialValues = {
-    name: '',
-    description: '',
-    picture: null,
-    quantity: 0
+interface IPortionPrice {
+    name: string;
+    portion_size: number;
+    portion_unit?: string;
+    price: number;
 }
+
+type TPrices = Array<IPortionPrice>;
 
 interface IintiialValues {
     name: string;
     description: string;
     picture: File[] | null;
     quantity: number;
+    prep_time: number;
+    prices: TPrices;
 }
+
+const initialValues: IintiialValues = {
+    name: '',
+    description: '',
+    picture: null,
+    quantity: 0,
+    prep_time: 0,
+    prices: [] as TPrices
+}
+
+// const FieldErrorMessage = ({ name: string }) => {
+//     <Field
+//         name
+// }
+
 
 const menuValidationSchema = Yup.object().shape({
     name: Yup.string()
@@ -92,11 +113,25 @@ const menuValidationSchema = Yup.object().shape({
     ),
     category: Yup.mixed()
         .required(),
-
+    // TODO: quantity/portion and price will be separated in some way
     quantity: Yup.number()
         .min(1, 'At least one is required')
-        .max(15, 'Cannot order more than 15 portions')
-        .required('Portion number is required')
+        // TODO: add quantity max size in app settings for lbs/kg
+        // see if country api provides measurments
+        .max(1500, 'Portion cannot be larger than 1500gr')
+        .required('Portion size is required'),
+    prep_time: Yup.number()
+        .min(1, 'At least one minut is required')
+        .max(300, 'Preparation time cannot be bigger than 300mins')
+        .required('Preparation time is required!'),
+    prices: Yup.array()
+        .of(
+            Yup.object().shape({
+                name: Yup.string().min(4, 'Name too short!').required('Portion name is required'),
+                portion_size: Yup.number().min(0, 'Min price is 0').max(10000, 'Max price is 10000').required('Portion size is required!'),
+                price: Yup.number().min(0, 'Min price is 0').max(10000, 'Max price is 10000').required('Price is required!')
+            })
+        )
 });
 
 class CreateMenu extends React.Component<IProps, IState>
@@ -109,7 +144,8 @@ class CreateMenu extends React.Component<IProps, IState>
         this.state = {
             isDragging: false,
             categories: [],
-            categoryOptions: []
+            categoryOptions: [],
+            key: 0
         }
         this.handleImageLoad = this.handleImageLoad.bind(this);
         this.handleFileLoad = this.handleFileLoad.bind(this);
@@ -192,6 +228,10 @@ class CreateMenu extends React.Component<IProps, IState>
         }
     }
 
+    refreshFieldset = () => {
+        this.setState({key: Math.random()});
+    }
+
     onCategoryChange(e: React.SyntheticEvent<HTMLSelectElement>) {
         // const value = e.target as HTMLSelectElement;
         // this.setState({ selectedCategory })
@@ -237,15 +277,16 @@ class CreateMenu extends React.Component<IProps, IState>
                         validationSchema={menuValidationSchema}
                         onSubmit={this.onSubmit}
                         innerRef={this.formikRef}
+                        enableReinitialize
                     >
 
-                    {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty }) => (
+                    {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty, values}) => (
 
                         <Form encType="multipart/form-data">
                         <div className="container-fluid">
                             <div className="row">
 
-                                <div className="col-md-6 border-end p-5">
+                                <div className="col-md-6 border-end p-2">
                                     <div className="form-group">
                                         <label>Choose picture</label>
                                         {/* image should be 4:3 */}
@@ -282,18 +323,39 @@ class CreateMenu extends React.Component<IProps, IState>
                                         ) : null}
                                     </div>
 
+                                    {/* QUANTITY */}
                                     <div className="form-group">
                                         <label>Quantity</label>
                                         <Field name="quantity" className="form-control" id="quantity" aria-describedby="quantityHelp" placeholder="Quantity"/>
                                         {errors.quantity && touched.quantity ? (
                                             <><small id="quantityHelp" className="form-text text-danger">{errors.quantity}</small><br /></>
                                         ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                        <small id="quantityHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                    </div>
+
+                                    {/* PREPARATION TIME */}
+                                    <div className="form-group">
+                                        <label>Preparation time:</label>
+                                        <Field 
+                                            name="prep_time" 
+                                            className="form-control" 
+                                            id="quantity" 
+                                            aria-describedby="prepTimeHelp" 
+                                            placeholder="Preparation time"
+                                        />
+                                        {errors.prep_time && touched.prep_time ? (
+                                            <><small id="prepTimeHelp" className="form-text text-danger">{errors.prep_time}</small><br /></>
+                                        ) : null}
+                                        <small id="prepTimeHelp" className="form-text text-muted">Dish preparation time (in minutes)</small>
+                                    </div>
+
+                                    <div className="col-12">
+                                        <h5>Test</h5>
                                     </div>
                                     
                                 </div>
 
-                                <div className="col-md-6 p-5">
+                                <div className="col-md-6 p-2">
 
                                     <div className="form-group">
                                         <label>Name</label>
@@ -326,15 +388,111 @@ class CreateMenu extends React.Component<IProps, IState>
                                             onChange={this.onCategoryChange}
                                         />
                                     </div>
+                                    
+                                    {/* SHOW / HIDE ENTRIES / ERRORS */}
+                                    <div className="d-none">
+                                        {'Is submitting: ' + isSubmitting}<br />
+                                        {'Is valid: ' + isValid} <br />
+                                        {'Is dirty: ' + dirty} <br />
+                                        <br />
+                                        <span>Errors: </span>
+                                        <small>{JSON.stringify(errors)}</small>
+                                        <br />
+                                        <span>Values:</span><br />
+                                        {Object.entries(values).map(function(value, key) {
+                                            // eslint-disable-next-line
+                                            return (<>
+                                                <small>Key: {key}</small><br />
+                                                <small>Value: {JSON.stringify(value)}</small><br />
+                                            </>)
+                                        })}
+                                    </div>
 
-                                    {/* {'Is submitting: ' + isSubmitting}<br />
-                                    {'Is valid: ' + isValid} <br />
-                                    {'Is dirty: ' + dirty} <br />
-                                    { 'Errors: ' + JSON.stringify(errors) } */}
                                     <div className="controls">
                                         <button className="submit" disabled={isSubmitting || !isValid || !dirty}>
                                             <FaSave />
                                         </button>
+                                    </div>
+                                </div>
+
+                                {/* BOTTOM FULL WIDTH */}
+                                <div className="col-12 pb-3">
+                                    {/* PORTIONS / PRICES */}
+                                    <div className="border-top container">
+                                        <div className="row">
+                                            
+                                            <label htmlFor="pricesFor">Portions</label> 
+                                            <FieldArray 
+                                                key={this.state.key}
+                                                name="prices"
+                                                render={arrayHelpers => (
+                                                    <>
+                                                        {values.prices && values.prices.length > 0 ? (
+                                                            values.prices.map((price, index) => (
+                                                                <>
+                                                                    <div className="form-group col-md-5 ps-0 pe-0">
+                                                                        <label htmlFor="priceName">Portion name</label>
+                                                                        <Field 
+                                                                            name={`prices.${index}.name`}
+                                                                            className="form-control"
+                                                                            aria-describedby="prepNameHelp"
+                                                                            />
+                                                                    </div>
+                                                                    <div className="form-group col-md-4 ps-1 pe-1">
+                                                                        <label htmlFor="portionSize"> Portion Size: </label>
+                                                                        <div className="input-group">
+                                                                            <Field 
+                                                                                name={`prices.${index}.portion_size`}
+                                                                                className="form-control"
+                                                                                aria-describedby="portionSizeHelp"
+                                                                            />
+                                                                            <div className="input-group-append">
+                                                                                <span className="input-group-text" id="basic-addon2">g</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="form-group col-md-3 ps-0 pe-0">
+                                                                        <label htmlFor="pricePrice"> Price: </label>
+                                                                        <div className="input-group">
+                                                                            <Field 
+                                                                                name={`prices.${index}.price`}
+                                                                                className="form-control"
+                                                                                aria-describedby="prepPriceHelp"
+                                                                            />
+                                                                            <div className="input-group-append">
+                                                                                <span className="input-group-text" id="basic-addon2">USD</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <button className="btn btn-danger mt-2" type="button" onClick={() => arrayHelpers.remove(index)}> - </button>
+                                                                </>
+
+
+                                                                
+                                                            ))
+                                                        ) : (
+
+                                                        <></>
+
+                                                        )}
+                                                            <button type="button" 
+                                                            onClick={() => {
+                                                                arrayHelpers.push({name: '', price: 0})
+                                                                this.formikRef.current?.setFieldTouched('prices');
+                                                                // debugger;
+                                                                this.refreshFieldset()}}
+                                                                className="btn btn-primary mt-5"
+                                                            >
+                                                            <GoPlus />
+                                                            {/* show this when user has removed all friends from the list */}
+                                                            
+                                                            Add a portion
+
+                                                        </button>
+                                                    </>
+                                                )}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -357,7 +515,8 @@ class CreateMenu extends React.Component<IProps, IState>
             picture: this.state.imageFile,
             quantity: event.quantity,
             category_id: event.category,
-            company_id: Store.getState().app.defaultCompany?.id
+            company_id: Store.getState().app.defaultCompany?.id,
+            prep_time: event.prep_time
         }
         // debugger;
         Store.dispatch(enableLoading({}));
