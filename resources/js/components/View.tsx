@@ -14,6 +14,10 @@ import ViewCompanyTable from "./tables/ViewCompanyTable";
 import { ICompanyTable } from "@/types/TCompanyTables";
 import ViewAllergen from "./allergen/ViewAllergen";
 import { IAllergen } from "@/types/Allergen";
+import ViewExtra from "./extra/ViewExtra";
+import { IExtra } from "@/types/Extra";
+import ViewPreference from "./preferences/ViewPreference";
+import { IPreference } from "@/types/Preference";
 
 interface IProps {
     isOpen?: boolean;
@@ -61,6 +65,8 @@ class View extends React.Component<IProps & WithRouterProps, IState>
                     {this.props.type == 'company' && <ViewCompany currentItem={this.props.currentItem as TCompany} />}
                     {this.props.type == 'table' && <ViewCompanyTable currentItem={this.props.currentItem as ICompanyTable} />}
                     {this.props.type == 'allergen' && <ViewAllergen currentItem={this.props.currentItem as IAllergen} />}
+                    {this.props.type == 'extra' && <ViewExtra currentItem={this.props.currentItem as IExtra} />}
+                    {this.props.type == 'preference' && <ViewPreference currentItem={this.props.currentItem as IPreference} />}
                 </ModalOrPage>
             </>
         )

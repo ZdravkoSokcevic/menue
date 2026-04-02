@@ -17,6 +17,10 @@ import EditAllergen from "./allergen/EditAllergen";
 import { IAllergen } from "@/types/Allergen";
 import EditIngridient from "./ingridient/EditIngridient";
 import { IIngridient } from "@/types/Ingridient";
+import EditExtra from "./extra/EditExtra";
+import { IExtra } from "@/types/Extra";
+import { IPreference } from "@/types/Preference";
+import EditPreference from "./preferences/EditPreference";
 
 interface IProps {
     isOpen?: boolean;
@@ -88,6 +92,18 @@ class Edit extends React.Component<IProps & WithRouterProps, IState>
 
                     {this.props.type == 'ingridient' && <EditIngridient 
                         currentItem={this.props.currentItem as IIngridient}
+                        closeModal={this.closeModal}
+                        editCurrentItem={this.props.editCurrentItem as Function}
+                    />}
+
+                    {this.props.type == 'extra' && <EditExtra 
+                        currentItem={this.props.currentItem as IExtra}
+                        closeModal={this.closeModal}
+                        editCurrentItem={this.props.editCurrentItem as Function}
+                    />}
+
+                    {this.props.type == 'preference' && <EditPreference 
+                        currentItem={this.props.currentItem as IPreference}
                         closeModal={this.closeModal}
                         editCurrentItem={this.props.editCurrentItem as Function}
                     />}

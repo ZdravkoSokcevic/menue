@@ -4,14 +4,16 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CompanyEditRequest extends FormRequest
+class PreferenceEditRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        // only admin can edit preference
+        $user = auth('sanctum')->user();
+        return $user && $user->role === 'admin';
     }
 
     public function prepareForValidation(): void
@@ -34,13 +36,9 @@ class CompanyEditRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id'    => 'required|exists:companies,id',
-            'name' => 'string',
-            'email' => 'email',
-            'phone' => 'string|max:15',
+            'id'    => 'required|exists:preferences,id',
+            'name' => 'required|string|min:4|max:30',
             'description' => 'string|max:255',
-            // 'location_lat' => '',
-            // 'location_lng' => ''  
         ];
     }
 }

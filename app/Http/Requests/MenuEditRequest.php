@@ -19,6 +19,18 @@ class MenuEditRequest extends FormRequest
         );
     }
 
+    public function prepareForValidation(): void
+    {
+        // Param validation
+        $param = $this->route()->parameters();
+        $paramId = [];
+        foreach($param as $k => $v) {
+            if($k == 'id')
+                $paramId[$k] = $v;
+        }
+        $this->merge($paramId);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -27,6 +39,7 @@ class MenuEditRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id'    => 'required|exists:menus,id',
             'name'=> 'required|string|max:30',
             // it is not mandatory in edit
             'picture' => ['extensions:jpg,png,jpeg'],

@@ -13,7 +13,8 @@ import AllergensAPI from "@/api/AllergensAPI";
 import { IResponseItem } from "@/types/Api";
 import { IIngridient } from "@/types/Ingridient";
 import { Option } from "@/types/App";
-import Select, { MultiValue } from "react-select"
+import Select, { GroupBase, MultiValue } from "react-select"
+import IngridientsAPI from "@/api/IngridientsAPI";
 
 interface IProps {
     // can be page or modal
@@ -78,22 +79,38 @@ class EditIngridient extends React.Component<IProps, IState>
     
     componentDidMount(): void {
         this.loadAllergens();
+
+        const markedAllergens: Array<Option> = [];
+        this.props.currentItem.allergens?.map((allergen: IAllergen) => {
+            markedAllergens.push({
+                id: allergen.id,
+                name: allergen.name,
+                label: allergen.name,
+                value: allergen.id
+            });
+            
+        })
+
+        this.setState({ selectedOptions: markedAllergens });
+        this.formikRef?.current?.setFieldValue('allergens', this.props.currentItem.allergens);
     }
 
     onAllergenChange(values: MultiValue<Option>) {
         console.log(values);
-        let selected: Array<Option> = []
+        let selectedOpts: Array<Option> = [];
+        let selectedAllergens: TAllergens = [];
         values.forEach((value: Option) => {
-            selected.push(value);
+            selectedOpts.push(value);
+            this.state.allergens.map((allergen: IAllergen) => {
+                if(allergen.id === value.id)
+                    selectedAllergens.push(allergen);
+            })
         })
-        this.setState({ selectedOptions: selected });
+        this.setState({ selectedOptions: selectedOpts });
+        this.formikRef.current?.setFieldValue('allergens', selectedAllergens)
     }
 
     render(): React.ReactNode {
-        const markedAllergens = [];
-        this.props.currentItem.allergens?.map((allergen: IAllergen) => {
-            markedAllergens.push(allergen.id);
-        })
         // Create a NEW object reference here
         const currentInitialValues: IintiialValues = {
             name: this.props.currentItem.name || '',
@@ -179,10 +196,10 @@ class EditIngridient extends React.Component<IProps, IState>
                                             name="allergens"
                                             id="allergens"
                                             aria-describedby="allergensHelp"
-                                            onChange={this.onAllergenChange}
+                                            onChange={this.onAllergenChange.bind(this)}
                                             isSearchable={false}
                                             isMulti={true}
-                                            value={this.state.allergenOptions}
+                                            value={this.state.selectedOptions}
                                             // ref={this.allergenRef}
                                             // as="select"
                                         />
@@ -194,7 +211,7 @@ class EditIngridient extends React.Component<IProps, IState>
 
 
                                     {/* SHOW / HIDE ENTRIES / ERRORS */}
-                                    <div className="">
+                                    <div className="d-none">
                                         {'Is submitting: ' + isSubmitting}<br />
                                         {'Is valid: ' + isValid} <br />
                                         {'Is dirty: ' + dirty} <br />
@@ -210,8 +227,10 @@ class EditIngridient extends React.Component<IProps, IState>
                                                 <small>Value: {JSON.stringify(value)}</small><br />
                                             </>)
                                         })}
-                                        <span>Current item: </span>
-                                        <small>{JSON.stringify(this.props.currentItem)}</small>
+                                        <div className="d-none">
+                                            <span>Current item: </span>
+                                            <small>{JSON.stringify(this.props.currentItem)}</small>
+                                        </div>
                                     </div>
 
                                     <div className="controls">
@@ -257,14 +276,15 @@ class EditIngridient extends React.Component<IProps, IState>
         // (event as Event).stopPropagation();
         // (event as Event).preventDefault();
 
-        let data: IAllergen = {
+        let data: IIngridient = {
             id: this.props.currentItem.id,
-            name: event.name
+            name: event.name,
+            allergens: event.allergens as TAllergens,
+            is_vegan: event.is_vegan
         }
         // debugger;
-
         Store.dispatch(enableLoading({}));
-        const res= await AllergensAPI.editAllergen(data as IAllergen);
+        const res= await IngridientsAPI.editAllergen(data as IIngridient);
         setTimeout(() => {
             Store.dispatch(disableLoading({}));
         })

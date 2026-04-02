@@ -15,6 +15,18 @@ class LicenseEditRequest extends FormRequest
         return $user && $user->role === 'admin';
     }
 
+    public function prepareForValidation(): void
+    {
+        // Param validation
+        $param = $this->route()->parameters();
+        $paramId = [];
+        foreach($param as $k => $v) {
+            if($k == 'id')
+                $paramId[$k] = $v;
+        }
+        $this->merge($paramId);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,6 +35,7 @@ class LicenseEditRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id'    => 'required|exists:licenses,id',
             'name' => 'string|max:40',
             'quantity' => 'string',
             'description' => 'string|max:255',

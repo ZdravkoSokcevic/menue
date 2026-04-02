@@ -3,6 +3,7 @@ import { Store } from "@/reducers/Store";
 import { AxiosResponse } from "axios";
 import { IResponseItem } from "@/types/Api";
 import { IIngridient, TIngridients } from "@/types/Ingridient";
+import { IAllergen } from "@/types/Allergen";
 
 class IngridientsAPI extends Api
 {
@@ -19,8 +20,28 @@ class IngridientsAPI extends Api
 
     static async editAllergen(data: IIngridient) 
     {
+        let allergens: Array<string> = [];
+        allergens = data.allergens?.map((allergen: IAllergen) => allergen.id) as Array<string>;
+        
+        // modify IIngridient bcs we have allergens as object
+        // and in edit array of id's is required
+        interface IPostAllergen {
+            id: string;
+            name: string,
+            allergens: Array<string>,
+            is_vegan: number
+        }
+
+        const postData: IPostAllergen = {
+            id: data.id,
+            name: data.name,
+            allergens: allergens,
+            is_vegan: data.is_vegan ? 1 : 0
+        };
+        postData.allergens = allergens;
+
         try {
-            const success: AxiosResponse<IResponseItem> = await this.post(`/api/ingridients/edit/${data.id}`, data, {}, true);
+            const success: AxiosResponse<IResponseItem> = await this.post(`/api/ingridients/edit/${data.id}`, postData, {}, true);
             if(success)
                 return Promise.resolve({ success:true, data: success.data });
         }catch(err) {

@@ -36,6 +36,15 @@ class IngridientsEditRequest extends FormRequest
         }catch(JsonException $e) {
             $this->merge(['allergens' => '']);
         }
+
+        // Param validation
+        $param = $this->route()->parameters();
+        $paramId = [];
+        foreach($param as $k => $v) {
+            if($k == 'id')
+                $paramId[$k] = $v;
+        }
+        $this->merge($paramId);
     }
 
     /**
@@ -46,6 +55,7 @@ class IngridientsEditRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id'    => 'required|exists:ingridients,id',
             'name' => 'string|min:4|max:30',
             'is_vegan' => 'numeric|min:0|max:1',
             'allergens' => 'array',

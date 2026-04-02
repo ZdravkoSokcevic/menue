@@ -78,6 +78,17 @@
 			Route::post('/ingridients/edit/{id}', action: '\App\Http\Controllers\IngridientsController@edit');
 			Route::get('/ingridients/delete/{id}', action: '\App\Http\Controllers\IngridientsController@delete');
 
+			// Extras
+			Route::get('/extras', '\App\Http\Controllers\ExtrasController@all');
+			Route::post('/extras/create', action: '\App\Http\Controllers\ExtrasController@create');
+			Route::post('/extras/edit/{id}', action: '\App\Http\Controllers\ExtrasController@edit');
+			Route::get('/extras/delete/{id}', action: '\App\Http\Controllers\ExtrasController@delete');
+
+			// Preferences
+			Route::get('/preferences', '\App\Http\Controllers\PreferencesController@all');
+			Route::post('/preferences/create', action: '\App\Http\Controllers\PreferencesController@create');
+			Route::post('/preferences/edit/{id}', action: '\App\Http\Controllers\PreferencesController@edit');
+			Route::get('/preferences/delete/{id}', action: '\App\Http\Controllers\PreferencesController@delete');
 
 			Route::get('/testificate', function() {
 				dd('Here in auth');

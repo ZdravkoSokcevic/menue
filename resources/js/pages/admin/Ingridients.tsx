@@ -44,7 +44,7 @@ class Ingridients extends React.Component<IProps, IState> {
     }
 
     componentDidMount(): void {
-        this.fetchAllergens();
+        this.fetchIngridients();
     }
 
     render(): ReactNode {
@@ -127,7 +127,7 @@ class Ingridients extends React.Component<IProps, IState> {
         )
     }
 
-    fetchAllergens = async() => {
+    fetchIngridients = async() => {
         const items = await IngridientsAPI.getItems();
         if(items) {
             this.setState({ ingridients: items });

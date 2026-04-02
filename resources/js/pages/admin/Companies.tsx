@@ -74,10 +74,8 @@ class Companies extends React.Component<IProps, IState>
 
     componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any): void {
 
-        console.log('Did update');
         if(prevState.animationRefreshKey != this.state.animationRefreshKey) {
             // Do the component animation
-            console.log('Razlicito je');
             // debugger;
             (async() => {
             // debugger;
@@ -171,6 +169,7 @@ class Companies extends React.Component<IProps, IState>
                     currentItem={this.state.currentItem as TComponentProps}
                     isOpen={this.state.isEditCompanyModalOpened}
                     closeModal={this.closeEditCompanyModal}
+                    editCurrentItem={this.editCurrentItem}
                 />
                 <Delete
                     onDeleteClicked={this.onDeleteModalClicked}

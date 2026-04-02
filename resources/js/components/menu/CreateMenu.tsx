@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import { Formik, Form, Field, FormikProps, FieldArray } from 'formik';
 import * as Yup from "yup";
 
-import { FaSave } from "react-icons/fa";
+import { FaPlus, FaSave } from "react-icons/fa";
 import { Button, Input, TextField } from "@mui/material";
 
 import "../../../sass/modal.scss"
@@ -18,6 +18,9 @@ import { ICategory, TCategories } from "@/types/Categories";
 import FormikSearchSelect from "../FormikSelectSearch";
 import { Option } from "@/types/App";
 import { GoPlus } from 'react-icons/go'
+import IngridientsAPI from "@/api/IngridientsAPI";
+import { IIngridient, TIngridients } from "@/types/Ingridient";
+import CreateIngridient from "../ingridient/CreateIngridient";
 
 interface IProps {
     // can be page or modal
@@ -35,6 +38,9 @@ interface IState {
     categories: TCategories;
     categoryOptions: Array<Option>;
     key: number;
+    ingridients: TIngridients;
+    choosenIngridients: Array<string | number>;
+    isIngridientModalOpened: boolean;
 };
 
 interface IPortionPrice {
@@ -53,6 +59,7 @@ interface IintiialValues {
     quantity: number;
     prep_time: number;
     prices: TPrices;
+    ingridients: TIngridients;
 }
 
 const initialValues: IintiialValues = {
@@ -61,7 +68,8 @@ const initialValues: IintiialValues = {
     picture: null,
     quantity: 0,
     prep_time: 0,
-    prices: [] as TPrices
+    prices: [] as TPrices,
+    ingridients: []
 }
 
 // const FieldErrorMessage = ({ name: string }) => {
@@ -139,13 +147,17 @@ class CreateMenu extends React.Component<IProps, IState>
     private fileInputRef = React.createRef<HTMLInputElement>();
     private formikRef = React.createRef<FormikProps<IintiialValues>>();
     private categoryInputRef = React.createRef<HTMLSelectElement>();
+    // private ingridientsRef = React.createRef<HTMLInputElement>([]);
     constructor(props: IProps) {
         super(props);
         this.state = {
             isDragging: false,
             categories: [],
             categoryOptions: [],
-            key: 0
+            key: 0,
+            ingridients: [],
+            choosenIngridients: [],
+            isIngridientModalOpened: false,
         }
         this.handleImageLoad = this.handleImageLoad.bind(this);
         this.handleFileLoad = this.handleFileLoad.bind(this);
@@ -228,6 +240,31 @@ class CreateMenu extends React.Component<IProps, IState>
         }
     }
 
+    onIngridientsChange(e: React.SyntheticEvent<HTMLInputElement>, ingridient: IIngridient) {
+        const pastIngridients = this.formikRef.current?.values.ingridients;
+        let isExisted = false;
+        pastIngridients?.map((i: IIngridient) => {
+            if(ingridient.id == i.id)
+                isExisted = true;
+        })
+
+        if(isExisted) {
+            const newIngridients = pastIngridients?.filter((iingridient: IIngridient) => (iingridient.id == ingridient.id)?ingridient:null);
+            this.formikRef.current?.setFieldValue("ingridients", newIngridients);
+        }else {
+            const newIngridients = pastIngridients?.concat(ingridient);
+            this.formikRef.current?.setFieldValue("ingridients", newIngridients);
+        }
+        // debugger;
+    }
+
+    isIngridientChecked(ingridient: IIngridient) {
+        const formik = this.formikRef.current?.values;
+        const ingridients = formik?.ingridients;
+        return true;
+        // debugger;
+    }
+
     refreshFieldset = () => {
         this.setState({key: Math.random()});
     }
@@ -251,13 +288,29 @@ class CreateMenu extends React.Component<IProps, IState>
 
     }
 
+    openCreateIngidientModal = async() => {
+        this.setState({ isIngridientModalOpened: true });
+    }
+
+    closeCreateIngridientModal = () => {
+        this.setState({ isIngridientModalOpened: false });
+    }
+
+    addNewIngridientItem = (item: IIngridient) => {
+        const ingr = this.state.ingridients;
+        ingr.push(item);
+        this.setState({ ingridients:ingr });
+    }
+
     componentDidMount(): void {
         this.fetchCategories();
+        this.fetchIngridients();
     }
     
 
     render(): React.ReactNode {
         return (
+            <>
             <Modal 
                 isOpen={this.props.isOpen as boolean} 
                 onRequestClose={() => this.closeModal()}
@@ -388,6 +441,76 @@ class CreateMenu extends React.Component<IProps, IState>
                                             onChange={this.onCategoryChange}
                                         />
                                     </div>
+
+                                    {this.state.ingridients.length && 
+                                    <div className="border-top pt-3"> 
+                                        <h5>Ingridients:</h5>
+                                        <FieldArray
+                                            name="ingridients"
+                                            render={arrayHelpers => (
+                                                <div >
+                                                    {/* <small>{JSON.stringify(arrayHelpers)}</small> */}
+                                                    {this.state.ingridients.map((ingridient: IIngridient, index: number) => (
+                                                        <div className="form-check" key={ingridient.id}>
+                                                            <input
+                                                                name="ingridients"
+                                                                type="checkbox"
+                                                                className="form-check-input"
+                                                                value={ingridient.id}
+                                                                checked={values.ingridients.find((i: IIngridient) => i.id === ingridient.id) ? true: false}
+                                                                onChange={e => {
+                                                                    console.log(arrayHelpers);
+                                                                    console.log(e.target.checked)
+                                                                if (e.target.checked) {
+                                                                    arrayHelpers.push(ingridient);
+                                                                } else {
+                                                                    const idx = values.ingridients.indexOf(ingridient);
+                                                                    arrayHelpers.remove(idx);
+                                                                }
+                                                                }}
+                                                            />
+                                                            <span>{ingridient.name}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        />
+                                        <button 
+                                            className="btn btn-primary"
+                                            onClick={this.openCreateIngidientModal}
+                                        >
+                                            <GoPlus /> Add ingridient
+                                        </button>
+                                    </div>
+                                    }
+                                    
+
+                                    {/* INGRIDIENTS */}
+                                    {/* {this.state.ingridients.length && <div className="form-group border-top pt-3">
+                                            <h5>Ingridients:</h5>
+                                            <FieldArray>
+                                            {this.state.ingridients.map((ingridient: IIngridient, index: number) => (
+                                                <div className="form-check">
+                                                    <Field 
+                                                        name="ingridients"
+                                                        className="form-check-input" 
+                                                        aria-describedby="isVeganHelp"
+                                                        value={ingridient.id}
+                                                        type="checkbox"
+                                                        label={ingridient.name}
+                                                        ref={this.ingridientsRef}
+                                                        onChange={(e: React.SyntheticEvent<HTMLInputElement>) => this.onIngridientsChange(e, ingridient)}
+                                                        // checked={() => this.formikRef.current?.values.ingridients.includes(ingridient)}
+                                                    />
+                                                    <label className="form-check-label" htmlFor="flexCheckDefault">
+                                                        {ingridient.name}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                            </FieldArray>
+                                    </div> 
+                                    
+                                    }*/}
                                     
                                     {/* SHOW / HIDE ENTRIES / ERRORS */}
                                     <div className="d-none">
@@ -501,7 +624,15 @@ class CreateMenu extends React.Component<IProps, IState>
                     )}
                     </Formik>
                 </div>
-            </Modal>   
+            </Modal>
+            <CreateIngridient
+                isOpen={this.state.isIngridientModalOpened} 
+                type="modal" 
+                closeCreateIngridientModal={this.closeCreateIngridientModal}
+                addNewIngridientItem={this.addNewIngridientItem} 
+                style={{zIndex: 100000}}
+            />
+        </>   
         )
     }
 
@@ -549,6 +680,13 @@ class CreateMenu extends React.Component<IProps, IState>
                 })
             })
             this.setState({ categoryOptions: options });
+        }
+    }
+
+    fetchIngridients = async() => {
+        const items = await IngridientsAPI.getItems();
+        if(items) {
+            this.setState({ ingridients: items });
         }
     }
 }

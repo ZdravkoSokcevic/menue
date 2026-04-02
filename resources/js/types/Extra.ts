@@ -1,7 +1,11 @@
-export interface Extra
-{
+export interface IAPIExtra {
     name: string;
-    price: number;
+    price?: number;
+    description: string;
+}
+export interface IExtra extends IAPIExtra
+{
+    id: string;
 }
 
-export type Extras = Array<Extra>;
+export type TExtras = Array<IExtra>;

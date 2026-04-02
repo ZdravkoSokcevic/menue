@@ -9,7 +9,7 @@ import React, { ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { IoIosExit } from "react-icons/io";
-import { MdOutlineRestaurantMenu } from "react-icons/md";
+import { MdOutlineRestaurantMenu, MdOutlineRoomPreferences } from "react-icons/md";
 import { BiCategory } from "react-icons/bi";
 import { PiDeskBold } from "react-icons/pi";
 import { BiDish } from "react-icons/bi";
@@ -18,6 +18,7 @@ import { MdSettings } from 'react-icons/md';
 import { GrRestaurant } from "react-icons/gr";
 import { LiaAllergiesSolid } from "react-icons/lia";
 import { LuCookingPot } from "react-icons/lu";
+import { FaRegSquarePlus } from 'react-icons/fa6';
 
 
 interface IProps {
@@ -123,6 +124,29 @@ class Navigation extends React.Component<IProps, IState>
             Store.getState().app.defaultCompany?.id == '' 
             ? true
             : false;
+    }
+
+    // TODO: rewiew ingridients permissions
+    isAllowedToRenderExtras = (): boolean => {
+        let {defaultCompany} = this.props;
+        const userSettings = this.props.userSettings;
+        return userSettings && 
+            userSettings.isLoggedIn && 
+            userSettings.user.role == 'admin' && 
+            Store.getState().app.defaultCompany?.id == '' 
+            ? true
+            : false;
+    }
+
+    isAllowedToRenderPreferences = (): boolean => {
+        let {defaultCompany} = this.props;
+        const userSettings = this.props.userSettings;
+        return userSettings && 
+            userSettings.isLoggedIn && 
+            userSettings.user.role == 'admin' && 
+            Store.getState().app.defaultCompany?.id == '' 
+            ? true
+            : false; 
     }
 
     isAllowedToRenderTables = (): boolean => {
@@ -245,6 +269,21 @@ class Navigation extends React.Component<IProps, IState>
                         viewTransition
                     >
                         <LuCookingPot /> <span style={{lineHeight: '15px'}}>Ingridients</span>
+                    </Link>}
+                    {this.isAllowedToRenderExtras() || true && <Link
+                        to="/extras"
+                        className={this.props.location?.pathname === '/extras' ? 'nav-link active': 'nav-link'}
+                        viewTransition
+                    >
+                        <FaRegSquarePlus /> <span style={{lineHeight: '15px'}}>Extras</span>
+                    </Link>}
+
+                    {this.isAllowedToRenderPreferences() || true && <Link
+                        to="/preferences"
+                        className={this.props.location?.pathname === '/preferences' ? 'nav-link active': 'nav-link'}
+                        viewTransition
+                    >
+                        <MdOutlineRoomPreferences /> <span style={{lineHeight: '15px'}}>Preferences</span>
                     </Link>}
                     {/* <a href="/fap">FAP</a> */}
                     {/* <a href="/users">Users</a> */}

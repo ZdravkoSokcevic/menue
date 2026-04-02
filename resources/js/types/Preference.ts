@@ -1,8 +1,9 @@
-export interface Preference
+export interface IPreference
 {
+    id: string;
     name: string;
     description: string;
 }
 
-export type Preferences = Array<Preference>; 
+export type TPreferences = Array<IPreference>; 
 

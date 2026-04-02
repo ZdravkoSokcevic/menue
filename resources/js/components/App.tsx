@@ -32,6 +32,8 @@ import Tables from '@/pages/admin/Tables';
 import { disableLoading } from '@/reducers/appSlice';
 import Allergens from '@/pages/admin/Allergens';
 import Ingridients from '@/pages/admin/Ingridients';
+import Extras from '@/pages/admin/Extras';
+import Preferences from '@/pages/admin/Preferences';
 
 const pageVariants = {
     initial: { opacity: 0, x: "-100vw" },
@@ -62,6 +64,10 @@ const App: React.FC = () => {
     const [user, setUser] = useState(null as null | TUser);
 
     useEffect(() => {
+        // Disable all loaders after 5s on initial load
+        setTimeout(() => {
+            Store.dispatch(disableLoading({}));
+        }, 5000)
         // // debugger;
         getLoggedIn()
         loadStorageIntoStore();
@@ -166,6 +172,18 @@ const App: React.FC = () => {
                     <Route path='/ingridients' element = {
                         <ProtectedRoute>
                             <Ingridients />
+                        </ProtectedRoute>
+                    } />
+
+                    <Route path='/extras' element = {
+                        <ProtectedRoute>
+                            <Extras />
+                        </ProtectedRoute>
+                    } />
+
+                    <Route path='/preferences' element = {
+                        <ProtectedRoute>
+                            <Preferences />
                         </ProtectedRoute>
                     } />
 
