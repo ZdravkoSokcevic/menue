@@ -18,6 +18,7 @@ interface IProps {
     isOpen?: boolean;
     closeCreatePreferenceModal: () => void;
     addNewPreferenceItem: (item: IPreference) => void;
+    style?: {};
 };
 interface IState {
 };
@@ -70,7 +71,7 @@ class CreatePreference extends React.Component<IProps, IState>
                 onRequestClose={() => this.closeModal()}
                 overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
                 className="form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none"
-                style={{}}
+                style={this.props.style}
                 contentLabel="Example"
             >
                 <div className="form-page">

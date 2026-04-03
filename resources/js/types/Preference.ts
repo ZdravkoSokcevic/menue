@@ -1,3 +1,6 @@
+// USED IN MENU CREATE FORM
+export type IMenuPreferences = Array<string>;
+
 export interface IPreference
 {
     id: string;

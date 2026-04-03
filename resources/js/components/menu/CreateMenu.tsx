@@ -19,8 +19,13 @@ import FormikSearchSelect from "../FormikSelectSearch";
 import { Option } from "@/types/App";
 import { GoPlus } from 'react-icons/go'
 import IngridientsAPI from "@/api/IngridientsAPI";
-import { IIngridient, TIngridients } from "@/types/Ingridient";
+import { IIngridient, TIngridients, TMenuIngridients } from "@/types/Ingridient";
 import CreateIngridient from "../ingridient/CreateIngridient";
+import { IExtra, IMenuExtra, TExtras, TMenuExtras } from "@/types/Extra";
+import { IPreference, TPreferences } from "@/types/Preference";
+import CreatePreference from "../preferences/CreatePreference";
+import PreferencesAPI from "@/api/PreferencesAPI";
+import ExtrasAPI from "@/api/ExtrasAPI";
 
 interface IProps {
     // can be page or modal
@@ -39,8 +44,11 @@ interface IState {
     categoryOptions: Array<Option>;
     key: number;
     ingridients: TIngridients;
+    preferences: TPreferences;
     choosenIngridients: Array<string | number>;
     isIngridientModalOpened: boolean;
+    isPreferencesModalOpened: boolean;
+    extraOpts: TMenuExtras;
 };
 
 interface IPortionPrice {
@@ -59,7 +67,9 @@ interface IintiialValues {
     quantity: number;
     prep_time: number;
     prices: TPrices;
-    ingridients: TIngridients;
+    ingridients: TMenuIngridients;
+    preferences: Array<string>;
+    extras: TMenuExtras;
 }
 
 const initialValues: IintiialValues = {
@@ -69,7 +79,9 @@ const initialValues: IintiialValues = {
     quantity: 0,
     prep_time: 0,
     prices: [] as TPrices,
-    ingridients: []
+    ingridients: [],
+    preferences: [],
+    extras: []
 }
 
 // const FieldErrorMessage = ({ name: string }) => {
@@ -139,7 +151,19 @@ const menuValidationSchema = Yup.object().shape({
                 portion_size: Yup.number().min(0, 'Min price is 0').max(10000, 'Max price is 10000').required('Portion size is required!'),
                 price: Yup.number().min(0, 'Min price is 0').max(10000, 'Max price is 10000').required('Price is required!')
             })
-        )
+        ),
+    preferences: Yup.array()
+        .of(
+             Yup.number()
+                    .min(0, 'Invalid preference')
+                    .max(65536, 'Ivalid preference')
+        ),
+    extras: Yup.array().of(
+        Yup.object({
+            id: Yup.number().required(),
+            price: Yup.number().min(0).required()
+        })
+    )
 });
 
 class CreateMenu extends React.Component<IProps, IState>
@@ -156,8 +180,11 @@ class CreateMenu extends React.Component<IProps, IState>
             categoryOptions: [],
             key: 0,
             ingridients: [],
+            extraOpts: [],
+            preferences: [],
             choosenIngridients: [],
             isIngridientModalOpened: false,
+            isPreferencesModalOpened: false,
         }
         this.handleImageLoad = this.handleImageLoad.bind(this);
         this.handleFileLoad = this.handleFileLoad.bind(this);
@@ -240,23 +267,23 @@ class CreateMenu extends React.Component<IProps, IState>
         }
     }
 
-    onIngridientsChange(e: React.SyntheticEvent<HTMLInputElement>, ingridient: IIngridient) {
-        const pastIngridients = this.formikRef.current?.values.ingridients;
-        let isExisted = false;
-        pastIngridients?.map((i: IIngridient) => {
-            if(ingridient.id == i.id)
-                isExisted = true;
-        })
+    // onIngridientsChange(e: React.SyntheticEvent<HTMLInputElement>, ingridient: IIngridient) {
+    //     const pastIngridients = this.formikRef.current?.values.ingridients;
+    //     let isExisted = false;
+    //     pastIngridients?.map((i: IIngridient) => {
+    //         if(ingridient.id == i.id)
+    //             isExisted = true;
+    //     })
 
-        if(isExisted) {
-            const newIngridients = pastIngridients?.filter((iingridient: IIngridient) => (iingridient.id == ingridient.id)?ingridient:null);
-            this.formikRef.current?.setFieldValue("ingridients", newIngridients);
-        }else {
-            const newIngridients = pastIngridients?.concat(ingridient);
-            this.formikRef.current?.setFieldValue("ingridients", newIngridients);
-        }
-        // debugger;
-    }
+    //     if(isExisted) {
+    //         const newIngridients = pastIngridients?.filter((iingridient: IIngridient) => (iingridient.id == ingridient.id)?ingridient:null);
+    //         this.formikRef.current?.setFieldValue("ingridients", newIngridients);
+    //     }else {
+    //         const newIngridients = pastIngridients?.concat(ingridient);
+    //         this.formikRef.current?.setFieldValue("ingridients", newIngridients);
+    //     }
+    //     // debugger;
+    // }
 
     isIngridientChecked(ingridient: IIngridient) {
         const formik = this.formikRef.current?.values;
@@ -296,15 +323,31 @@ class CreateMenu extends React.Component<IProps, IState>
         this.setState({ isIngridientModalOpened: false });
     }
 
+    openCreatePreferencesModal = async() => {
+        this.setState({ isPreferencesModalOpened: true });
+    }
+
+    closeCreatePreferencesModal = async() => {
+        this.setState({ isPreferencesModalOpened: false });
+    }
+
     addNewIngridientItem = (item: IIngridient) => {
         const ingr = this.state.ingridients;
         ingr.push(item);
         this.setState({ ingridients:ingr });
     }
 
+    addNewPreferenceItem = (item: IPreference) => {
+        const pref = this.state.preferences;
+        pref.push(item);
+        this.setState({ preferences: pref });
+    }
+
     componentDidMount(): void {
         this.fetchCategories();
         this.fetchIngridients();
+        this.fetchPreferences();
+        this.fetchExtras();
     }
     
 
@@ -442,8 +485,9 @@ class CreateMenu extends React.Component<IProps, IState>
                                         />
                                     </div>
 
+                                    {/* INGRIDIENTS */}
                                     {this.state.ingridients.length && 
-                                    <div className="border-top pt-3"> 
+                                    <div className="border-top mt-3 pt-2"> 
                                         <h5>Ingridients:</h5>
                                         <FieldArray
                                             name="ingridients"
@@ -457,14 +501,12 @@ class CreateMenu extends React.Component<IProps, IState>
                                                                 type="checkbox"
                                                                 className="form-check-input"
                                                                 value={ingridient.id}
-                                                                checked={values.ingridients.find((i: IIngridient) => i.id === ingridient.id) ? true: false}
+                                                                checked={values.ingridients.find((i) => i === ingridient.id) ? true: false}
                                                                 onChange={e => {
-                                                                    console.log(arrayHelpers);
-                                                                    console.log(e.target.checked)
                                                                 if (e.target.checked) {
-                                                                    arrayHelpers.push(ingridient);
+                                                                    arrayHelpers.push(ingridient.id);
                                                                 } else {
-                                                                    const idx = values.ingridients.indexOf(ingridient);
+                                                                    const idx = values.ingridients.indexOf(ingridient.id);
                                                                     arrayHelpers.remove(idx);
                                                                 }
                                                                 }}
@@ -483,37 +525,119 @@ class CreateMenu extends React.Component<IProps, IState>
                                         </button>
                                     </div>
                                     }
+
+                                    {/* PREFERENCES */}
+                                    {this.state.preferences.length && 
+                                    <div className="border-top mt-3 pt-2"> 
+                                        <h5>Preferences:</h5>
+                                        <FieldArray
+                                            name="preferences"
+                                            render={arrayHelpers => (
+                                                <div >
+                                                    {/* <small>{JSON.stringify(arrayHelpers)}</small> */}
+                                                    {this.state.preferences.map((ingridient: IPreference, index: number) => (
+                                                        <div className="form-check" key={ingridient.id}>
+                                                            <input
+                                                                name="preferences"
+                                                                type="checkbox"
+                                                                className="form-check-input"
+                                                                value={ingridient.id}
+                                                                checked={values.preferences.find((i) => i === ingridient.id) ? true: false}
+                                                                onChange={e => {
+                                                                if (e.target.checked) {
+                                                                    arrayHelpers.push(ingridient.id);
+                                                                } else {
+                                                                    const idx = values.preferences.indexOf(ingridient.id);
+                                                                    arrayHelpers.remove(idx);
+                                                                }
+                                                                }}
+                                                            />
+                                                            <span>{ingridient.name}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        />
+                                        <button 
+                                            className="btn btn-primary"
+                                            onClick={this.openCreatePreferencesModal}
+                                        >
+                                            <GoPlus /> Add preference
+                                        </button>
+                                    </div>
+                                    }
                                     
 
-                                    {/* INGRIDIENTS */}
-                                    {/* {this.state.ingridients.length && <div className="form-group border-top pt-3">
-                                            <h5>Ingridients:</h5>
-                                            <FieldArray>
-                                            {this.state.ingridients.map((ingridient: IIngridient, index: number) => (
-                                                <div className="form-check">
-                                                    <Field 
-                                                        name="ingridients"
-                                                        className="form-check-input" 
-                                                        aria-describedby="isVeganHelp"
-                                                        value={ingridient.id}
-                                                        type="checkbox"
-                                                        label={ingridient.name}
-                                                        ref={this.ingridientsRef}
-                                                        onChange={(e: React.SyntheticEvent<HTMLInputElement>) => this.onIngridientsChange(e, ingridient)}
-                                                        // checked={() => this.formikRef.current?.values.ingridients.includes(ingridient)}
-                                                    />
-                                                    <label className="form-check-label" htmlFor="flexCheckDefault">
-                                                        {ingridient.name}
-                                                    </label>
+                                    {this.state.extraOpts.map((opt, ind: number) => {
+                                        const index = values.extras.findIndex(p => p.id === opt.id);
+                                        const isChecked = index !== -1;
+
+                                        return (
+                                            <div key={opt.id} className="row border-top mt-3 pt-2 mb-2 align-items-center">
+                                                <h5 className="col-12">Extras:</h5>
+                                                {/* CHECKBOX */}
+                                                <div className="col-md-6 form-group">
+                                                    <div className="form-check">
+                                                        <input
+                                                            type="checkbox"
+                                                            className="form-check-input form-control"
+                                                            checked={isChecked}
+                                                            onChange={(e) => {
+                                                                if (e.target.checked) {
+                                                                    setFieldValue('extras', [
+                                                                        ...values.extras,
+                                                                        { id: opt.id, price: 0 }
+                                                                    ]);
+                                                                } else {
+                                                                    setFieldValue(
+                                                                        'extras',
+                                                                        values.extras.filter(p => p.id !== opt.id)
+                                                                    );
+                                                                }
+                                                            }}
+                                                        />
+                                                        <label className="form-check-label">
+                                                            {opt.name}
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                            ))}
-                                            </FieldArray>
-                                    </div> 
-                                    
-                                    }*/}
+
+                                                {/* PRICE INPUT (only if checked) */}
+                                                {false && (<div className="col-md-12">
+                                                    {isChecked && (
+                                                        <Field
+                                                            type="number"
+                                                            name={`extras.${ind}.price`}
+                                                            className="form-control"
+                                                            placeholder="Enter price"
+                                                        />
+
+
+                                                    )}
+                                                </div>)}
+
+                                                {true && isChecked && (
+                                                    <div className="col-md-6">
+                                                        <label htmlFor="pricePrice"> Price: </label>
+                                                        <div className="input-group">
+                                                            <Field 
+                                                                name={`extras.${index}.price`}
+                                                                className="form-control"
+                                                                aria-describedby="prepPriceHelp"
+                                                            />
+                                                            <div className="input-group-append">
+                                                                <span className="input-group-text" id="basic-addon2">USD</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                            </div>
+                                        );
+                                    })}
                                     
                                     {/* SHOW / HIDE ENTRIES / ERRORS */}
-                                    <div className="d-none">
+                                    <div className="">
                                         {'Is submitting: ' + isSubmitting}<br />
                                         {'Is valid: ' + isValid} <br />
                                         {'Is dirty: ' + dirty} <br />
@@ -632,6 +756,13 @@ class CreateMenu extends React.Component<IProps, IState>
                 addNewIngridientItem={this.addNewIngridientItem} 
                 style={{zIndex: 100000}}
             />
+            <CreatePreference
+                isOpen={this.state.isPreferencesModalOpened}
+                type="modal"
+                closeCreatePreferenceModal={this.closeCreatePreferencesModal}
+                addNewPreferenceItem={this.addNewPreferenceItem}
+                style={{zIndex: 100000}}
+            />
         </>   
         )
     }
@@ -652,6 +783,7 @@ class CreateMenu extends React.Component<IProps, IState>
         // debugger;
         Store.dispatch(enableLoading({}));
         const response = await MenuAPI.createMenu(data as TMenu);
+        // const response = {success: false, data: {} };
         setTimeout(() => {
             Store.dispatch(disableLoading({}));
         })
@@ -688,6 +820,32 @@ class CreateMenu extends React.Component<IProps, IState>
         if(items) {
             this.setState({ ingridients: items });
         }
+    }
+
+    fetchPreferences = async() => {
+        const items = await PreferencesAPI.getItems();
+        if(items) {
+            this.setState({ preferences: items });
+        }
+    }
+
+    fetchExtras = async() => {
+        const items = await ExtrasAPI.getItems();
+        // don't need this here
+        // if(items) {
+        //     this.formikRef.current?.setFieldValue('extras', items);
+            // this.setState({ extras: items });
+        // }
+
+        const opts: TMenuExtras = [];
+        const extraOpts = items?.map((item: IExtra) => {
+            opts.push({
+                id: item.id,
+                name: item.name,
+                price: 0
+            } as IMenuExtra)
+        })
+        this.setState({ extraOpts: opts });
     }
 }
 

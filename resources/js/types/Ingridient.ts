@@ -1,5 +1,7 @@
 import { TAllergens } from "./Allergen";
 
+export type TMenuIngridients = Array<string>;
+
 export interface IIngridient
 {
     id: string;
