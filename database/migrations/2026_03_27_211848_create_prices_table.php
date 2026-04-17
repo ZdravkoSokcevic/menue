@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
             $table->integer('price');
-            $table->string('name');
+            // extras does have their own name
+            $table->string('name')->nullable();
             $table->bigInteger('currency_id')->unsigned()->nullable();
             // default menu type
-            $table->tinyInteger('type')->default(1);
+            // 2 extras
+            // $table->tinyInteger('type')->default(1);
             $table->timestamps();
         });
 

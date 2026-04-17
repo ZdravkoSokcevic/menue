@@ -17,8 +17,8 @@ class Extra extends BaseModel
         return $this->belongsToMany(Menu::class, 'menu_extras');
     }
 
-    public function price(): BelongsTo {
-        return $this->belongsTo(Price::class);
+    public function prices(): BelongsToMany {
+        return $this->belongsToMany(Price::class, 'menu_extras', 'price_id');
     }
 
     public function ingridients(): BelongsToMany 

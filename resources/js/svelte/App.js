@@ -2,6 +2,7 @@ import { mount, unmount } from 'svelte';
 import Navbar from './components/Navbar.svelte'
 import MenuItems from './components/MenuItems.svelte';
 import MenuDetails from './components/MenuDetails.svelte'
+import CartPage from './components/CartPage.svelte'
 import { globalState } from './store.svelte.js'
 
 
@@ -50,6 +51,15 @@ function initSvelteApp() {
         props: { menuItem }
       });
     }
+  }
+
+  const cartDetailsTarget = document.getElementById('cart-details');
+  if(cartDetailsTarget && !cartDetailsTarget.dataset.mounted) {
+    mount(CartPage, {
+      target: cartDetailsTarget,
+      // TODO: add company info
+      props: []
+    });
   }
 
 }

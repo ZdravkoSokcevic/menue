@@ -25,9 +25,9 @@
         </button>
     </div>
 
-    <div class="flex-1 overflow-y-auto p-6">
+    <div class="flex-1 overflow-y-auto p-6 pt-0">
         {#each cart.items as item (item.id)}
-            <div class="group mb-4 flex items-center gap-4">
+            <div class="pt-6 group mb-4 flex items-center gap-4 border-t border-gray-200">
                 <img
                     src="/storage/{item.picture}"
                     alt={item.name}
@@ -70,18 +70,55 @@
             </div>
             <div class="mt-3 flex items-end justify-between">
                 <div class="text-sm text-gray-500">
-                    ${item.price} each
+                    ${item.selectedPortion.price} each
                 </div>
 
                 <div class="text-right">
                     <p class="text-sm text-gray-400">
-                        {item.quantity} × ${item.price}
+                        {item.quantity} × ${item.selectedPortion.price}
                     </p>
                     <p class="text-base font-extrabold text-gray-900">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ${(item.selectedPortion.price * item.quantity).toFixed(2)}
                     </p>
                 </div>
             </div>
+            {#if item.extras && item.extras.length}
+                <div class="mt-3">
+                    <h6 class="text-sm text-gray-500 mt-4">Extras:</h6>
+                    {#each item.extras as extra}
+                        <div class="flex items-end justify-between">
+                            <div class="text-sm text-gray-500">
+                                ${extra.prices[0].price}
+                            </div>
+
+                            <div class="text-right">
+                                <p class="text-sm text-gray-400">
+                                    {item.quantity} × ${extra.prices[0].price}
+                                </p>
+                                <p class="text-base font-extrabold text-gray-900">
+                                    ${(extra.prices[0].price * item.quantity).toFixed(2)}
+                                </p>
+                            </div>
+                        </div>
+                    {/each}
+                </div>
+            {/if}
+            <!-- TOTAL FOR ITEM -->
+            <div class="mt-3 flex items-end justify-between border-t border-gray-200">
+                <div class="text-sm text-bold-500">
+                    TOTAL: 
+                </div>
+
+                <div class="text-right">
+                    <p class="text-sm text-gray-400">
+                        
+                    </p>
+                    <p class="text-base font-extrabold text-gray-900">
+                        {cart.totalSingle(item).toFixed(2)}
+                    </p>
+                </div>
+            </div>
+
         {:else}
             <div class="flex h-full flex-col items-center justify-center text-center">
                 <span class="mb-4 text-4xl">🛒</span>
@@ -96,7 +133,7 @@
         {/each}
     </div>
 
-    {#if cart.items.length > 0}
+    {#if cart.items && cart.items.length > 0}
         <div class="border-t border-gray-100 bg-gray-50 p-6">
             <div class="mb-6 flex items-end justify-between">
                 <span class="text-sm font-bold uppercase tracking-widest text-gray-500">Total</span>

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Ingridient extends BaseModel
 {
+    protected $table = 'ingridients';
     protected $fillable = [
         'name',
         'is_vegan'

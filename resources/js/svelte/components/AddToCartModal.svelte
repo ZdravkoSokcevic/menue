@@ -6,17 +6,19 @@
     export let close;
 
     let quantity = 1;
-    let selectedPortion = null;
+    let selectedPortion = item.portions[0];
     let extras = [];
+    let preferences = [];
     let note = '';
 
     // Example data (you'll pass real later)
     let portions = item.portions || [];
     let availableExtras = item.extras || [];
+    let availablePreferences = item.preferences || [];
 
-    $: basePrice = selectedPortion ? selectedPortion.price : item.price;
+    $: basePrice = selectedPortion ? selectedPortion.price : item.portions[0].price;
 
-    $: extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
+    $: extrasTotal = extras.reduce((sum, e) => sum + (e && e.prices[0] && e.prices[0].price && !isNaN(e.prices[0].price)) ? e.prices[0].price : 0, 0);
 
     $: total = (basePrice + extrasTotal) * quantity;
 
@@ -27,18 +29,26 @@
             extras = [...extras, extra];
         }
     }
-    console.log('Add modal');
+
+    function togglePreference(preference) {
+        if(preferences.includes(preference)) {
+            preferences = preferences.filter(e => e !== preference);
+        }else preferences = [...preferences, preference]
+    }
 
     function addToCart() {
         console.log('Add');
         cart.add({
             item,
             quantity,
-            portion: selectedPortion,
-            extras,
+            selectedPortion: selectedPortion,
+            extras: extras,
+            preferences: preferences,
             note,
             total
         });
+
+        quantity = 0;
 
         close();
     }
@@ -93,6 +103,27 @@
             </div>
         {/if}
 
+        <!-- PREFERENCES -->
+        {#if availablePreferences.length}
+            <div>
+                <h3 class="font-semibold mb-2">Preferences</h3>
+                <div class="space-y-2">
+                    {#each availablePreferences as preference}
+                        <label class="flex justify-between items-center border rounded-xl p-3 cursor-pointer">
+                            <span>{preference.name}</span>
+                            <div class="flex items-center gap-3">
+                                <input
+                                    type="checkbox"
+                                    checked={preferences.includes(preference)}
+                                    onchange={() => togglePreference(preference)}
+                                />
+                            </div>
+                        </label>
+                    {/each}
+                </div>
+            </div>
+        {/if}
+
         <!-- EXTRAS -->
         {#if availableExtras.length}
             <div>
@@ -102,7 +133,7 @@
                         <label class="flex justify-between items-center border rounded-xl p-3 cursor-pointer">
                             <span>{extra.name}</span>
                             <div class="flex items-center gap-3">
-                                <span>${extra.price}</span>
+                                <span>${(extra && extra.prices && extra.prices[0] && extra.prices[0].price) ? extra.prices[0].price : 0}</span>
                                 <input
                                     type="checkbox"
                                     checked={extras.includes(extra)}
@@ -143,6 +174,47 @@
                 >+</button>
             </div>
         </div>
+
+        <!-- PRICES -->
+        <div class="flex flex-col border-t pt-4">
+            {#if selectedPortion}
+                <div class="w-full flex justify-between items-center">
+
+                    <span class="font-semibold">{selectedPortion.name}</span>
+                    
+                    <div class="flex items-center gap-3">
+                        <span class="price">${selectedPortion.price}</span>
+                    </div>
+                </div>
+            {/if}
+            {#each preferences as preference}
+                <div class="w-full flex justify-between items-center">
+                <span class="font-semibold">{preference.name}</span>
+                
+                <div class="flex items-center gap-3">
+                    <span class="price">$0</span>
+                </div>
+                </div>
+            {/each}
+            {#each extras as extra}
+                <div class="w-full flex justify-between items-center">
+                <span class="font-semibold">{extra.name}</span>
+                
+                <div class="flex items-center gap-3">
+                    <span class="price">${(extra && extra.prices && extra.prices[0] && extra.prices[0].price) ? extra.prices[0].price : 0}</span>
+                </div>
+                </div>
+            {/each}
+            <!-- TOTAL PRICE -->
+            <div class="w-full flex justify-between items-center border-t">
+                <span class="font-semibold">TOTAL:</span>
+
+                <div class="flex items-center gap-3">
+                    <span class="price">${(!isNaN(total)) ? total : 0}</span>
+                </div>
+            </div>
+        </div>
+        
 
     </div>
 

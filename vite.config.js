@@ -50,7 +50,11 @@ export default defineConfig({
     server: {
         fs: {
             allow: ['..']
-        }
+        },
+        watch: {
+            // Ignore everything EXCEPT .js and .ts files
+            ignored: ['!**/*.js', '!**/*.ts'],
+        },
         // host: true,
         // strictPort: true,
         // port: 8080

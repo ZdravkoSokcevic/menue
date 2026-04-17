@@ -26,6 +26,7 @@ import { IPreference, TPreferences } from "@/types/Preference";
 import CreatePreference from "../preferences/CreatePreference";
 import PreferencesAPI from "@/api/PreferencesAPI";
 import ExtrasAPI from "@/api/ExtrasAPI";
+import { TPrices } from "@/types/Prices";
 
 interface IProps {
     // can be page or modal
@@ -50,15 +51,6 @@ interface IState {
     isPreferencesModalOpened: boolean;
     extraOpts: TMenuExtras;
 };
-
-interface IPortionPrice {
-    name: string;
-    portion_size: number;
-    portion_unit?: string;
-    price: number;
-}
-
-type TPrices = Array<IPortionPrice>;
 
 interface IintiialValues {
     name: string;
@@ -125,7 +117,7 @@ const menuValidationSchema = Yup.object().shape({
             const { width, height }: WidthHeight = await MediaHelper.getFileDimensions(value as File);
             const aspectRatio = width / height;
             // Check if the aspect ratio is approximately 16/9 (approx due to potential float errors)
-            return Math.abs(aspectRatio - (4 / 3)) < 0.01; 
+            return Math.abs(aspectRatio - (4 / 3)) < 0.01;
             } catch (error) {
             return false; // Return false if dimensions cannot be read
             }
@@ -163,7 +155,7 @@ const menuValidationSchema = Yup.object().shape({
             id: Yup.number().required(),
             price: Yup.number().min(0).required()
         })
-    )
+    ),
 });
 
 class CreateMenu extends React.Component<IProps, IState>
@@ -189,7 +181,7 @@ class CreateMenu extends React.Component<IProps, IState>
         this.handleImageLoad = this.handleImageLoad.bind(this);
         this.handleFileLoad = this.handleFileLoad.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
-        
+
     }
 
     getIsOpen() {
@@ -349,13 +341,13 @@ class CreateMenu extends React.Component<IProps, IState>
         this.fetchPreferences();
         this.fetchExtras();
     }
-    
+
 
     render(): React.ReactNode {
         return (
             <>
-            <Modal 
-                isOpen={this.props.isOpen as boolean} 
+            <Modal
+                isOpen={this.props.isOpen as boolean}
                 onRequestClose={() => this.closeModal()}
                 overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
                 className="form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none"
@@ -368,7 +360,7 @@ class CreateMenu extends React.Component<IProps, IState>
                     <h2>Create menu</h2>
                     <button className="close-btn" onClick={() => this.closeModal()}>x</button>
 
-                    <Formik 
+                    <Formik
                         initialValues={initialValues}
                         validationSchema={menuValidationSchema}
                         onSubmit={this.onSubmit}
@@ -432,11 +424,11 @@ class CreateMenu extends React.Component<IProps, IState>
                                     {/* PREPARATION TIME */}
                                     <div className="form-group">
                                         <label>Preparation time:</label>
-                                        <Field 
-                                            name="prep_time" 
-                                            className="form-control" 
-                                            id="quantity" 
-                                            aria-describedby="prepTimeHelp" 
+                                        <Field
+                                            name="prep_time"
+                                            className="form-control"
+                                            id="quantity"
+                                            aria-describedby="prepTimeHelp"
                                             placeholder="Preparation time"
                                         />
                                         {errors.prep_time && touched.prep_time ? (
@@ -448,11 +440,12 @@ class CreateMenu extends React.Component<IProps, IState>
                                     <div className="col-12">
                                         <h5>Test</h5>
                                     </div>
-                                    
+
                                 </div>
 
                                 <div className="col-md-6 p-2">
 
+                                    {/* NAME */}
                                     <div className="form-group">
                                         <label>Name</label>
                                         <Field name="name" className="form-control" placeholder="Enter name of your menu" aria-describedby="nameHelp"/>
@@ -475,7 +468,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                     {/* CATEGORY */}
                                     <div className="form-group">
                                         <label>Category</label>
-                                        <FormikSearchSelect 
+                                        <FormikSearchSelect
                                             options={(this.state.categoryOptions as unknown) as Option[]}
                                             name="category"
                                             id="category"
@@ -486,8 +479,8 @@ class CreateMenu extends React.Component<IProps, IState>
                                     </div>
 
                                     {/* INGRIDIENTS */}
-                                    {this.state.ingridients.length && 
-                                    <div className="border-top mt-3 pt-2"> 
+                                    {this.state.ingridients.length &&
+                                    <div className="border-top mt-3 pt-2">
                                         <h5>Ingridients:</h5>
                                         <FieldArray
                                             name="ingridients"
@@ -517,7 +510,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                                 </div>
                                             )}
                                         />
-                                        <button 
+                                        <button
                                             className="btn btn-primary"
                                             onClick={this.openCreateIngidientModal}
                                         >
@@ -527,8 +520,8 @@ class CreateMenu extends React.Component<IProps, IState>
                                     }
 
                                     {/* PREFERENCES */}
-                                    {this.state.preferences.length && 
-                                    <div className="border-top mt-3 pt-2"> 
+                                    {this.state.preferences.length &&
+                                    <div className="border-top mt-3 pt-2">
                                         <h5>Preferences:</h5>
                                         <FieldArray
                                             name="preferences"
@@ -558,7 +551,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                                 </div>
                                             )}
                                         />
-                                        <button 
+                                        <button
                                             className="btn btn-primary"
                                             onClick={this.openCreatePreferencesModal}
                                         >
@@ -566,8 +559,8 @@ class CreateMenu extends React.Component<IProps, IState>
                                         </button>
                                     </div>
                                     }
-                                    
 
+                                    {/* EXTRAS */}
                                     {this.state.extraOpts.map((opt, ind: number) => {
                                         const index = values.extras.findIndex(p => p.id === opt.id);
                                         const isChecked = index !== -1;
@@ -620,7 +613,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                                     <div className="col-md-6">
                                                         <label htmlFor="pricePrice"> Price: </label>
                                                         <div className="input-group">
-                                                            <Field 
+                                                            <Field
                                                                 name={`extras.${index}.price`}
                                                                 className="form-control"
                                                                 aria-describedby="prepPriceHelp"
@@ -635,7 +628,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                             </div>
                                         );
                                     })}
-                                    
+
                                     {/* SHOW / HIDE ENTRIES / ERRORS */}
                                     <div className="">
                                         {'Is submitting: ' + isSubmitting}<br />
@@ -663,13 +656,13 @@ class CreateMenu extends React.Component<IProps, IState>
                                 </div>
 
                                 {/* BOTTOM FULL WIDTH */}
+                                {/* PORTIONS / PRICES */}
                                 <div className="col-12 pb-3">
-                                    {/* PORTIONS / PRICES */}
                                     <div className="border-top container">
                                         <div className="row">
-                                            
-                                            <label htmlFor="pricesFor">Portions</label> 
-                                            <FieldArray 
+
+                                            <label htmlFor="pricesFor">Portions</label>
+                                            <FieldArray
                                                 key={this.state.key}
                                                 name="prices"
                                                 render={arrayHelpers => (
@@ -679,7 +672,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                                                 <>
                                                                     <div className="form-group col-md-5 ps-0 pe-0">
                                                                         <label htmlFor="priceName">Portion name</label>
-                                                                        <Field 
+                                                                        <Field
                                                                             name={`prices.${index}.name`}
                                                                             className="form-control"
                                                                             aria-describedby="prepNameHelp"
@@ -688,7 +681,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                                                     <div className="form-group col-md-4 ps-1 pe-1">
                                                                         <label htmlFor="portionSize"> Portion Size: </label>
                                                                         <div className="input-group">
-                                                                            <Field 
+                                                                            <Field
                                                                                 name={`prices.${index}.portion_size`}
                                                                                 className="form-control"
                                                                                 aria-describedby="portionSizeHelp"
@@ -701,7 +694,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                                                     <div className="form-group col-md-3 ps-0 pe-0">
                                                                         <label htmlFor="pricePrice"> Price: </label>
                                                                         <div className="input-group">
-                                                                            <Field 
+                                                                            <Field
                                                                                 name={`prices.${index}.price`}
                                                                                 className="form-control"
                                                                                 aria-describedby="prepPriceHelp"
@@ -715,14 +708,14 @@ class CreateMenu extends React.Component<IProps, IState>
                                                                 </>
 
 
-                                                                
+
                                                             ))
                                                         ) : (
 
                                                         <></>
 
                                                         )}
-                                                            <button type="button" 
+                                                            <button type="button"
                                                             onClick={() => {
                                                                 arrayHelpers.push({name: '', price: 0})
                                                                 this.formikRef.current?.setFieldTouched('prices');
@@ -732,7 +725,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                                             >
                                                             <GoPlus />
                                                             {/* show this when user has removed all friends from the list */}
-                                                            
+
                                                             Add a portion
 
                                                         </button>
@@ -750,10 +743,10 @@ class CreateMenu extends React.Component<IProps, IState>
                 </div>
             </Modal>
             <CreateIngridient
-                isOpen={this.state.isIngridientModalOpened} 
-                type="modal" 
+                isOpen={this.state.isIngridientModalOpened}
+                type="modal"
                 closeCreateIngridientModal={this.closeCreateIngridientModal}
-                addNewIngridientItem={this.addNewIngridientItem} 
+                addNewIngridientItem={this.addNewIngridientItem}
                 style={{zIndex: 100000}}
             />
             <CreatePreference
@@ -763,7 +756,7 @@ class CreateMenu extends React.Component<IProps, IState>
                 addNewPreferenceItem={this.addNewPreferenceItem}
                 style={{zIndex: 100000}}
             />
-        </>   
+        </>
         )
     }
 
@@ -778,7 +771,11 @@ class CreateMenu extends React.Component<IProps, IState>
             quantity: event.quantity,
             category_id: event.category,
             company_id: Store.getState().app.defaultCompany?.id,
-            prep_time: event.prep_time
+            prep_time: event.prep_time,
+            extras: event.extras,
+            preferences: event.preferences,
+            prices: event.prices,
+            ingridients: event.ingridients
         }
         // debugger;
         Store.dispatch(enableLoading({}));

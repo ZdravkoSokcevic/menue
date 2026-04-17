@@ -3,11 +3,10 @@
     import Cart from './Cart.svelte'; // Simply import it here
     
     let isCartOpen = $state(false);
-    console.log('Global code:', globalState.code);
 </script>
 
 <nav class="navbar">
-    <div class="logo tracking-tighter">MyStore</div>
+    <div class="logo tracking-tighter"><a href="/shorts/{globalState.code}" {...{'wire:navigate': true }}>MyStore</a></div>
     
     <div class="nav-links">
         <a href="/shorts/{globalState.code}" wire:navigate>Home</a>

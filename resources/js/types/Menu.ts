@@ -1,7 +1,9 @@
 import { AxiosResponse } from "axios";
 import { TComponentProps } from "./TComponentProps";
-import { Ingridients } from "./Ingridient";
-import { Preferences } from "./Preference";
+import { TIngridients } from "./Ingridient";
+import { TPreferences } from "./Preference";
+import { TExtras } from "./Extra";
+import { TPrices } from "./Prices";
 
 export interface TMenu extends TComponentProps{
     name: string;
@@ -11,8 +13,12 @@ export interface TMenu extends TComponentProps{
     company_id?: string;
     category_id: string;
     prep_time: number | string;
-    ingridients?: Ingridients;
-    preferents: Preferences
+    ingridients?: TIngridients;
+    preferences: TPreferences;
+    extras?: TExtras;
+    portions?: TPrices;
+    // Used as key in EditMenu submit
+    prices?: TPrices;
 }
 
 export interface MenuCreateResponseItem {

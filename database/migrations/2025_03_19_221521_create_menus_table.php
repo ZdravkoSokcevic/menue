@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('quantity');
             $table->string('picture')->nullable();
             $table->tinyInteger('prep_time')->nullable();
+            $table->tinyInteger('is_liquid')->default(0);
             $table->bigInteger('company_id')->unsigned()->nullable();
             $table->bigInteger('category_id')->unsigned()->nullable();
             $table->timestamps();

@@ -42,7 +42,8 @@ class MenuCreateRequest extends FormRequest
                 'nullable',
                 Rule::exists('categories', 'id')
             ],
-            'prep_time' => 'required|numeric'
+            'prep_time' => 'required|numeric',
+            // TODO: add validation for extras, preferences, prices, ingridients
         ];
     }
 }

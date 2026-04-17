@@ -26,7 +26,7 @@
             </h1>
 
             <p class="mt-1 text-lg font-semibold">
-                ${menuItem.price}
+                ${ (menuItem && menuItem.portions && menuItem.portions[0]) ? menuItem.portions[0].price : 0}
             </p>
         </div>
 
@@ -47,7 +47,7 @@
 
         <!-- PRICE -->
         <p class="mt-3 text-2xl font-extrabold text-gray-900">
-            ${menuItem.price ?? ''}
+            ${ (menuItem && menuItem.portions && menuItem.portions[0]) ? menuItem.portions[0].price : 0}
         </p>
 
         <!-- DESCRIPTION -->
@@ -56,16 +56,37 @@
         </p>
 
         <!-- ALLERGENS -->
-        {#if menuItem.allergens && menuItem.allergens.length}
+        {#if menuItem.ingridients && menuItem.ingridients.length}
             <div class="mt-6">
                 <h4 class="mb-2 text-sm font-bold text-gray-500 uppercase tracking-wider">
                     Allergens
                 </h4>
 
                 <div class="flex flex-wrap gap-2">
-                    {#each menuItem.allergens as allergen}
+                    {#each menuItem.ingridients as ingridient}
+                    {#if ingridient.allergens && ingridient.allergens.length}
+                        {#each ingridient.allergens as allergen}
                         <span class="rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-600">
-                            {allergen}
+                            {allergen.name}
+                        </span>
+                        {/each}
+                    {/if}
+                    {/each}
+                </div>
+            </div>
+        {/if}
+
+        <!-- INGRIDIENTS -->
+        {#if menuItem.ingridients && menuItem.ingridients.length}
+            <div class="mt-6">
+                <h4 class="mb-2 text-sm font-bold text-gray-500 uppercase tracking-wider">
+                    Ingridients
+                </h4>
+
+                <div class="flex flex-wrap gap-2">
+                    {#each menuItem.ingridients as ingridient}
+                        <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600">
+                            {ingridient.name}
                         </span>
                     {/each}
                 </div>

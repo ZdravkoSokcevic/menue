@@ -11,9 +11,8 @@ class Price extends BaseModel
     protected $fillable = [
         'name',
         'price',
-        'portion_size',
         'currency_id',
-        // 1 - for menus, 2 - for extras
-        'type'
+        // // 1 - for menus, 2 - for extras
+        // 'type'
     ];
 }

@@ -1,5 +1,5 @@
 // USED IN MENU CREATE FORM
-export type IMenuPreferences = Array<string>;
+export type TMenuPreferences = Array<string>;
 
 export interface IPreference
 {

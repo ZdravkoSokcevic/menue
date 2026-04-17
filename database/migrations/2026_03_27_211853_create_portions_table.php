@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('portions', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
             $table->bigInteger('menu_id')
                 ->unsigned()
                 ->nullable()

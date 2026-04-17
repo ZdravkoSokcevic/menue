@@ -14,7 +14,7 @@ class DetailsPage extends Component
     public $code;
     public function mount(Request $r, $id)
     {
-        $item = Menu::with('category')->whereId($id)->first();
+        $item = Menu::with(['category', 'extras', 'extras.prices', 'preferences', 'ingridients', 'ingridients.allergens' ,'portions'])->whereId($id)->first();
         if(!$item)
             return abort(403);
 

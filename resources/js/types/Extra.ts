@@ -1,6 +1,9 @@
+import { IPrice } from "./Prices";
+
 export interface IAPIExtra {
     name: string;
     price?: number;
+    prices: Array<IPrice>;
     description: string;
 }
 
@@ -8,7 +11,8 @@ export interface IAPIExtra {
 export interface IMenuExtra {
     id: string;
     name: string;
-    price: number;
+    price?: number;
+    prices?: Array<IPrice>;
 }
 
 export interface IExtra extends IAPIExtra
