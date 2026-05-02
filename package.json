@@ -64,10 +64,12 @@
         "redux-persist": "^6.0.0",
         "simple-react-validator": "^1.6.2",
         "styled-components": "^6.1.19",
+        "svelte": "^5.55.1",
         "svelte-persisted-store": "^0.12.0",
         "swiper": "^11.2.6",
         "tailwind-merge": "^2.5.5",
         "tailwindcss-animate": "^1.0.7",
+        "vite-plugin-svelte-monorepo": "github:sveltejs/vite-plugin-svelte",
         "yup": "^1.7.1",
         "ziggy-js": "^2.4.2"
     },

@@ -3,6 +3,7 @@
     import { fly, fade } from 'svelte/transition';
 
     let { closeCart } = $props();
+    console.log(cart.items);
 </script>
 
 <div
@@ -27,6 +28,7 @@
 
     <div class="flex-1 overflow-y-auto p-6 pt-0">
         {#each cart.items as item (item.id)}
+            <div class="hidden">{JSON.stringify(item)}</div>
             <div class="pt-6 group mb-4 flex items-center gap-4 border-t border-gray-200">
                 <img
                     src="/storage/{item.picture}"
@@ -70,7 +72,7 @@
             </div>
             <div class="mt-3 flex items-end justify-between">
                 <div class="text-sm text-gray-500">
-                    ${item.selectedPortion.price} each
+                    ${item && item.selectedPortion && item.selectedPortion.price ? item.selectedPortion.price : 0} each
                 </div>
 
                 <div class="text-right">

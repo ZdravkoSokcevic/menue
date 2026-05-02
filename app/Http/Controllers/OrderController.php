@@ -29,18 +29,42 @@ class OrderController extends Controller
     public function create(OrderCreateRequest $r)
     {
         $data = $r->only((new Order)->getFillable());
-        $success = $this->orderRepository->store($data);
-        if($success)
+
+        $res = $this->orderRepository->store($data);
+        if($res && $res instanceof App\Models\Order) {
+            // Store order items
+            foreach($r->items as $item) {
+                // create menu extras
+                $selectedExtras = [];
+                foreach($item['extras'] as $extra) {
+                    $selectedExtras[] = $extra;
+                }
+                $res->items()->extra()->sync($selectedExtras);
+                // create menu preference
+                $selectedPreferences = [];
+                foreach($item['preferences'] as $preference) {
+                    $selectedPreferences[] = $preference;
+                }
+                $res->items()->preferences()->sync($preference);
+
+                // create notes
+                // $note = OrderModification::insert([
+
+                // ]);
+            }
+            $row = Order::with(['items', 'items.extras', 'items.preferences'])
+                ->where('id', $res->id)->first();
             return new CreateResponse(true, ['data'=> $success]);
+        }
         else return new CreateResponse(false);
     }
 
     public function edit($id, OrderEditRequest $r): EditResponse
     {
-        $success = $this->orderRepository->edit($id, $r->only((new Order)->getFillable()));
-        if($success)
-            return new EditResponse(true, ['row' => $success]);
-        return new EditResponse(false);
+        $res = $this->orderRepository->edit($id, $r->only((new Order)->getFillable()));
+        if($res)    
+            return new EditResponse(true, ['row' => $res]);
+        else return new EditResponse(false);
     }
 
     public function delete($id)

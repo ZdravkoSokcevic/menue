@@ -37,7 +37,9 @@
     }
 
     function addToCart() {
-        console.log('Add');
+        console.log('### ADD TO CART ###')
+        console.log({item}, {selectedPortion}, {extras});
+        console.log('### /// ADD TO CART ###')
         cart.add({
             item,
             quantity,

@@ -65,7 +65,7 @@ class ViewCompanyTable extends React.Component<IProps, IState>
                 </div>
 
                 <div className="col-md-12 d-flex p-2" >
-                <img src={"/storage/"+this.props.currentItem.code?.qr_code + ".svg"} alt="" />
+                <img src={"/storage/"+this.props.currentItem.code?.qr_code + ".svg"} alt="alter" />
                 </div>
 
                 <div className="col-md-12 d-flex p-2" >

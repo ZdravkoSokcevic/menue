@@ -3,7 +3,8 @@ import Navbar from './components/Navbar.svelte'
 import MenuItems from './components/MenuItems.svelte';
 import MenuDetails from './components/MenuDetails.svelte'
 import CartPage from './components/CartPage.svelte'
-import { globalState } from './store.svelte.js'
+import Order from './components/Order.svelte'
+import { cart, globalState } from './store.svelte.js'
 
 
 let app;
@@ -58,6 +59,14 @@ function initSvelteApp() {
     mount(CartPage, {
       target: cartDetailsTarget,
       // TODO: add company info
+      props: []
+    });
+  }
+
+  const orderTarget = document.getElementById('order');
+  if(orderTarget && !orderTarget.dataset.mounted) {
+    mount(Order,  {
+      target: orderTarget,
       props: []
     });
   }

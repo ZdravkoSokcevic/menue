@@ -24,6 +24,8 @@ Route::get('/details/{id}/{code}', DetailsPage::class);
 Route::get('/shorts/{code}', HomePage::class);
 Route::get('/cart', CartPage::class);
 
+Route::get('/order/create', [OrderController::class, 'create']);
+
 
 Route::view('/{url?}', 'app')
     ->where('url', '^(?!api|shorts|details).*$');

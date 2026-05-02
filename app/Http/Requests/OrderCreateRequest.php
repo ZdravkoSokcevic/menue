@@ -11,7 +11,7 @@ class OrderCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class OrderCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'menu_id' => 'exists:menu,id',
+            'items.*.portion_id' => 'exists: portions,id',
+            'items.*.quantity' => 'min:1|max:20',
+            'items.*.extras.*' => 'exists:menu_extras,id',
+            'items.*.preferences.*' => 'exists:menu_preferences,id',
+            'items.*.note' => 'string|max:255'
         ];
     }
 }

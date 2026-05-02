@@ -98,7 +98,7 @@
                 {...{'wire:navigate': true }}
                 class="block w-full rounded-2xl bg-blue-600 py-4 text-center font-bold text-white hover:bg-blue-700 active:scale-95 transition"
             >
-                Continue to Checkout
+                Order
             </a>
 
         </div>
