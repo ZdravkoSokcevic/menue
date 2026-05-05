@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\OrderController;
+use App\Livewire\OrdersPage;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Livewire\HomePage;
@@ -24,7 +26,9 @@ Route::get('/details/{id}/{code}', DetailsPage::class);
 Route::get('/shorts/{code}', HomePage::class);
 Route::get('/cart', CartPage::class);
 
-Route::get('/order/create', [OrderController::class, 'create']);
+// Route::get('/order/create', [OrderController::class, 'create']);
+
+Route::view('/order/{slug}', OrdersPage::class);
 
 
 Route::view('/{url?}', 'app')

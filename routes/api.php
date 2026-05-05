@@ -22,6 +22,10 @@
 			dd('Middleware free route');
 		});
 
+		// ORDERS ROUTES
+		Route::post('/orders/create', '\App\Http\Controllers\OrderController@create');
+		Route::post('/order/edit/:slug', '\App\Http\Controllers\OrderController@edit');
+
 		Route::post('/companies/create', '\App\Http\Controllers\CompaniesController@create');
 		Route::post('/companies/edit/{id}', [\App\Http\Controllers\CompaniesController::class , 'edit']);
 		Route::middleware(['auth:sanctum'])->group(function($router) {

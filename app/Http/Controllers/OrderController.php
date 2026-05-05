@@ -54,7 +54,7 @@ class OrderController extends Controller
             }
             $row = Order::with(['items', 'items.extras', 'items.preferences'])
                 ->where('id', $res->id)->first();
-            return new CreateResponse(true, ['data'=> $success]);
+            return new CreateResponse(true, ['data'=> $row]);
         }
         else return new CreateResponse(false);
     }
