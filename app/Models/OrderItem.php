@@ -13,7 +13,8 @@ class OrderItem extends BaseModel
         'portion_id',
         'quantity',
         'status',
-        'prep_time'
+        'prep_time',
+        'table_id'
     ];
 
     public function order(): BelongsTo
@@ -26,12 +27,12 @@ class OrderItem extends BaseModel
         return $this->belongsTo(Menu::class);
     }
 
-    public function extra(): BelongsTo
+    public function extras(): BelongsTo
     {
         return $this->belongsTo(MenuExtra::class);
     }
 
-    public function preference(): BelongsTo
+    public function preferences(): BelongsTo
     {
         return $this->belongsTo(MenuPreference::class);
     }

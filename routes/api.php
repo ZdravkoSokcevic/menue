@@ -94,6 +94,8 @@
 			Route::post('/preferences/edit/{id}', action: '\App\Http\Controllers\PreferencesController@edit');
 			Route::get('/preferences/delete/{id}', action: '\App\Http\Controllers\PreferencesController@delete');
 
+			Route::get('/orders', 'App\Http\Controllers\OrderController@get');
+
 			Route::get('/testificate', function() {
 				dd('Here in auth');
 			});

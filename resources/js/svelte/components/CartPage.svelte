@@ -1,5 +1,37 @@
 <script>
     import { cart } from '../store.svelte.js';
+    import Order from "../api/Order.js"
+
+    async function createOrder(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let items = cart.items;
+        const dataItems = items.map((item) => {
+            // extract extras ids
+            // extract preferences ids
+            let extrasIds = [];
+            let preferencesIds = [];
+            item.extras.map(extra => extrasIds.push(extra.id));
+            item.preferences.map(preference => preferencesIds.push(preference.id));
+            return {
+                menu_id: item.id,
+                portion_id: item.selectedPortion.id,
+                quantity: item.quantity,
+                extras: extrasIds,
+                preferences: preferencesIds,
+                note: item.note
+            }
+        });
+        let data = {
+            items: dataItems 
+        }
+
+        let response = await Order.create(data);
+        if(response && response.success && response.data) {
+            alert('Order created');
+        }
+
+    }
 </script>
 
 <div class="mx-auto max-w-5xl p-4 md:p-8">
@@ -93,13 +125,15 @@
                 <span class="text-2xl font-bold">${cart.total.toFixed(2)}</span>
             </div>
 
-            <a
-                href="/order"
+            <button
+                href="#"
+                role="button"
                 {...{'wire:navigate': true }}
+                onclick={createOrder}
                 class="block w-full rounded-2xl bg-blue-600 py-4 text-center font-bold text-white hover:bg-blue-700 active:scale-95 transition"
             >
                 Order
-            </a>
+            </button>
 
         </div>
 

@@ -21,7 +21,18 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function all(): Collection
     {
-        return Order::all();
+        // TODO: return just orders that are 
+        // from the menu from that restaurant/hotel
+        return Order::with(['items', 'items.menu', 'items.modifications', 'items.modifications.extra', 'items.modifications.preference' => function($q) {
+            // $q->select('items.menu.id');
+        }])
+            // 0 - ordered / unprocessed
+            // 1 - ordered / processed
+            // 2 - processed / finished
+            // 3 - paid
+            ->orderBy('status', 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
     }
 
     public function edit($id, $data): Order|bool

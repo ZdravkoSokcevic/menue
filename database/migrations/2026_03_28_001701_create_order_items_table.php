@@ -30,14 +30,36 @@ return new class extends Migration
             $table->string('prep_time')
                 ->nullable();
 
+            $table->bigInteger('table_id')
+                ->unsigned()
+                ->nullable();
+
+
             // $table->unique([ 'order_id', 'order_portion_id', 'order_extras_id', 'order_preferences_id' ]);
             $table->string('note')->nullable();
+            
 
             $table->timestamps();
         });
 
         Schema::table('order_items', function (Blueprint $table) {
+            $table->foreign('table_id')
+                ->references('id')
+                ->on('tables')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
 
+            $table->foreign('menu_id')
+                ->references('id')
+                ->on('menus')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreign('order_id')
+                ->references('id')
+                ->on('orders')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

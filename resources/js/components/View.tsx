@@ -18,6 +18,8 @@ import ViewExtra from "./extra/ViewExtra";
 import { IExtra } from "@/types/Extra";
 import ViewPreference from "./preferences/ViewPreference";
 import { IPreference } from "@/types/Preference";
+import { IOrder } from "@/types/Order";
+import ViewOrder from "./order/ViewOrder";
 
 interface IProps {
     isOpen?: boolean;
@@ -67,6 +69,7 @@ class View extends React.Component<IProps & WithRouterProps, IState>
                     {this.props.type == 'allergen' && <ViewAllergen currentItem={this.props.currentItem as IAllergen} />}
                     {this.props.type == 'extra' && <ViewExtra currentItem={this.props.currentItem as IExtra} />}
                     {this.props.type == 'preference' && <ViewPreference currentItem={this.props.currentItem as IPreference} />}
+                    {this.props.type == 'order' && <ViewOrder currentItem={this.props.currentItem as IOrder} />}
                 </ModalOrPage>
             </>
         )

@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class OrderModification extends BaseModel
 {
     protected $table = 'order_modifications';
+    protected $fillable = [
+        'order_item_id',
+        'menu_extras_id',
+        'menu_preferences_id'
+    ];
     public function orderItem(): BelongsTo
     {
         return $this->belongsTo(OrderItem::class);

@@ -1,18 +1,5 @@
+import { TMenu } from "./Menu";
 import TUser from "./TUser";
-
-export interface Order
-{
-    slug: string;
-    waiter_id: TUser,
-    order_received_at: string;
-    order_processed_at: string;
-    prep_time: string;
-    // TODO: status can be enum
-    status: string; 
-
-}
-
-export type Orders = Array<Order>;
 
 export interface OrderItem
 {
@@ -23,7 +10,24 @@ export interface OrderItem
     // TODO: status can be enum
     status: string;
     prep_time: string;
+    menu: TMenu;
+}
+export type OrderItems = Array<OrderItem>;
+
+export interface IOrder
+{
+    id: string;
+    slug: string;
+    waiter_id: TUser,
+    order_received_at: string;
+    order_processed_at: string;
+    prep_time: string;
+    // TODO: status can be enum
+    status: string; 
+    items: OrderItems;
 }
 
-export type OrderItems = Array<OrderItem>;
+export type TOrders = Array<IOrder>;
+
+
 

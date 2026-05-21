@@ -19,7 +19,9 @@ import Menu from '@/pages/admin/Menu';
 import Categories from '@/pages/admin/Categories';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import Storage from '@/helpers/Storage';
+// eslint-disable-next-line
 import '../../sass/app.scss';
+// import '../../sass/app';
 import Companies from '@/pages/admin/Companies';
 import {Store, RootState, persistor } from "../reducers/Store";
 import { DotLoader } from "react-spinners"
@@ -34,6 +36,7 @@ import Allergens from '@/pages/admin/Allergens';
 import Ingridients from '@/pages/admin/Ingridients';
 import Extras from '@/pages/admin/Extras';
 import Preferences from '@/pages/admin/Preferences';
+import Order from '@/pages/admin/Order';
 
 const pageVariants = {
     initial: { opacity: 0, x: "-100vw" },
@@ -184,6 +187,11 @@ const App: React.FC = () => {
                     <Route path='/preferences' element = {
                         <ProtectedRoute>
                             <Preferences />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/orders' element = {
+                        <ProtectedRoute>
+                            <Order />
                         </ProtectedRoute>
                     } />
 

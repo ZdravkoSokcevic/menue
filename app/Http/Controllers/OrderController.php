@@ -8,15 +8,17 @@ use App\Http\Requests\OrderEditRequest;
 use App\Http\Responses\CreateResponse;
 use App\Http\Responses\EditResponse;
 use App\Interfaces\OrderRepositoryInterface;
+use App\Models\MenuExtra;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Collection;
 use Response;
+use Str;
 
 class OrderController extends Controller
 {
-    private OrderRepository $orderRepository;
+    private OrderRepositoryInterface $orderRepository;
 
-    public function __construct(OrderRepositoryInterface $orI)
+    public function __construct(OrderRepository $orI)
     {
         $this->orderRepository = $orI;
     }
@@ -28,31 +30,42 @@ class OrderController extends Controller
 
     public function create(OrderCreateRequest $r)
     {
+        $r->merge([
+            'slug' => Str::random(36)
+        ]);
         $data = $r->only((new Order)->getFillable());
 
         $res = $this->orderRepository->store($data);
-        if($res && $res instanceof App\Models\Order) {
+        // dd($res instanceof Order);
+        if($res && $res instanceof Order) {
             // Store order items
             foreach($r->items as $item) {
-                // create menu extras
                 $selectedExtras = [];
+                $orItem = $res->items()->create($item);
+                // dd($orItem);
                 foreach($item['extras'] as $extra) {
-                    $selectedExtras[] = $extra;
+
+                    $orItem->modifications()->create([
+                        'menu_id' => $item['menu_id'],
+                        'order_item_id' => $orItem->id,
+                        'menu_extras_id' => $extra
+                    ]);
                 }
-                $res->items()->extra()->sync($selectedExtras);
-                // create menu preference
+
                 $selectedPreferences = [];
+                // dd($item['preferences']);
                 foreach($item['preferences'] as $preference) {
                     $selectedPreferences[] = $preference;
+                    // create menu preference
+
+                    $orItem->modifications()->create([
+                        'menu_id' => $item['menu_id'],
+                        'order_item_id' => $orItem->id,
+                        'menu_preferences_id' => $preference
+                    ]);
                 }
-                $res->items()->preferences()->sync($preference);
-
-                // create notes
-                // $note = OrderModification::insert([
-
-                // ]);
             }
-            $row = Order::with(['items', 'items.extras', 'items.preferences'])
+            $row = Order::with(['items', 'items.modifications', 'items.modifications.extra', 'items.modifications.preference' , 'items.extras', 'items.preferences'])
                 ->where('id', $res->id)->first();
             return new CreateResponse(true, ['data'=> $row]);
         }
