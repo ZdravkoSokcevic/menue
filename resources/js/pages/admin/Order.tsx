@@ -164,15 +164,105 @@ class Companies extends React.Component<IProps, IState>
                         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                         <Collapse in={order.id == this.state.selectedRow.id} timeout="auto" unmountOnExit>
                             <Box sx={{ margin: 1 }}>
-                                {order.items.map((item: OrderItem) => {
-                                    if(item.menu) {
+                                <div className="d-flex flex-column gap-3 py-2">
+
+                                    {order.items.map((item: OrderItem) => {
+
+                                        if (!item.menu) return null;
+
                                         return (
-                                            <>
-                                                <span>{item.menu.name}</span>
-                                            </>
-                                        )
-                                    }
-                                })}
+                                            <div
+                                                key={item.id}
+                                                className="border rounded-4 p-3 bg-light-subtle shadow-sm"
+                                            >
+
+                                                <div className="d-flex gap-3">
+
+                                                    {/* IMAGE */}
+                                                    <div
+                                                        style={{
+                                                            width: 72,
+                                                            height: 72,
+                                                            borderRadius: 12,
+                                                            backgroundImage: `url(${item.menu.picture})`,
+                                                            backgroundSize: 'cover',
+                                                            backgroundPosition: 'center',
+                                                            flexShrink: 0
+                                                        }}
+                                                    />
+
+                                                    {/* CONTENT */}
+                                                    <div className="flex-grow-1">
+
+                                                        {/* NAME */}
+                                                        <div className="d-flex justify-content-between align-items-start">
+                                                            <h6 className="fw-bold mb-1">
+                                                                {item.menu.name}
+                                                            </h6>
+                                                        </div>
+
+                                                        {/* EXTRAS */}
+                                                        {!!item.menu.extras?.length && (
+                                                            <div className="mb-2">
+                                                                <small className="text-muted d-block mb-1">
+                                                                    Extras
+                                                                </small>
+
+                                                                <div className="d-flex flex-wrap gap-1">
+                                                                    {item.menu.extras.map((extra) => (
+                                                                        <span
+                                                                            key={extra.id}
+                                                                            className="badge text-bg-primary rounded-pill"
+                                                                        >
+                                                                            {extra.name}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        {/* PREFERENCES */}
+                                                        {!!item.menu.preferences?.length && (
+                                                            <div className="mb-2">
+                                                                <small className="text-muted d-block mb-1">
+                                                                    Preferences
+                                                                </small>
+
+                                                                <div className="d-flex flex-wrap gap-1">
+                                                                    {item.menu.preferences.map((pref) => (
+                                                                        <span
+                                                                            key={pref.id}
+                                                                            className="badge text-bg-secondary rounded-pill"
+                                                                        >
+                                                                            {pref.name}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        {/* NOTE */}
+                                                        {!!item.note && (
+                                                            <div className="mt-2 rounded-3 border bg-white p-2">
+                                                                <small className="text-muted d-block">
+                                                                    Special note
+                                                                </small>
+
+                                                                <div className="small">
+                                                                    {item.note}
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        );
+                                    })}
+
+                                </div>
                             </Box>
                         </Collapse>
                         </TableCell>

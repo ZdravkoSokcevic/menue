@@ -1,6 +1,13 @@
 <script>
-    import { cart } from '../store.svelte.js';
+    import { cart, globalState } from '../store.svelte.js';
     import Order from "../api/Order.js"
+
+    // -1 - not ordered
+    // 0 - ordered / unprocessed
+    // 1 - ordered / processed
+    // 2 - processed / finished
+    // 3 - paid
+    $: orderStatus = globalState.currentOrderStatus;
 
     async function createOrder(e) {
         e.preventDefault();
@@ -19,17 +26,24 @@
                 quantity: item.quantity,
                 extras: extrasIds,
                 preferences: preferencesIds,
-                note: item.note
+                note: item.note,
             }
         });
         let data = {
-            items: dataItems 
+            items: dataItems,
+            qrCodeSlug: globalState.code
         }
+        // debugger;
 
         let response = await Order.create(data);
         if(response && response.success && response.data) {
             alert('Order created');
-        }
+            globalState.setCurrentOrderStatus(0);
+            // TODO: Add current order to order history
+            cart.removeAll();
+        }else [
+            alert('There\'s problem creating your order')
+        ]
 
     }
 </script>
@@ -37,8 +51,7 @@
 <div class="mx-auto max-w-5xl p-4 md:p-8">
 
     <h1 class="mb-6 text-2xl font-bold">Your Cart</h1>
-
-    {#if cart.items.length > 0}
+    {#if cart.items.length > 0 && orderStatus == -1}
 
         <div class="space-y-6">
 
@@ -125,15 +138,82 @@
                 <span class="text-2xl font-bold">${cart.total.toFixed(2)}</span>
             </div>
 
+            {#if orderStatus == -1}
             <button
-                href="#"
-                role="button"
                 {...{'wire:navigate': true }}
                 onclick={createOrder}
                 class="block w-full rounded-2xl bg-blue-600 py-4 text-center font-bold text-white hover:bg-blue-700 active:scale-95 transition"
             >
                 Order
             </button>
+            {/if}
+
+            {#if orderStatus == 0}
+                <div class="rounded-2xl border border-blue-100 bg-blue-50 p-4 text-blue-800 shadow-sm">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-blue-500">
+                        Order Received
+                    </p>
+
+                    <h3 class="mt-1 text-lg font-bold">
+                        Your order has been sent successfully.
+                    </h3>
+
+                    <p class="mt-1 text-sm text-blue-700">
+                        We’ve received your order and it will be reviewed shortly.
+                    </p>
+                </div>
+            {/if}
+
+            {#if orderStatus == 1}
+                <!-- STATUS 1 -->
+                <div class="rounded-2xl border border-amber-100 bg-amber-50 p-4 text-amber-800 shadow-sm">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-amber-500">
+                        Preparing Your Order
+                    </p>
+
+                    <h3 class="mt-1 text-lg font-bold">
+                        Your order is being prepared.
+                    </h3>
+
+                    <p class="mt-1 text-sm text-amber-700">
+                        We’ll notify you as soon as everything is ready.
+                    </p>
+                </div>
+            {/if}
+
+            {#if orderStatus == 2}
+                <!-- STATUS 2 -->
+                <div class="rounded-2xl border border-green-100 bg-green-50 p-4 text-green-800 shadow-sm">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-green-500">
+                        Almost Ready
+                    </p>
+
+                    <h3 class="mt-1 text-lg font-bold">
+                        Your order is ready.
+                    </h3>
+
+                    <p class="mt-1 text-sm text-green-700">
+                        It will be served to your table shortly.
+                    </p>
+                </div>
+            {/if}
+
+            {#if orderStatus == 3}
+                <!-- STATUS 3 -->
+                <div class="rounded-2xl border border-gray-200 bg-gray-50 p-4 text-gray-800 shadow-sm">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">
+                        Order Completed
+                    </p>
+
+                    <h3 class="mt-1 text-lg font-bold">
+                        Payment completed successfully.
+                    </h3>
+
+                    <p class="mt-1 text-sm text-gray-600">
+                        Thank you for your order. Enjoy your meal!
+                    </p>
+                </div>
+            {/if}
 
         </div>
 

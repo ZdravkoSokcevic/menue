@@ -19,7 +19,7 @@ class MenuRepository implements MenuRepositoryInterface
         $isAdmin = auth('sanctum')->user()->isAdmin();
         // allow admin and demo users to see every company list
         $isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
-        $q = Menu::with(['ingridients', 'extras', 'extras.prices', 'portions', 'preferences']);
+        $q = Menu::with(['ingridients', 'extras', 'extras.prices', 'portions', 'portions.prices', 'preferences']);
         if($isNotAdmin)
             $q->where('company_id', $r->input('company_id'));
         else if ($r->filled('company_id'))

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid('slug')->unique()->index();
             // User who confirm and processed order
             $table->bigInteger('waiter_id')->unsigned()->nullable();
+            $table->bigInteger('table_id')->unsigned()->nullable();
             $table->time('order_received_at')->nullable();
             $table->time('order_processed_at')->nullable();
             // Prep time is calculated per order
@@ -34,6 +35,12 @@ return new class extends Migration
                 ->on('users')
                 ->onUpdate('cascade')
                 ->onDelete('set null');
+
+            $table->foreign('table_id')
+                ->references('id')
+                ->on('table')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
         });
     }
 
@@ -44,6 +51,7 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->dropForeign('waiter_id');
+            $table->dropForeign('table_id');
         });
         Schema::dropIfExists('orders');
     }

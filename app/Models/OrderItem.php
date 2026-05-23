@@ -14,7 +14,8 @@ class OrderItem extends BaseModel
         'quantity',
         'status',
         'prep_time',
-        'table_id'
+        'table_id',
+        'note'
     ];
 
     public function order(): BelongsTo

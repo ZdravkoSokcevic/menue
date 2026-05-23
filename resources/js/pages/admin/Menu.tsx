@@ -7,7 +7,6 @@ import { HiMiniPencilSquare } from "react-icons/hi2";
 import { MdDelete } from "react-icons/md";
 
 
-
 import "../../../sass/menu.scss"
 import CreateMenu from "@/components/menu/CreateMenu";
 import MenuAPI from "@/api/MenuAPI";

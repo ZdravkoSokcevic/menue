@@ -3,6 +3,7 @@ import TUser from "./TUser";
 
 export interface OrderItem
 {
+    id: string;
     order_id: string;
     menu_id: string;
     portion_id: string;
@@ -10,6 +11,7 @@ export interface OrderItem
     // TODO: status can be enum
     status: string;
     prep_time: string;
+    note?: string;
     menu: TMenu;
 }
 export type OrderItems = Array<OrderItem>;

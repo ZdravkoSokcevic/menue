@@ -105,7 +105,7 @@ class MenuController extends Controller
                 $success->syncPortions($r);
             }
 
-            return new CreateResponse(true,   ['item'=> $success]);
+            return new CreateResponse(true,   ['item'=> $success->with(['portions', 'portions.prices'])]);
         }
         else return new CreateResponse(false, 'Could not create Menu!');
     }
@@ -198,7 +198,7 @@ class MenuController extends Controller
                 }
 
                 // need to return fresh updated row, that's why new query is required
-                $updatedRow = Menu::with(['ingridients', 'extras', 'extras.prices', 'portions', 'preferences'])
+                $updatedRow = Menu::with(['ingridients', 'extras', 'extras.prices', 'portions', 'portions.prices', 'preferences'])
                     ->where('id', $success->id)->first();
                     
                 return new EditResponse(true, ['item' => $updatedRow ]);

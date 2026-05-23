@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Portion extends BaseModel
 {
@@ -13,4 +15,9 @@ class Portion extends BaseModel
         'portion_size',
         'name'
     ];
+
+    public function prices(): BelongsTo
+    {
+        return $this->belongsTo(Price::class, 'price_id');
+    }
 }

@@ -15,6 +15,12 @@ export const addWholeItemsToPersistedStore  = cartItems => {
     }));
 }
 
+export const removeAllItemsFromPersistedStore = () => {
+    appPreferences.update(state => ({
+        cart: []
+    }));
+}
+
 export const addCodeToPersistedStore = code => {
     appPreferences.update(state => ({
         ...state,
@@ -35,6 +41,8 @@ export const globalState = $state({
     code: get(appPreferences).code || '',
     items: [],
     cartModalSelectedItem: null,
+    currentOrder: '',
+    currentOrderStatus: -1,
     setCartModalSelectedItem(item) {
         this.cartModalSelectedItem = item;
     },
@@ -43,6 +51,12 @@ export const globalState = $state({
         this.code = newCode;
         addCodeToPersistedStore(newCode);
     },
+    setCurrentOrder(id) {
+        this.setCurrentOrder = id;
+    },
+    setCurrentOrderStatus(status) {
+        this.currentOrderStatus = status;
+    }
     // add data to cart:
 });
 
@@ -78,6 +92,11 @@ export const cart = $state({
         }
     },
 
+    removeAll() {
+        this.items = [];
+        removeAllItemsFromPersistedStore([]);
+    },
+
     remove(id) {
         this.items = this.items.filter(i => i.id !== id);
         addWholeItemsToPersistedStore(this.items);
@@ -90,7 +109,12 @@ export const cart = $state({
             console.log({ ...item });
             let totalBase = 0;
             let totalExtra = 0;
-            totalBase = (item && item.selectedPortion && item.selectedPortion.price) ? item.selectedPortion.price : 0;
+            totalBase = (
+                item && 
+                item.selectedPortion && 
+                item.selectedPortion.prices &&
+                item.selectedPortion.prices.price
+            ) ? item.selectedPortion.prices.price : 0;
             total += (totalBase * item.quantity);
             console.log({
                 totalBase: totalBase,
@@ -112,7 +136,12 @@ export const cart = $state({
                 if(searchedItem.id == item.id) {
                 let totalBase = 0;
                 let totalExtra = 0;
-                totalBase = (item && item.selectedPortion && item.selectedPortion.price) ? item.selectedPortion.price : 0;
+                totalBase = (
+                    item && 
+                    item.selectedPortion && 
+                    item.selectedPortion.prices && 
+                    item.selectedPortion.prices.price
+                ) ? item.selectedPortion.prices.price : 0;
                 total += (totalBase * item.quantity);
                 console.log({
                     totalBase: totalBase,

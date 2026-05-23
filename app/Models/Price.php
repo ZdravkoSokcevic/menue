@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PriceCast;
 use Illuminate\Database\Eloquent\Model;
 
 class Price extends BaseModel
@@ -14,5 +15,9 @@ class Price extends BaseModel
         'currency_id',
         // // 1 - for menus, 2 - for extras
         // 'type'
+    ];
+
+    protected $casts = [
+        'price' => PriceCast::class,
     ];
 }

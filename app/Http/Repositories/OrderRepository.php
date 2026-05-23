@@ -4,6 +4,7 @@ namespace App\Http\Repositories;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Collection;
 use App\Interfaces\OrderRepositoryInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
 class OrderRepository implements OrderRepositoryInterface
 {
     private Order $order;
@@ -19,13 +20,15 @@ class OrderRepository implements OrderRepositoryInterface
         return $this->order;
     }
 
-    public function all(): Collection
+    public function all(): Collection | LengthAwarePaginator
     {
         // TODO: return just orders that are 
         // from the menu from that restaurant/hotel
         return Order::with(['items', 'items.menu', 'items.modifications', 'items.modifications.extra', 'items.modifications.preference' => function($q) {
             // $q->select('items.menu.id');
+            
         }])
+        ->whereHas('items')
             // 0 - ordered / unprocessed
             // 1 - ordered / processed
             // 2 - processed / finished

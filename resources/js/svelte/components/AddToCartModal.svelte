@@ -16,7 +16,7 @@
     let availableExtras = item.extras || [];
     let availablePreferences = item.preferences || [];
 
-    $: basePrice = selectedPortion ? selectedPortion.price : item.portions[0].price;
+    $: basePrice = selectedPortion ? selectedPortion.prices.price : item.portions[0].prices.price;
 
     $: extrasTotal = extras.reduce((sum, e) => sum + (e && e.prices[0] && e.prices[0].price && !isNaN(e.prices[0].price)) ? e.prices[0].price : 0, 0);
 
@@ -98,7 +98,7 @@
                             onclick={() => selectedPortion = portion}
                         >
                             <span>{portion.name}</span>
-                            <span>${portion.price}</span>
+                            <span>${portion.prices.price}</span>
                         </button>
                     {/each}
                 </div>

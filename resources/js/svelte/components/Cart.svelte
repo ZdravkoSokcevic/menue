@@ -3,7 +3,6 @@
     import { fly, fade } from 'svelte/transition';
 
     let { closeCart } = $props();
-    console.log(cart.items);
 </script>
 
 <div
@@ -72,15 +71,15 @@
             </div>
             <div class="mt-3 flex items-end justify-between">
                 <div class="text-sm text-gray-500">
-                    ${item && item.selectedPortion && item.selectedPortion.price ? item.selectedPortion.price : 0} each
+                    ${item && item.selectedPortion && item.selectedPortion.prices.price ? item.selectedPortion.prices.price : 0} each
                 </div>
 
                 <div class="text-right">
                     <p class="text-sm text-gray-400">
-                        {item.quantity} × ${item.selectedPortion.price}
+                        {item.quantity} × ${item.selectedPortion.prices.price}
                     </p>
                     <p class="text-base font-extrabold text-gray-900">
-                        ${(item.selectedPortion.price * item.quantity).toFixed(2)}
+                        ${(item.selectedPortion.prices.price * item.quantity).toFixed(2)}
                     </p>
                 </div>
             </div>

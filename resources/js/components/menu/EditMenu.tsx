@@ -62,6 +62,7 @@ interface IPortionPrice {
         name: string;
     }
     price: number;
+    prices: IPrice;
 }
 
 type TPrices = Array<IPortionPrice>;
@@ -379,13 +380,15 @@ class EditMenu extends React.Component<IProps, IState>
         }
         // Include added portions
         if(prices && prices.length) {
+            // debugger;
             const selected: TPrices = [];
             prices.map((price: IPortionPrice) => {
                 const d: IPortionPrice = {
                     name: price.name as string,
-                    portion_size: price.pivot?.portion_size as number,
+                    portion_size: price.portion_size as number,
                     portion_unit: 'usd',
-                    price: price.price
+                    price: price.prices.price,
+                    prices: price.prices
                 }
                 // check for portion_id
                 if(price.id)
@@ -762,7 +765,7 @@ class EditMenu extends React.Component<IProps, IState>
                                                                         <label htmlFor="pricePrice"> Price: </label>
                                                                         <div className="input-group">
                                                                             <Field
-                                                                                name={`prices.${index}.price`}
+                                                                                name={`prices.${index}.prices.price`}
                                                                                 className="form-control"
                                                                                 aria-describedby="prepPriceHelp"
                                                                             />
@@ -843,7 +846,7 @@ class EditMenu extends React.Component<IProps, IState>
         // const res = {success: false, data: {} };
         setTimeout(() => {
             Store.dispatch(disableLoading({}));
-        })
+        }, 500)
 
         // if modal is case
         if(res && res.success == true)  {

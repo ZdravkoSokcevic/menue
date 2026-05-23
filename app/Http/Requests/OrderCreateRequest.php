@@ -75,7 +75,8 @@ class OrderCreateRequest extends FormRequest
             'items.*.quantity' => 'min:1|max:20',
             'items.*.extras.*' => 'exists:menu_extras,id',
             'items.*.preferences.*' => 'exists:menu_preferences,id',
-            'items.*.note' => 'string|max:255'
+            'items.*.note' => 'string|max:255',
+            'qrCodeSlug' => 'required|min:35|max:42|exists:codes,code',
         ];
     }
 }

@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Request;
 use Log;
@@ -35,12 +36,17 @@ class Menu extends BaseModel
         return $this->hasOne(Category::class, 'id', 'category_id');
     }
 
-    public function portions(): BelongsToMany
+    public function portions(): HasMany
     {
-        return $this->belongsToMany(Price::class, 'portions')
-            ->withPivot('name')
-            ->withPivot('portion_size');
+        return $this->hasMany(Portion::class);
     }
+
+    // public function portions(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Price::class, 'portions')
+    //         ->withPivot('name')
+    //         ->withPivot('portion_size');
+    // }
 
     public function extras(): BelongsToMany
     {
@@ -96,7 +102,8 @@ class Menu extends BaseModel
         // remove all relations on edit
         // safest way
         // }
-        $this->portions()->detach();
+        // dd($this->portions);
+        $this->portions()->delete();
 
 
         foreach($prices as $price) {

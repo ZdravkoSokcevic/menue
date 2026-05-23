@@ -8,6 +8,7 @@ use App\Http\Requests\OrderEditRequest;
 use App\Http\Responses\CreateResponse;
 use App\Http\Responses\EditResponse;
 use App\Interfaces\OrderRepositoryInterface;
+use App\Models\Code;
 use App\Models\MenuExtra;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Collection;
@@ -34,6 +35,13 @@ class OrderController extends Controller
             'slug' => Str::random(36)
         ]);
         $data = $r->only((new Order)->getFillable());
+        
+        // find Table from QRCodeSlug
+        $table = Code::where('code', $r->input('qrCodeSlug'))->first();
+        
+        $table_id = $table->id;
+
+        $data['table_id'] = $table_id;
 
         $res = $this->orderRepository->store($data);
         // dd($res instanceof Order);
@@ -67,7 +75,7 @@ class OrderController extends Controller
             }
             $row = Order::with(['items', 'items.modifications', 'items.modifications.extra', 'items.modifications.preference' , 'items.extras', 'items.preferences'])
                 ->where('id', $res->id)->first();
-            return new CreateResponse(true, ['data'=> $row]);
+            return new CreateResponse(true, ['data'=> $row, 'success'=>true]);
         }
         else return new CreateResponse(false);
     }

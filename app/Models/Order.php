@@ -16,7 +16,8 @@ class Order extends BaseModel
         'order_received_at',
         'order_processed_at',
         'prep_time',
-        'status'
+        'status',
+        'table_id'
     ];
 
     public function items(): HasMany
