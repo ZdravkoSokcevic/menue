@@ -1,4 +1,5 @@
 import { TMenu } from "./Menu";
+import { ICompanyTable } from "./TCompanyTables";
 import TUser from "./TUser";
 
 export interface OrderItem
@@ -27,6 +28,9 @@ export interface IOrder
     // TODO: status can be enum
     status: string; 
     items: OrderItems;
+    created_at: Date;
+    updated_at: Date;
+    table: ICompanyTable
 }
 
 export type TOrders = Array<IOrder>;

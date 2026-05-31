@@ -9,12 +9,25 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class CartPage extends Component
 {
+    public $code;
+    public $page;
+
+    public function mount(Request $r) {
+        // $this->code = $r->code;
+        // $this->page = 'cart';
+    }
     public function render(Request $r)
     {
+        // dd($r->code);
         // dd('here');
+        $data = [
+            'page' => 'cart',
+            'code' => $r->code
+        ];
+        
         return view('livewire.cart-page')
-            ->layout('layouts.app', [])
-            ->with([]);
+            ->layout('layouts.app')
+            ->with($data);
     }
 }
 ?>

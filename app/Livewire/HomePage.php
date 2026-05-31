@@ -77,6 +77,7 @@ class HomePage extends Component
             $data['code'] = $this->code;
         if($this->menuItems)
             $data['menuItems'] = $this->menuItems;
+        $data['page'] = 'home';
         return view('livewire.home-page')
             ->layout('layouts.app', $data)
             ->with($data);

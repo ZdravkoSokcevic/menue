@@ -41,4 +41,8 @@ class OrderItem extends BaseModel
     public function modifications() {
         return $this->hasMany(OrderModification::class);
     }
+
+    public function table(): BelongsTo {
+        return $this->belongsTo(Table::class, 'table_id');
+    }
 }

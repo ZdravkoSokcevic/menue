@@ -16,8 +16,14 @@ class Order extends BaseModel
         'order_received_at',
         'order_processed_at',
         'prep_time',
+        // 0 - ordered / unprocessed
+        // 1 - ordered / processed
+        // 2 - processed / finished
+        // 3 - paid
         'status',
-        'table_id'
+        'table_id',
+        'created_at',
+        'updated_at',
     ];
 
     public function items(): HasMany
@@ -28,6 +34,10 @@ class Order extends BaseModel
     public function waiter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'waiter_id', 'id');
+    }
+
+    public function table(): BelongsTo {
+        return $this->belongsTo(Table::class, 'table_id');
     }
 
     

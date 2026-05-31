@@ -13,7 +13,9 @@ class OrdersPage extends Component
     {
         // dd('here');
         return view('livewire.orders-page')
-            ->layout('layouts.app', [])
+            ->layout('layouts.app', [
+                'page' => 'orders'
+            ])
             ->with([]);
     }
 }

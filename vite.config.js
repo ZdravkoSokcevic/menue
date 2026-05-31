@@ -18,11 +18,17 @@ export default defineConfig({
                 'resources/js/svelte/App.js', // Svelte entry
                 'resources/js/libs/alpine.js',
             ],
-            refresh: true,
+            refresh: false,
         }),
         react(),
         svelte(),
     ],
+
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+        },
+    },
 
     build: {
         rollupOptions: {

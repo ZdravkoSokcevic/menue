@@ -26,7 +26,7 @@
             </h1>
 
             <p class="mt-1 text-lg font-semibold">
-                ${ (menuItem && menuItem.portions && menuItem.portions[0]) ? menuItem.portions[0].price : 0}
+                ${ (menuItem && menuItem.portions && menuItem.portions[0] && menuItem.portions[0].prices) ? menuItem.portions[0].prices.price : 0}
             </p>
         </div>
 
@@ -47,7 +47,7 @@
 
         <!-- PRICE -->
         <p class="mt-3 text-2xl font-extrabold text-gray-900">
-            ${ (menuItem && menuItem.portions && menuItem.portions[0]) ? menuItem.portions[0].price : 0}
+            ${ (menuItem && menuItem.portions && menuItem.portions[0] && menuItem.portions[0].prices) ? menuItem.portions[0].prices.price : 0}
         </p>
 
         <!-- DESCRIPTION -->

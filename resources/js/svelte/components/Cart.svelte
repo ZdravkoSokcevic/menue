@@ -1,5 +1,5 @@
 <script>
-    import { cart } from '../store.svelte.js';
+    import { cart, globalState } from '../store.svelte.js';
     import { fly, fade } from 'svelte/transition';
 
     let { closeCart } = $props();
@@ -142,9 +142,12 @@
             </div>
 
             <a
-                href="/cart" {...{'wire:navigate': true }}
+                href={'/cart/' + globalState.code} {...{'wire:navigate': true }}
                 class="block w-full rounded-2xl bg-blue-600 py-4 text-center font-bold text-white transition-transform transition-colors hover:bg-blue-700 active:scale-95"
                 // onclick|preventDefault={() => cart.add(item)}
+                onclick = {() => { 
+                    globalState.setCurrentPage('cart')
+                }}
             >
                 View cart
             </a>

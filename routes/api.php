@@ -95,6 +95,8 @@
 			Route::get('/preferences/delete/{id}', action: '\App\Http\Controllers\PreferencesController@delete');
 
 			Route::get('/orders', 'App\Http\Controllers\OrderController@get');
+			Route::get('/orders/delete/{id}', action: '\App\Http\Controllers\OrderController@delete');
+			Route::post('/orders/edit/{id}', action: '\App\Http\Controllers\OrderController@edit');
 
 			Route::get('/testificate', function() {
 				dd('Here in auth');

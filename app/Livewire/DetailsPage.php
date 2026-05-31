@@ -12,9 +12,11 @@ class DetailsPage extends Component
 {
     public $item;
     public $code;
+
+    public $page;
     public function mount(Request $r, $id)
     {
-        $item = Menu::with(['category', 'extras', 'extras.prices', 'preferences', 'ingridients', 'ingridients.allergens' ,'portions'])->whereId($id)->first();
+        $item = Menu::with(['category', 'extras', 'extras.prices', 'preferences', 'ingridients', 'ingridients.allergens' ,'portions', 'portions.prices'])->whereId($id)->first();
         if(!$item)
             return abort(403);
 
@@ -40,6 +42,7 @@ class DetailsPage extends Component
 
         $this->item = $item;
         $this->code= $r->code;
+        $this->page = 'details';
     }
 
     public function render(Request $r)
@@ -47,9 +50,9 @@ class DetailsPage extends Component
 
         $data = [
             'code' => $r->code,
-            'item' => $this->item
+            'item' => $this->item,
+            'page' => $this->page
         ];
-        // dd('here');
         return view('livewire.details-page')
             ->layout('layouts.app', $data)
             ->with($data);

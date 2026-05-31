@@ -16,6 +16,7 @@ function initSvelteApp() {
 
   if(window.LaravelData) {
     globalState.setCode(window.LaravelData.code);
+    globalState.setCurrentPage(window.LaravelData.page);
   }
 
   const navEl = document.getElementById('app-navbar');
@@ -81,9 +82,20 @@ if (!window.svelteInitialized) {
       // destroyNavbar();
       // destroyMenu();
         globalState.setCartModalSelectedItem(null);
-        initSvelteApp();
+          console.log('User is not navigated using the back or forward button');
+          // Your logic here
+          initSvelteApp();
+        // debugger;
     });
     window.svelteInitialized = true;
+
+    // window.addEventListener('popstate', () => {
+
+    //     setTimeout(() => {
+    //         mountComponents();
+    //     }, 0);
+
+    // });
 }
 // 1. Find the element
 

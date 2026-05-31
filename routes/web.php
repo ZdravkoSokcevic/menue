@@ -24,6 +24,7 @@ Route::get('/details/{id}/{code}', DetailsPage::class);
 // not working with livewire
 // Route::get('/shorts/{code}', '\App\Http\Controllers\HomeController@index');
 Route::get('/shorts/{code}', HomePage::class);
+Route::get('/cart/{code}', CartPage::class);
 Route::get('/cart', CartPage::class);
 
 // Route::get('/order/create', [OrderController::class, 'create']);

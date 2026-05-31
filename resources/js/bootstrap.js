@@ -12,7 +12,7 @@ window.axios = axios;
     async function getCsrfToken() {
         try {
             const response = await axios.get('/sanctum/csrf-cookie',{withCredentials: true}); // Replace with your actual endpoint
-            console.log(response.headers['set-cookie']);
+            // console.log(response.headers['set-cookie']);
             return response.headers['set-cookie']; // Assuming the token is in the response data
         } catch (error) {
             console.error('Error fetching CSRF token:', error);

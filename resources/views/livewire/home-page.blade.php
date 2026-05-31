@@ -5,7 +5,8 @@
     ])
     <script>
         window.LaravelData = {
-            code: "{{ $code }}"
+            code: "{{ $code }}",
+            page: "{{ $page }}"
         };
     </script>
     @endpush

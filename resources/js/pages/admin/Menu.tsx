@@ -15,6 +15,8 @@ import View from "@/components/View";
 import { TComponentProps } from "@/types/TComponentProps";
 import Edit from "@/components/Edit";
 import Delete from "@/components/Delete";
+import MenuTranslation from "@/components/menu/MenuTranslation";
+import Translations from "@/components/Translations";
 
 interface IProps {};
 interface IState {
@@ -22,6 +24,7 @@ interface IState {
     isViewMenuModalOpened: boolean;
     isEditMenuMOdalOpened: boolean;
     isDeleteModalOpened: boolean;
+    isTranslationsModalOpened: boolean;
     menuItems: Array<TMenu>;
     currentItem: TMenu;
 };
@@ -34,6 +37,7 @@ class Menu extends React.Component<IProps, IState> {
             isViewMenuModalOpened: false,
             isEditMenuMOdalOpened: false,
             isDeleteModalOpened: false,
+            isTranslationsModalOpened: false,
             menuItems: [],
             currentItem: {} as TMenu
         }
@@ -73,6 +77,7 @@ class Menu extends React.Component<IProps, IState> {
                                         <span>{item.name}</span> 
                                         <span>{item.description}</span>
                                         <div className="d-flex flex-direction-column card-actions">
+                                            <IoEye onClick={() => this.onTranslationClicked(item)}/>
                                             <IoEye onClick={() => this.onViewClicked(item)}/>
                                             <HiMiniPencilSquare onClick={() => this.onEditClicked(item)}/>
                                             <MdDelete onClick={() => this.onDeleteClicked(item)}/>
@@ -113,6 +118,13 @@ class Menu extends React.Component<IProps, IState> {
                     text={`Do you realy want to delete menu <b>${this.state.currentItem.name}</b>?`} 
                     closeModal={this.closeDeleteMenuModal}
                     onDeleteClicked={this.onDeleteModalClicked}
+                />
+                <Translations 
+                    type="menu"
+                    isOpen={this.state.isTranslationsModalOpened}
+                    currentItem={this.state.currentItem}
+                    closeModal={this.closeMenuTranslationsModal}
+
                 />
             </div>
 
@@ -157,6 +169,11 @@ class Menu extends React.Component<IProps, IState> {
         this.openDeleteMenuModal();
     }
 
+    onTranslationClicked = (item: TMenu) => {
+        this.setState({ currentItem: item });
+        this.openMenuTranslationsModal();
+    }
+
     onDeleteModalClicked = async() => {
         const currentItem = this.state.currentItem;
         if(currentItem && currentItem.id) {
@@ -189,6 +206,10 @@ class Menu extends React.Component<IProps, IState> {
         this.setState({ isDeleteModalOpened: true });
     }
 
+    openMenuTranslationsModal = () => {
+        this.setState({ isTranslationsModalOpened: true });
+    }
+
     closeCreateMenuModal = () => {
         this.setState({ isCreateMenuModalOpened: false });
     }
@@ -206,6 +227,11 @@ class Menu extends React.Component<IProps, IState> {
     closeDeleteMenuModal = () => {
         this.setState({ currentItem: {} as TMenu });
         this.setState({ isDeleteModalOpened: false })
+    }
+
+    closeMenuTranslationsModal = () => {
+        this.setState({ currentItem: {} as TMenu });
+        this.setState({ isTranslationsModalOpened: false });
     }
 }
 

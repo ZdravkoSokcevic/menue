@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ApiDelayMiddleware;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 // use App\Http\Middleware\Authenticate;
@@ -16,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
             // Register admin and api routes
-            Route::middleware('api')->prefix('api')->name('api.')->group(base_path('routes/api.php'));
+            Route::middleware(['api', ApiDelayMiddleware::class])->prefix('api')->name('api.')->group(base_path('routes/api.php'));
             // Route::middleware(['api'])
             //     ->prefix('api')
             //     // ->namespace('Api')
@@ -36,6 +37,9 @@ return Application::configure(basePath: dirname(__DIR__))
             AddLinkHeadersForPreloadedAssets::class
         ]);
 
+        // $middleware->api(append: [
+        //     ApiDelayMiddleware::class
+        // ]);
         // DO NOT INCLUDE, MIDDLEWARE INCLUDED MANUALLY
         // $middleware->api(append: [
         //     Authenticate::class

@@ -24,7 +24,13 @@ class OrderRepository implements OrderRepositoryInterface
     {
         // TODO: return just orders that are 
         // from the menu from that restaurant/hotel
-        return Order::with(['items', 'items.menu', 'items.modifications', 'items.modifications.extra', 'items.modifications.preference' => function($q) {
+        $q =  Order::with([
+                'table',
+                'items', 
+                'items.menu', 
+                'items.modifications', 
+                'items.modifications.extra', 
+                'items.modifications.preference' => function($q) {
             // $q->select('items.menu.id');
             
         }])
@@ -34,8 +40,12 @@ class OrderRepository implements OrderRepositoryInterface
             // 2 - processed / finished
             // 3 - paid
             ->orderBy('status', 'asc')
-            ->orderBy('created_at', 'asc')
-            ->get();
+            ->orderBy('created_at', 'asc');
+
+        if(request()->has('status'))
+            $q->where('status', request()->input('status'));
+
+        return $q->get();
     }
 
     public function edit($id, $data): Order|bool

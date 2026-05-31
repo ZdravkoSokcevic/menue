@@ -5,7 +5,8 @@ import { get } from 'svelte/store'
 
 export const appPreferences = persisted('preferences', {
     cart: [],
-    code: ''
+    code: '',
+    page: '',
 })
 export const addWholeItemsToPersistedStore  = cartItems => {
     
@@ -27,6 +28,14 @@ export const addCodeToPersistedStore = code => {
         code: code
     }));
 }
+
+export const addPageToPersisted = page => {
+    appPreferences.update(state => ({
+        ...state,
+        page: page
+    }));
+}
+
 // import { writable } from 'svelte/store';
 // import { browser } from '$app/environment';
 // const cartItems = browser ? localStorage.getItem('cart') || [] : [];
@@ -43,6 +52,7 @@ export const globalState = $state({
     cartModalSelectedItem: null,
     currentOrder: '',
     currentOrderStatus: -1,
+    currentPage: '',
     setCartModalSelectedItem(item) {
         this.cartModalSelectedItem = item;
     },
@@ -56,6 +66,15 @@ export const globalState = $state({
     },
     setCurrentOrderStatus(status) {
         this.currentOrderStatus = status;
+    },
+    setCurrentPage(page) {
+        // debugger;
+        this.currentPage = page;
+        addPageToPersisted(page);
+    },
+    get currentPage() {
+        // this.currentPage = get('persisted').page;
+        return get(appPreferences).page
     }
     // add data to cart:
 });

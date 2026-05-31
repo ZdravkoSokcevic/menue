@@ -73,7 +73,14 @@ class OrderController extends Controller
                     ]);
                 }
             }
-            $row = Order::with(['items', 'items.modifications', 'items.modifications.extra', 'items.modifications.preference' , 'items.extras', 'items.preferences'])
+            $row = Order::with([
+                'items', 
+                'items.modifications', 
+                'items.modifications.extra', 
+                'items.modifications.preference' , 
+                'items.extras', 
+                'items.preferences'
+            ])
                 ->where('id', $res->id)->first();
             return new CreateResponse(true, ['data'=> $row, 'success'=>true]);
         }
@@ -84,7 +91,7 @@ class OrderController extends Controller
     {
         $res = $this->orderRepository->edit($id, $r->only((new Order)->getFillable()));
         if($res)    
-            return new EditResponse(true, ['row' => $res]);
+            return new EditResponse(true, ['row' => $res, 'success' => true, 'message' => 'success']);
         else return new EditResponse(false);
     }
 

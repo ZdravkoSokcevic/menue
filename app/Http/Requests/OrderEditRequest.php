@@ -11,7 +11,10 @@ class OrderEditRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = auth('sanctum')->user()->id;
+        if($user)
+            return true;
+        else return false;
     }
 
     /**
