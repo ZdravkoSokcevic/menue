@@ -32,13 +32,13 @@ interface IState {
     allergenOptions: Array<Option>;
 };
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
     allergens?: TAllergens;
     is_vegan: boolean;
 }
 
-const initialValues: IintiialValues = {
+const initialValues: IInitialValues = {
     name: '',
     allergens: [],
     is_vegan: false
@@ -62,7 +62,7 @@ const ingridientValidationSchema = Yup.object().shape({
 
 class CreateIngridient extends React.Component<IProps, IState>
 {
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
     private isVeganRef = React.createRef<HTMLInputElement>();
     constructor(props: IProps) {
         super(props);

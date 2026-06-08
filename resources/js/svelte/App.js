@@ -4,10 +4,19 @@ import MenuItems from './components/MenuItems.svelte';
 import MenuDetails from './components/MenuDetails.svelte'
 import CartPage from './components/CartPage.svelte'
 import Order from './components/Order.svelte'
+import LanguageChooser from './components/LanguageChooser.svelte'
 import { cart, globalState } from './store.svelte.js'
+import Api from './api.js';
 
 
 let app;
+
+const loadLanguages = async() => {
+  let languages = await Api.getWeb('languages');
+  if(languages && languages.data) {
+    globalState.setLanguages(languages.data);
+  }
+}
 
 function initSvelteApp() {
   if(app) {
@@ -18,6 +27,9 @@ function initSvelteApp() {
     globalState.setCode(window.LaravelData.code);
     globalState.setCurrentPage(window.LaravelData.page);
   }
+
+  // LOAD LANGUAGES
+  loadLanguages();
 
   const navEl = document.getElementById('app-navbar');
   if (navEl && !navEl.dataset.mounted) {
@@ -69,6 +81,14 @@ function initSvelteApp() {
     mount(Order,  {
       target: orderTarget,
       props: []
+    });
+  }
+
+  const languageChooserTarget = document.getElementById('lang-chooser');
+  if(languageChooserTarget && !languageChooserTarget.dataset.mounted) {
+    mount(LanguageChooser,  {
+      target: languageChooserTarget,
+      props: {close: ()=> globalState.setIsLanguageModalOpened(false)}
     });
   }
 

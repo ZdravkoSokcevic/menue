@@ -14,8 +14,9 @@
         }
         public function all(): Collection
         {
-            $q = Extra::query();
-            return $q->get();
+            $q = Extra::with('translations', 'translations.language', 'translations.language.countries');
+            $data = $q->get();
+            return collect($data->toArray());
         }
         public function create($data): Extra | bool
         {

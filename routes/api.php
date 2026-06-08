@@ -70,6 +70,9 @@
 			// Countries
 			Route::get('/countries', '\App\Http\Controllers\CountriesController@all');
 
+			// Languages
+			Route::get('/languages', '\App\Http\Controllers\LanguageController@all');
+
 			// Allergens
 			Route::get('/allergens', '\App\Http\Controllers\AllergensController@all');
 			Route::post('/allergens/create', action: '\App\Http\Controllers\AllergensController@create');
@@ -97,6 +100,14 @@
 			Route::get('/orders', 'App\Http\Controllers\OrderController@get');
 			Route::get('/orders/delete/{id}', action: '\App\Http\Controllers\OrderController@delete');
 			Route::post('/orders/edit/{id}', action: '\App\Http\Controllers\OrderController@edit');
+
+			Route::post('/translations/menu/{id}', '\App\Http\Controllers\TranslationsController@addOrUpdateMenuTranslations');
+			Route::post('/translations/category/{id}', '\App\Http\Controllers\TranslationsController@addOrUpdateCategoryTranslations');
+			Route::post('/translations/allergen/{id}', '\App\Http\Controllers\TranslationsController@addOrUpdateAllergenTranslations');
+			Route::post('/translations/ingridient/{id}', '\App\Http\Controllers\TranslationsController@addOrUpdateIngridientTranslations');
+			Route::post('/translations/extra/{id}', '\App\Http\Controllers\TranslationsController@addOrUpdateExtraTranslations');			
+			Route::post('/translations/preference/{id}', '\App\Http\Controllers\TranslationsController@addOrUpdatePreferenceTranslations');
+
 
 			Route::get('/testificate', function() {
 				dd('Here in auth');

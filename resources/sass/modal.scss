@@ -33,6 +33,12 @@
     }
 }
 
+// FOR VIEW MENU
+.view-modal {
+    max-height: 80%;
+    overflow-y: scroll;
+}
+
 div.form-page .row > div {
     height: auto;
 }

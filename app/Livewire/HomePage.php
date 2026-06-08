@@ -34,7 +34,17 @@ class HomePage extends Component
         if(!$company)
             return abort(403);
 
-        $menu = $company->menu()->with(['category', 'extras', 'extras.prices', 'preferences', 'ingridients', 'portions', 'portions.prices'])
+        $menu = $company->menu()->with([
+            'category', 
+            'extras', 
+            'extras.prices', 
+            'preferences', 
+            'ingridients', 
+            'portions', 
+            'portions.prices',
+            'translations',
+            'translations.language'
+            ])
             ->whereHas('portions')
             ->get();
             // dd($menu);

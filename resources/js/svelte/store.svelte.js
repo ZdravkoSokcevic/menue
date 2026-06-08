@@ -36,6 +36,20 @@ export const addPageToPersisted = page => {
     }));
 }
 
+export const addLanguagesToPersisted = languages => {
+    appPreferences.update(state => ({
+        ...state,
+        languages
+    }))
+}
+
+export const addSelectedLanguageToPersisted = language => {
+    appPreferences.update(state => ({
+        ...state,
+        selectedLanguage: language
+    }))
+}
+
 // import { writable } from 'svelte/store';
 // import { browser } from '$app/environment';
 // const cartItems = browser ? localStorage.getItem('cart') || [] : [];
@@ -53,6 +67,9 @@ export const globalState = $state({
     currentOrder: '',
     currentOrderStatus: -1,
     currentPage: '',
+    languages: get(appPreferences).languages || [],
+    selectedLanguage: get(appPreferences).selectedLanguage || [],
+    isLanguageModalOpened: false,
     setCartModalSelectedItem(item) {
         this.cartModalSelectedItem = item;
     },
@@ -75,6 +92,17 @@ export const globalState = $state({
     get currentPage() {
         // this.currentPage = get('persisted').page;
         return get(appPreferences).page
+    },
+    setLanguages(data) {
+        addLanguagesToPersisted(data);
+        this.languages = data;
+    },
+    setSelectedLanguage(language) {
+        addSelectedLanguageToPersisted(language);
+        this.selectedLanguage = language;
+    },
+    setIsLanguageModalOpened(value) {
+        this.isLanguageModalOpened = value;
     }
     // add data to cart:
 });

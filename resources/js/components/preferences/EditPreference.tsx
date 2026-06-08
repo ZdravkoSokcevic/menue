@@ -22,12 +22,12 @@ interface IState {
     
 };
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
     description: string;
 }
 
-const initialValues: IintiialValues = {
+const initialValues: IInitialValues = {
     name: '',
     description: ''
 }
@@ -45,7 +45,7 @@ const preferencesValidationSchema = Yup.object().shape({
 
 class EditPreference extends React.Component<IProps, IState>
 {
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -61,7 +61,7 @@ class EditPreference extends React.Component<IProps, IState>
 
     render(): React.ReactNode {
         // Create a NEW object reference here
-        const currentInitialValues: IintiialValues = {
+        const currentInitialValues: IInitialValues = {
             name: this.props.currentItem.name || '',
             description: this.props.currentItem.description || '',
         };
@@ -164,7 +164,7 @@ class EditPreference extends React.Component<IProps, IState>
     }
 
     // Here event is object that contains values
-    onSubmit = async(event: IintiialValues) => {
+    onSubmit = async(event: IInitialValues) => {
 
         let data: IPreference = {
             id: this.props.currentItem.id,

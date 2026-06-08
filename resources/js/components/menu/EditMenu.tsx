@@ -67,7 +67,7 @@ interface IPortionPrice {
 
 type TPrices = Array<IPortionPrice>;
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
     description: string;
     picture: File[] | null;
@@ -80,7 +80,7 @@ interface IintiialValues {
     extras: TMenuExtras;
 }
 
-const initialValues: IintiialValues = {
+const initialValues: IInitialValues = {
     name: '',
     description: '',
     picture: null,
@@ -176,7 +176,7 @@ picture: Yup.mixed()
 class EditMenu extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
     private categoryInputRef = React.createRef<HTMLSelectElement>();
 
     private initialValues = {
@@ -403,7 +403,7 @@ class EditMenu extends React.Component<IProps, IState>
     render(): React.ReactNode {
         // Create a NEW object reference here
         const hasExistingPicture = !!this.props.currentItem.picture;
-        const currentInitialValues: IintiialValues = {
+        const currentInitialValues: IInitialValues = {
             name: this.props.currentItem.name || '',
             description: this.props.currentItem.description || '',
             quantity: Number(this.props.currentItem.quantity) || 1,

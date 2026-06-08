@@ -15,7 +15,8 @@ class Language extends BaseModel
 
    public function countries(): BelongsToMany
     {
-        return $this->belongsToMany( \App\Models\Country::class, \App\Models\CountryLanguage::class, 'language_id', 'country_id');
+        return $this->belongsToMany( \App\Models\Country::class, \App\Models\CountryLanguage::class, 'language_id', 'country_id')
+            ->where('frequent', 1);
     }
 
 

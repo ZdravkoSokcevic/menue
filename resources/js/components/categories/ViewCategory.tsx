@@ -1,5 +1,6 @@
 import { ICategory } from "@/types/Categories";
 import { TMenu } from "@/types/Menu";
+import { ICountry } from "@/types/TCountries";
 import React from "react";
 interface IProps {
     currentItem: ICategory
@@ -10,6 +11,17 @@ class ViewCategory extends React.Component<IProps, IState>
 {
     constructor(props: IProps) {
         super(props);
+    }
+
+   getFlag(code: any) {
+    
+        let flags = '';
+        code.countries.map((country: ICountry) => {
+            flags += country.flag as string;
+            flags += ' '
+        })
+
+        return flags;
     }
 
     render(): React.ReactNode {
@@ -29,13 +41,54 @@ class ViewCategory extends React.Component<IProps, IState>
                             textAlign: "center",
                             borderRadius: "10px",
                             backgroundColor: "#f0f8ff",
-                            height: '600px',
-                            width: '400px',
+                            height: '300px',
+                            width: '200px',
                             backgroundImage: this.props.currentItem.picture ? `url(/storage/${this.props.currentItem.picture})` : '',
                             backgroundSize: 'cover',
                             position: 'relative'
                         }}
                     ></div>
+                </div>
+                <div className="mt-4">
+                    <h6 className="fw-bold text-muted mb-3">
+                        🌍 Translations
+                    </h6>
+
+                    {Object.entries(this.props.currentItem.translations || {}).map(
+                        ([lang, translation]: [string, any]) => (
+                            <div
+                                key={lang}
+                                data-lang={lang}
+                                className="card mb-2 border-0 bg-light"
+                            >
+                                <div className="card-body py-2">
+
+                                    <div className="d-flex align-items-center mb-2">
+                                        <span className="fs-5 me-2">
+                                            {this.getFlag(translation)}
+                                        </span>
+
+                                        <span className="badge bg-primary">
+                                            {lang.toUpperCase()}
+                                        </span>
+                                    </div>
+
+                                    <div>
+                                        <strong>Name:</strong>
+                                        <div>{translation.name || '-'}</div>
+                                    </div>
+
+                                    <div className="mt-2">
+                                        <strong>Description:</strong>
+                                        <div className="text-muted">
+                                            {translation.description || '-'}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        )
+                    )}
                 </div>
             </div>
         )

@@ -3,3 +3,5 @@ export interface ILang {
     name: string;
     required: boolean;
 }
+
+export type ILanguages = Array<ILang>;

@@ -61,15 +61,21 @@ class View extends React.Component<IProps & WithRouterProps, IState>
             // return (<><Navigate to={`/admin/menue/view/${this.props.currentItem.id}`} item={this.props.currentItem}/></>)
         else return(
             <>
-                <ModalOrPage isOpen={this.props.isOpen as boolean} closeModal={this.closeModal}>
-                    {this.props.type == 'menu' && <ViewMenu currentItem={this.props.currentItem as TMenu} />}
-                    {this.props.type == 'category' && <ViewCategory currentItem={this.props.currentItem as TMenu} />}
-                    {this.props.type == 'company' && <ViewCompany currentItem={this.props.currentItem as TCompany} />}
-                    {this.props.type == 'table' && <ViewCompanyTable currentItem={this.props.currentItem as ICompanyTable} />}
-                    {this.props.type == 'allergen' && <ViewAllergen currentItem={this.props.currentItem as IAllergen} />}
-                    {this.props.type == 'extra' && <ViewExtra currentItem={this.props.currentItem as IExtra} />}
-                    {this.props.type == 'preference' && <ViewPreference currentItem={this.props.currentItem as IPreference} />}
-                    {this.props.type == 'order' && <ViewOrder currentItem={this.props.currentItem as IOrder} />}
+                <ModalOrPage 
+                    isOpen={this.props.isOpen as boolean} 
+                    closeModal={this.closeModal}
+                    page={this.props.type}
+                >
+                    <div className="view-page">
+                        {this.props.type == 'menu' && <ViewMenu currentItem={this.props.currentItem as TMenu} />}
+                        {this.props.type == 'category' && <ViewCategory currentItem={this.props.currentItem as TMenu} />}
+                        {this.props.type == 'company' && <ViewCompany currentItem={this.props.currentItem as TCompany} />}
+                        {this.props.type == 'table' && <ViewCompanyTable currentItem={this.props.currentItem as ICompanyTable} />}
+                        {this.props.type == 'allergen' && <ViewAllergen currentItem={this.props.currentItem as IAllergen} />}
+                        {this.props.type == 'extra' && <ViewExtra currentItem={this.props.currentItem as IExtra} />}
+                        {this.props.type == 'preference' && <ViewPreference currentItem={this.props.currentItem as IPreference} />}
+                        {this.props.type == 'order' && <ViewOrder currentItem={this.props.currentItem as IOrder} />}
+                    </div>
                 </ModalOrPage>
             </>
         )

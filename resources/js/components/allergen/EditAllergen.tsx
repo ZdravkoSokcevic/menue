@@ -22,7 +22,7 @@ interface IProps {
     editCurrentItem: Function;
 };
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
     icon: File[] | null;
     icon_exists: string | null;
@@ -36,7 +36,7 @@ interface IState {
     icon?: Image | null;
 };
 
-const initialValues: IintiialValues = {
+const initialValues: IInitialValues = {
     name: '',
     icon: null,
     icon_exists: 'false',
@@ -69,7 +69,7 @@ const allergenValidationSchema = Yup.object().shape({
 class EditAllergen extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
 
     constructor(props: IProps) {
         super(props);

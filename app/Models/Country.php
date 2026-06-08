@@ -20,7 +20,9 @@ class Country extends BaseModel
         'currency_id',
         'region',
         'tld',
-        'frequent'
+        'frequent',
+        'mandatory',
+        'use_imperial'
     ];
 
     // We take first currency as main one

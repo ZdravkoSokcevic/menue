@@ -29,13 +29,13 @@ interface IState {
     selectedOptions: Array<Option>;
 };
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
     allergens?: TAllergens;
     is_vegan: boolean;
 }
 
-const initialValues: IintiialValues = {
+const initialValues: IInitialValues = {
     name: '',
     allergens: [],
     is_vegan: false,
@@ -60,7 +60,7 @@ const allergenValidationSchema = Yup.object().shape({
 class EditIngridient extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
     private isVeganRef = React.createRef<HTMLInputElement>();
 
     constructor(props: IProps) {
@@ -112,7 +112,7 @@ class EditIngridient extends React.Component<IProps, IState>
 
     render(): React.ReactNode {
         // Create a NEW object reference here
-        const currentInitialValues: IintiialValues = {
+        const currentInitialValues: IInitialValues = {
             name: this.props.currentItem.name || '',
             is_vegan: this.props.currentItem.is_vegan ? true : false, // Boolean
             allergens:[],

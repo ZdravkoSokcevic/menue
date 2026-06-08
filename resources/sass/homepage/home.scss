@@ -122,3 +122,15 @@
             font-size: 14px;
         }
     }
+
+    .language-list-container {
+        max-height: 300px; /* Or any height that fits your design */
+        overflow-y: auto;  /* Allows scrolling inside this div */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        .grid {
+            // max-height: 300px;
+        }
+        .translation-inside {
+            z-index: 100;
+        }
+    }

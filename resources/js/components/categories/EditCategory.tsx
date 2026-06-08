@@ -29,13 +29,13 @@ interface IState {
     image?: Image | null;
 };
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
     picture: File[] | null;
     picture_exists: string | null;
 }
 
-const initialValues: IintiialValues = {
+const initialValues: IInitialValues = {
     name: '',
     picture: null,
     picture_exists: 'false',
@@ -68,7 +68,7 @@ const categoryValidationSchema = Yup.object().shape({
 class EditCategory extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
 
     constructor(props: IProps) {
         super(props);

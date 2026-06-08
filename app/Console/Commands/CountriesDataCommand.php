@@ -82,6 +82,22 @@ class CountriesDataCommand extends Command
         return in_array($name, $frequent_array);
     }
 
+    protected function isMandatoryCountry(string $name)
+    {
+        $frequent_array = [
+            'United States',
+            'United Kingdom',
+            'France',
+            'Switzerland',
+            'Austria',
+            'Germany',
+            'Italy',
+            'Spain',
+            'Portugal',
+        ];
+        return in_array($name, $frequent_array);   
+    }
+
 
     protected function insertCountry(array $countryData): Country | null
     {
@@ -151,7 +167,8 @@ class CountriesDataCommand extends Command
             'currency_id'   => $main_currency,
             'language_id'   => $main_language,
             'frequent'      => $this->isFrequentCountry($countryData['name']['common']),
-            'use_imperial'  => in_array($countryData['name']['common'], $this->imperialCountryNames)
+            'use_imperial'  => in_array($countryData['name']['common'], $this->imperialCountryNames),
+            'mandatory'     => $this->isMandatoryCountry($countryData['name']['common'])
         ]);
 
         // dd($country->attributesToArray());

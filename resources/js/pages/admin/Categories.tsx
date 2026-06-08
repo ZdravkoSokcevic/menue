@@ -4,7 +4,7 @@ import Navigation from "../admin/Navigation";
 import { CiCirclePlus } from "react-icons/ci"
 import { IoEye } from "react-icons/io5";
 import { HiMiniPencilSquare } from "react-icons/hi2";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdOutlineTranslate } from "react-icons/md";
 
 
 
@@ -17,12 +17,14 @@ import Edit from "@/components/Edit";
 import Delete from "@/components/Delete";
 import CreateCategory from "@/components/categories/CreateCategory";
 import { Store } from "@/reducers/Store";
+import Translations from "@/components/Translations";
 
 interface IProps {};
 interface IState {
     isCreateCategoriesModalOpened: boolean;
     isViewCategoriesModalOpened: boolean;
     isEditCategoriesMOdalOpened: boolean;
+    isTranslationsModalOpened: boolean;
     isDeleteModalOpened: boolean;
     categories: Array<ICategory>;
     currentItem: ICategory;
@@ -35,6 +37,7 @@ class Categories extends React.Component<IProps, IState> {
             isCreateCategoriesModalOpened: false,
             isViewCategoriesModalOpened: false,
             isEditCategoriesMOdalOpened: false,
+            isTranslationsModalOpened: false,
             isDeleteModalOpened: false,
             categories: [],
             currentItem: {} as ICategory
@@ -74,6 +77,7 @@ class Categories extends React.Component<IProps, IState> {
                                     <div className="category-info">
                                         <span>{item.name}</span> 
                                         <div className="d-flex flex-direction-column card-actions">
+                                            <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)}/>
                                             <IoEye onClick={() => this.onViewClicked(item)}/>
                                             <HiMiniPencilSquare onClick={() => this.onEditClicked(item)}/>
                                             <MdDelete onClick={() => this.onDeleteClicked(item)}/>
@@ -120,6 +124,13 @@ class Categories extends React.Component<IProps, IState> {
                     closeModal={this.closeDeleteCategoryModal}
                     onDeleteClicked={this.onDeleteModalClicked}
                 />
+                <Translations
+                    type="category"
+                    isOpen={this.state.isTranslationsModalOpened}
+                    currentItem={this.state.currentItem}
+                    closeModal={this.closeCategoryTranslationsModal}
+                    editTranslationItem={this.editTranslationItem}
+                />
             </div>
 
         )
@@ -162,6 +173,11 @@ class Categories extends React.Component<IProps, IState> {
         this.openDeleteCategoryModal();
     }
 
+    onTranslationClicked = (item: ICategory) => {
+        this.setState({ currentItem: item });
+        this.openCategoryTranslationsModal();
+    }
+
     onDeleteModalClicked = async() => {
         const currentItem = this.state.currentItem;
         if(currentItem && currentItem.id) {
@@ -198,6 +214,10 @@ class Categories extends React.Component<IProps, IState> {
         this.setState({ isCreateCategoriesModalOpened: false });
     }
 
+    openCategoryTranslationsModal = () => {
+        this.setState({ isTranslationsModalOpened: true });
+    }
+
     closeViewCategoryModal = () => {
         this.setState({ currentItem: {} as ICategory });
         this.setState({ isViewCategoriesModalOpened: false });
@@ -211,6 +231,23 @@ class Categories extends React.Component<IProps, IState> {
     closeDeleteCategoryModal = () => {
         this.setState({ currentItem: {} as ICategory });
         this.setState({ isDeleteModalOpened: false })
+    }
+
+    closeCategoryTranslationsModal = () => {
+        this.setState({ currentItem: {} as ICategory })
+        this.setState({ isTranslationsModalOpened: false });
+    }
+
+    editTranslationItem = (item: ICategory) => {
+        let stat = this.state.categories;
+        let newState = stat.map((category: ICategory) => {
+            if(item.id == category.id) {
+                category.translations = item.translations;
+            }
+            return category;
+        })
+
+        this.setState({ categories: newState });
     }
 }
 

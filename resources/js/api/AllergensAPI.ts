@@ -2,7 +2,7 @@ import Api from "./api";
 import { Store } from "@/reducers/Store";
 import { AxiosResponse } from "axios";
 import { IResponseItem } from "@/types/Api";
-import { IAllergen, TAllergens } from "@/types/Allergen";
+import { IAllergen, IAllergenDataTranslations, IAllergenResponseItem, TAllergens } from "@/types/Allergen";
 
 class AllergensAPI extends Api
 {
@@ -43,7 +43,12 @@ class AllergensAPI extends Api
     static async getItems(): Promise<TAllergens | undefined >
     {
         let items: Array<IAllergen> = [];
-        const data = {};
+        let companyId = Store.getState().app.defaultCompany?.id;
+ 
+        // debugger;
+        const data: {company_id?: string} = {}
+        if(companyId)
+            data.company_id = companyId;
         try {
             let response = await this.get('/api/allergens', data, {});
             // console.log('### RESPONSE GET ALLERGENS ###');
@@ -56,6 +61,19 @@ class AllergensAPI extends Api
             console.error(err);
             return Promise.resolve([]);
         }finally {
+        }
+    }
+
+    static async addOrEditTranslations(id:string, data: IAllergenDataTranslations)
+    {
+        // TODO: Add logic for sending translations on beckend
+        // return;
+        try {
+            const success: AxiosResponse<IAllergenResponseItem> = await this.post(`/api/translations/category/${id}`, data, {}, true);
+            if(success)
+                return Promise.resolve({ success:true, data: success.data });
+        }catch(err) {
+            return Promise.resolve({ success:false, data: {}, reason: (err as Error).cause })
         }
     }
 }

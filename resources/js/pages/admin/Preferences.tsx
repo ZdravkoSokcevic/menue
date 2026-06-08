@@ -13,10 +13,11 @@ import Login from "@/api/Login";
 import { IPreference, TPreferences } from "@/types/Preference";
 import { GrView } from "react-icons/gr";
 import { CiEdit } from "react-icons/ci";
-import { MdDelete, MdOutlineRoomPreferences } from "react-icons/md";
+import { MdDelete, MdOutlineRoomPreferences, MdOutlineTranslate } from "react-icons/md";
 import CreatePreference from "@/components/preferences/CreatePreference";
 import PreferencesAPI from "@/api/PreferencesAPI";
 import { GoPlus } from "react-icons/go";
+import Translations from "@/components/Translations";
 
 interface IProps {};
 interface IState {
@@ -24,6 +25,7 @@ interface IState {
     isCreatePreferencesModalOpened: boolean;
     isViewPreferencesModalOpened: boolean;
     isEditPreferencesModalOpened: boolean;
+    isTranslationsModalOpened: boolean;
     isDeleteModalOpened: boolean;
     preferences: TPreferences;
     currentItem: IPreference;
@@ -37,6 +39,7 @@ class Preferences extends React.Component<IProps, IState> {
             isViewPreferencesModalOpened: false,
             isEditPreferencesModalOpened: false,
             isDeleteModalOpened: false,
+            isTranslationsModalOpened: false,
             preferences: [],
             currentItem: {} as IPreference,
             user: {} as TUser,
@@ -95,6 +98,12 @@ class Preferences extends React.Component<IProps, IState> {
                                                         <>
                                                             <a 
                                                                 role="button"
+                                                                onClick={() => this.onTranslationClicked(preference)}
+                                                                >
+                                                                <MdOutlineTranslate />
+                                                            </a>
+                                                            <a 
+                                                                role="button"
                                                                 onClick={() => this.onViewClicked(preference)}
                                                             >
                                                                 <GrView />
@@ -142,6 +151,13 @@ class Preferences extends React.Component<IProps, IState> {
                     closeModal={this.closeDeletePreferencesModal}
                     isOpen={this.state.isDeleteModalOpened}
                 />
+               <Translations
+                    type="preference"
+                    isOpen={this.state.isTranslationsModalOpened}
+                    currentItem={this.state.currentItem}
+                    closeModal={this.closePreferencesTranslationModal}
+                    editTranslationItem={this.editTranslationItem}
+                />
             </div>
 
         )
@@ -184,6 +200,11 @@ class Preferences extends React.Component<IProps, IState> {
         this.openDeletePreferencesModal();
     }
 
+   onTranslationClicked = (item: IPreference) => {
+        this.setState({ currentItem: item });
+        this.openIngridientTranslationsModal();
+    }
+
     onDeleteModalClicked = async() => {
         const currentItem = this.state.currentItem;
         if(currentItem && currentItem.id) {
@@ -216,6 +237,10 @@ class Preferences extends React.Component<IProps, IState> {
         this.setState({ isDeleteModalOpened: true });
     }
 
+    openIngridientTranslationsModal = () => {
+        this.setState({ isTranslationsModalOpened: true });
+    }
+
     closeCreatePreferencesModal = () => {
         this.setState({ isCreatePreferencesModalOpened: false });
     }
@@ -233,6 +258,23 @@ class Preferences extends React.Component<IProps, IState> {
     closeDeletePreferencesModal = () => {
         this.setState({ currentItem: {} as IPreference });
         this.setState({ isDeleteModalOpened: false })
+    }
+
+    closePreferencesTranslationModal = () => {
+        this.setState({ currentItem: {} as IPreference });
+        this.setState({ isTranslationsModalOpened: false })
+    }
+
+    editTranslationItem = (item: IPreference) => {
+        let stat = this.state.preferences;
+        let newState = stat.map((preference: IPreference) => {
+            if(item.id == preference.id) {
+                preference.translations = item.translations;
+            }
+            return preference;
+        })
+
+        this.setState({ preferences: newState });
     }
 }
 

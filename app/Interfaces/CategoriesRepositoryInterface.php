@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 interface CategoriesRepositoryInterface
 {
-    public function all(Request $r): Collection;
+    public function all(Request $r);
     public function store(Array $data);
     public function edit($id, Array $data): Category | bool;
     public function delete($id): bool | null;

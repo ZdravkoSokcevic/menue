@@ -23,4 +23,5 @@
         <div id="menuitems-component" wire:ignore></div>
 
     </div>
+    <div id="lang-chooser" class="language-list-container"></div> 
 </div>

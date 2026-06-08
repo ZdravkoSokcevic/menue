@@ -43,7 +43,7 @@ interface IState {
     countryOptions: Array<Option>;
 };
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
     description: string;
     email: string;
@@ -63,7 +63,7 @@ interface IintiialValues {
 
 }
 
-const initialValues: IintiialValues = {
+const initialValues: IInitialValues = {
     name: '',
     description: '',
     email: '',
@@ -168,7 +168,7 @@ const companyValidationSchema = Yup.object().shape({
 class EditCompany extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
     private emailRef = React.createRef<HTMLInputElement>();
     private countryRef = React.createRef<HTMLSelectElement>();
     private currencyRef = React.createRef<HTMLSelectElement>();
@@ -341,7 +341,7 @@ class EditCompany extends React.Component<IProps, IState>
         let pr = this.props.currentItem;
         // Create a NEW object reference here
         const hasExistingLogo = !!this.props.currentItem.logo;
-        const currentInitialValues: IintiialValues = {
+        const currentInitialValues: IInitialValues = {
             name: this.props.currentItem.name || '',
             email: this.props.currentItem.email || '',
             description: this.props.currentItem.description || '',

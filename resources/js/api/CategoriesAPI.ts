@@ -4,7 +4,7 @@ import Storage from "@/helpers/Storage";
 import { ICreateResponse, MenuCreateResponseItem, TMenu } from "@/types/Menu";
 import { Store } from "@/reducers/Store";
 import { AxiosResponse } from "axios";
-import { ICategoriesResponseItem, ICategory } from "@/types/Categories";
+import { ICategoriesResponseItem, ICategory, ICategoryDataTranslations } from "@/types/Categories";
 
 class CategoriesAPI extends Api
 {
@@ -65,6 +65,19 @@ class CategoriesAPI extends Api
             // debugger;
             // return Promise.resolve([]);
             return Promise.resolve(items);
+        }
+    }
+
+    static async addOrEditTranslations(id:string, data: ICategoryDataTranslations)
+    {
+        // TODO: Add logic for sending translations on beckend
+        // return;
+        try {
+            const success: AxiosResponse<ICategoriesResponseItem> = await this.post(`/api/translations/category/${id}`, data, {}, true);
+            if(success)
+                return Promise.resolve({ success:true, data: success.data });
+        }catch(err) {
+            return Promise.resolve({ success:false, data: {}, reason: (err as Error).cause })
         }
     }
 }

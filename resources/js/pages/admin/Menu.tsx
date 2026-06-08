@@ -4,7 +4,7 @@ import Navigation from "../admin/Navigation";
 import { CiCirclePlus } from "react-icons/ci"
 import { IoEye } from "react-icons/io5";
 import { HiMiniPencilSquare } from "react-icons/hi2";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdOutlineTranslate } from "react-icons/md";
 
 
 import "../../../sass/menu.scss"
@@ -77,7 +77,7 @@ class Menu extends React.Component<IProps, IState> {
                                         <span>{item.name}</span> 
                                         <span>{item.description}</span>
                                         <div className="d-flex flex-direction-column card-actions">
-                                            <IoEye onClick={() => this.onTranslationClicked(item)}/>
+                                            <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)}/>
                                             <IoEye onClick={() => this.onViewClicked(item)}/>
                                             <HiMiniPencilSquare onClick={() => this.onEditClicked(item)}/>
                                             <MdDelete onClick={() => this.onDeleteClicked(item)}/>
@@ -105,7 +105,12 @@ class Menu extends React.Component<IProps, IState> {
                     closeCreateMenuModal={this.closeCreateMenuModal}
                     addNewMenuItem={this.addNewMenuItem} 
                 />
-                <View isOpen={this.state.isViewMenuModalOpened} type="menu" closeModal={this.closeViewMenuModal} currentItem={this.state.currentItem as TComponentProps} />
+                <View 
+                    isOpen={this.state.isViewMenuModalOpened} 
+                    type="menu" 
+                    closeModal={this.closeViewMenuModal} 
+                    currentItem={this.state.currentItem as TComponentProps} 
+                />
                 <Edit 
                     isOpen={this.state.isEditMenuMOdalOpened} 
                     type="menu" 
@@ -124,6 +129,7 @@ class Menu extends React.Component<IProps, IState> {
                     isOpen={this.state.isTranslationsModalOpened}
                     currentItem={this.state.currentItem}
                     closeModal={this.closeMenuTranslationsModal}
+                    editTranslationItem={this.editTranslationItem}
 
                 />
             </div>
@@ -232,6 +238,18 @@ class Menu extends React.Component<IProps, IState> {
     closeMenuTranslationsModal = () => {
         this.setState({ currentItem: {} as TMenu });
         this.setState({ isTranslationsModalOpened: false });
+    }
+
+    editTranslationItem = (item: TMenu) => {
+        let stat = this.state.menuItems;
+        let newState = stat.map((menu: TMenu) => {
+            if(item.id == menu.id) {
+                menu.translations = item.translations;
+            }
+            return menu;
+        })
+
+        this.setState({ menuItems: newState });
     }
 }
 

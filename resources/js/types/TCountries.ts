@@ -1,5 +1,5 @@
 import { TCurrencies } from "./TCurrencies";
-import { TLanguages } from "./TLanguages";
+import { ILanguage, TLanguages } from "./TLanguages";
 
 export interface ICountry {
     id: string;
@@ -15,6 +15,8 @@ export interface ICountry {
     tld: string;
     frequent: boolean;
     languages: TLanguages;
+    language?: ILanguage;
+    mandatory: boolean;
 }
 
 export type TCountries = Array<ICountry>;

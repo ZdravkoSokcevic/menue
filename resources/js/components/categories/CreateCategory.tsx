@@ -33,7 +33,7 @@ const initialValues = {
     picture: null
 }
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
     picture: File[] | null;
 }
@@ -64,7 +64,7 @@ const categoryValidationSchema = Yup.object().shape({
 class CreateCategory extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
     constructor(props: IProps) {
         super(props);
         this.state = {

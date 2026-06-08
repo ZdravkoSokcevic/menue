@@ -32,11 +32,11 @@ interface IState {
     image?: Image | null;
 };
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
 }
 
-const initialValues: IintiialValues = {
+const initialValues: IInitialValues = {
     name: '',
 }
 
@@ -50,7 +50,7 @@ const categoryValidationSchema = Yup.object().shape({
 class EditCompanyTable extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
 
     constructor(props: IProps) {
         super(props);

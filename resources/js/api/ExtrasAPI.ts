@@ -1,7 +1,8 @@
 import Api from "./api";
 import { AxiosResponse } from "axios";
 import { IResponseItem } from "@/types/Api";
-import { TExtras, IExtra } from "@/types/Extra";
+import { TExtras, IExtra, IExtraTranslations, IExtraResponseItem, IExtraDataTranslations } from "@/types/Extra";
+import { Store } from "@/reducers/Store";
 
 class ExtrasAPI extends Api
 {
@@ -42,7 +43,12 @@ class ExtrasAPI extends Api
     static async getItems(): Promise<TExtras | undefined >
     {
         let items: TExtras = [];
-        const data = {};
+        let companyId = Store.getState().app.defaultCompany?.id;
+ 
+        // debugger;
+        const data: {company_id?: string} = {}
+        if(companyId)
+            data.company_id = companyId;
         try {
             let response = await this.get('/api/extras', data, {});
             // console.log('### RESPONSE GET EXTRAS ###');
@@ -55,6 +61,19 @@ class ExtrasAPI extends Api
             console.error(err);
             return Promise.resolve([]);
         }finally {
+        }
+    }
+
+    static async addOrEditTranslations(id:string, data: IExtraDataTranslations)
+    {
+        // TODO: Add logic for sending translations on beckend
+        // return;
+        try {
+            const success: AxiosResponse<IExtraResponseItem> = await this.post(`/api/translations/extra/${id}`, data, {}, true);
+            if(success)
+                return Promise.resolve({ success:true, data: success.data });
+        }catch(err) {
+            return Promise.resolve({ success:false, data: {}, reason: (err as Error).cause })
         }
     }
 }

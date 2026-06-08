@@ -24,13 +24,13 @@ interface IProps {
 interface IState {
 };
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
     description: string;
     // price: number;
 }
 
-const initialValues: IintiialValues = {
+const initialValues: IInitialValues = {
     name: '',
     description: '',
     // price: 0
@@ -54,7 +54,7 @@ const extraValidationSchema = Yup.object().shape({
 
 class CreateExtra extends React.Component<IProps, IState>
 {
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
     constructor(props: IProps) {
         super(props);
         this.state = {

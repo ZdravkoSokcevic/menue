@@ -1,7 +1,7 @@
 import { TCompaniesArr } from "@/types/TCompanies";
 import Api from "./api";
 import Storage from "@/helpers/Storage";
-import { ICreateResponse, IMenuTranslations, MenuCreateResponseItem, TMenu } from "@/types/Menu";
+import { ICreateResponse, IMenuDataTranslations, IMenuTranslations, MenuCreateResponseItem, TMenu } from "@/types/Menu";
 import { Store } from "@/reducers/Store";
 import { AxiosResponse } from "axios";
 
@@ -68,12 +68,12 @@ class MenuAPI extends Api
     }
 
     // static async addOrEditTranslations(id:string, data: IMenuTranslations): Promise<TMenu | undefined>
-    static async addOrEditTranslations(id:string, data: IMenuTranslations)
+    static async addOrEditTranslations(id:string, data: IMenuDataTranslations)
     {
         // TODO: Add logic for sending translations on beckend
         // return;
         try {
-            const success: AxiosResponse<MenuCreateResponseItem> = await this.post(`/api/menu/edit/${data.id}`, data, {}, true);
+            const success: AxiosResponse<MenuCreateResponseItem> = await this.post(`/api/translations/menu/${id}`, data, {}, true);
             if(success)
                 return Promise.resolve({ success:true, data: success.data });
         }catch(err) {

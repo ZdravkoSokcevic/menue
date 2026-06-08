@@ -1,0 +1,83 @@
+{
+  "_index-hc_r2luO.js": {
+    "file": "assets/index-hc_r2luO.js",
+    "name": "index"
+  },
+  "_reactVendor-wzZzN_Jv.js": {
+    "file": "assets/reactVendor-wzZzN_Jv.js",
+    "name": "reactVendor"
+  },
+  "_svelteVendor-fFkwWwEz.js": {
+    "file": "assets/svelteVendor-fFkwWwEz.js",
+    "name": "svelteVendor"
+  },
+  "resources/fonts/Inter.ttf": {
+    "file": "assets/Inter-c8O0ljhh.ttf",
+    "src": "resources/fonts/Inter.ttf"
+  },
+  "resources/fonts/JosefinSans.ttf": {
+    "file": "assets/JosefinSans-4CYtYlBz.ttf",
+    "src": "resources/fonts/JosefinSans.ttf"
+  },
+  "resources/fonts/Roboto.ttf": {
+    "file": "assets/Roboto-CTnIOZTo.ttf",
+    "src": "resources/fonts/Roboto.ttf"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-BlRh76wF.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_index-hc_r2luO.js",
+      "_reactVendor-wzZzN_Jv.js",
+      "_svelteVendor-fFkwWwEz.js"
+    ],
+    "css": [
+      "assets/app--CVaiC91.css",
+      "assets/menu-D-EMWwIT.css",
+      "assets/app-DkhDEVVU.css"
+    ],
+    "assets": [
+      "assets/JosefinSans-4CYtYlBz.ttf",
+      "assets/Roboto-CTnIOZTo.ttf",
+      "assets/Inter-c8O0ljhh.ttf"
+    ]
+  },
+  "resources/js/libs/alpine.js": {
+    "file": "assets/alpine-BNkQbMJ9.js",
+    "name": "alpine",
+    "src": "resources/js/libs/alpine.js",
+    "isEntry": true
+  },
+  "resources/js/svelte/App.js": {
+    "file": "assets/App-BEvIpOw2.js",
+    "name": "App",
+    "src": "resources/js/svelte/App.js",
+    "isEntry": true,
+    "imports": [
+      "_svelteVendor-fFkwWwEz.js",
+      "_index-hc_r2luO.js"
+    ]
+  },
+  "resources/sass/app.scss": {
+    "file": "assets/app-DkhDEVVU.css",
+    "src": "resources/sass/app.scss",
+    "isEntry": true
+  },
+  "resources/sass/homepage/app.scss": {
+    "file": "assets/app-BY6p_bJl.css",
+    "src": "resources/sass/homepage/app.scss",
+    "isEntry": true
+  },
+  "resources/sass/homepage/tailwind.css": {
+    "file": "assets/tailwind-Dlt51dd2.css",
+    "src": "resources/sass/homepage/tailwind.css",
+    "isEntry": true
+  },
+  "resources/sass/menu.scss": {
+    "file": "assets/menu-D-EMWwIT.css",
+    "src": "resources/sass/menu.scss",
+    "isEntry": true
+  }
+}

@@ -14,14 +14,17 @@ class AllergensRepository implements AllergensRepositoryInterface
     {
         $this->allergen = new Allergen();
     }
-    public function all(Request $r): Collection
+    public function all(Request $r)
     {
         // allow admin and demo users to see allergens
         $isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
-        $q = Allergen::query();
+        $q = Allergen::with('translations', 'translations.language');
         if($isNotAdmin)
             return Collection::make([]);
-        else return $q->get();
+        else {
+            $data = $q->get();
+            return collect($data->toArray());
+        }
     }
     public function store(Array $data): Allergen | null
     {

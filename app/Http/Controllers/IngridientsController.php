@@ -26,7 +26,7 @@ class IngridientsController extends Controller
         $this->mediaService = $ms;
     }
 
-    public function all(Request $r): Collection
+    public function all(Request $r)
     {
         return $this->ingridientsRepository->all($r);
     }

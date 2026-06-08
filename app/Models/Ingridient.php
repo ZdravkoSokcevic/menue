@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ingridient extends BaseModel
 {
@@ -15,5 +16,11 @@ class Ingridient extends BaseModel
     public function allergens(): BelongsToMany
     {
         return $this->belongsToMany(Allergen::class, 'allergen_ingridients');
+    }
+
+    public function translations(): HasMany
+    {
+        return $this->HasMany(Translation::class, 'model_id')
+            ->where('model', 'ingridient');
     }
 }

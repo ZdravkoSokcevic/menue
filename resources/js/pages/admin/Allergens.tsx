@@ -4,7 +4,7 @@ import Navigation from "../admin/Navigation";
 import { CiCirclePlus } from "react-icons/ci"
 import { IoEye } from "react-icons/io5";
 import { HiMiniPencilSquare } from "react-icons/hi2";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdOutlineTranslate } from "react-icons/md";
 
 
 
@@ -17,6 +17,7 @@ import CreateAllergen from "@/components/allergen/CreateAllergen";
 import { Store } from "@/reducers/Store";
 import { IAllergen, TAllergens } from "@/types/Allergen";
 import AllergensAPI from "@/api/AllergensAPI";
+import Translations from "@/components/Translations";
 
 interface IProps {};
 interface IState {
@@ -24,6 +25,7 @@ interface IState {
     isViewAllergenModalOpened: boolean;
     isEditAllergenModalOpened: boolean;
     isDeleteModalOpened: boolean;
+    isTranslationsModalOpened: boolean;
     allergens: TAllergens;
     currentItem: IAllergen;
 };
@@ -36,6 +38,7 @@ class Allergens extends React.Component<IProps, IState> {
             isViewAllergenModalOpened: false,
             isEditAllergenModalOpened: false,
             isDeleteModalOpened: false,
+            isTranslationsModalOpened: false,
             allergens: [],
             currentItem: {} as IAllergen
         }
@@ -74,6 +77,7 @@ class Allergens extends React.Component<IProps, IState> {
                                     <div className="allergen-info">
                                         <span>{item.name}</span> 
                                         <div className="d-flex flex-direction-column card-actions">
+                                            <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)}/>
                                             <IoEye onClick={() => this.onViewClicked(item)}/>
                                             <HiMiniPencilSquare onClick={() => this.onEditClicked(item)}/>
                                             <MdDelete onClick={() => this.onDeleteClicked(item)}/>
@@ -120,6 +124,13 @@ class Allergens extends React.Component<IProps, IState> {
                     closeModal={this.closeDeleteAllergenModal}
                     onDeleteClicked={this.onDeleteModalClicked}
                 />
+               <Translations
+                    type="allergen"
+                    isOpen={this.state.isTranslationsModalOpened}
+                    currentItem={this.state.currentItem}
+                    closeModal={this.closeAllergenTranslationsModal}
+                    editTranslationItem={this.editTranslationItem}
+                />
             </div>
 
         )
@@ -162,6 +173,11 @@ class Allergens extends React.Component<IProps, IState> {
         this.openDeleteAllergenModal();
     }
 
+    onTranslationClicked = (item: IAllergen) => {
+        this.setState({ currentItem: item });
+        this.openAllergenTranslationsModal();
+    }
+
     onDeleteModalClicked = async() => {
         const currentItem = this.state.currentItem;
         if(currentItem && currentItem.id) {
@@ -190,6 +206,10 @@ class Allergens extends React.Component<IProps, IState> {
         this.setState({ isEditAllergenModalOpened: true });
     }
 
+    openAllergenTranslationsModal = () => {
+        this.setState({ isTranslationsModalOpened: true });
+    }
+
     openDeleteAllergenModal = () => {
         this.setState({ isDeleteModalOpened: true });
     }
@@ -211,6 +231,23 @@ class Allergens extends React.Component<IProps, IState> {
     closeDeleteAllergenModal = () => {
         this.setState({ currentItem: {} as IAllergen });
         this.setState({ isDeleteModalOpened: false })
+    }
+
+   closeAllergenTranslationsModal = () => {
+        this.setState({ currentItem: {} as IAllergen });
+        this.setState({ isTranslationsModalOpened: false });
+    }
+
+    editTranslationItem = (item: IAllergen) => {
+        let stat = this.state.allergens;
+        let newState = stat.map((allergen: IAllergen) => {
+            if(item.id == allergen.id) {
+                allergen.translations = item.translations;
+            }
+            return allergen;
+        })
+
+        this.setState({ allergens: newState });
     }
 }
 

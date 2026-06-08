@@ -6,10 +6,11 @@ interface IProps {
     children?: React.ReactNode | string;
     isOpen: boolean;
     closeModal: Function;
+    page?: string;
 };
 interface IState {};
 
-const ModalOrPage: React.FC<IProps> = ({ children, isOpen, closeModal }: IProps) => {
+const ModalOrPage: React.FC<IProps> = ({ children, isOpen, closeModal, page }: IProps) => {
     const useModal = useSelector((state: RootState) => state.app.settings.useModals);
 
     const renderWithModal = (): React.ReactNode => {
@@ -17,14 +18,14 @@ const ModalOrPage: React.FC<IProps> = ({ children, isOpen, closeModal }: IProps)
             <Modal
                 isOpen={isOpen as boolean} 
                 onRequestClose={() => closeModal()}
-                    overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
-                className={`form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none ${Math.random()}`}
-                style={{}}
+                overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
+                className={`${page} view-modal form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none ${Math.random()}`}
+                style={{ }}
                 contentLabel="Example"
             >
                 <div className="form-page">
                     {/* <h2>Create </h2> */}
-                    <button className="close-btn" onClick={() => closeModal()}>x</button>
+                    <button className="close-btn main-btn" onClick={() => closeModal()}>x</button>
                     <br />
                     {children}
                 </div>

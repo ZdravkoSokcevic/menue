@@ -3,6 +3,12 @@
     import Cart from './Cart.svelte'; // Simply import it here
     
     let isCartOpen = $state(false);
+
+    const toggleLanguagesModal = () => {
+        let opened = globalState.isLanguageModalOpened;
+        globalState.setIsLanguageModalOpened(!opened);
+        console.log(opened);
+    }
 </script>
 
 <nav class="navbar">
@@ -13,11 +19,19 @@
         <a href="/details?code={globalState.code}" wire:navigate>Details</a>
     </div>
 
-    <button onclick={() => isCartOpen = !isCartOpen}>🛒</button>
-    
-    {#if isCartOpen}
-        <Cart closeCart={() => isCartOpen = false}/>
-    {/if}
+    <div>
+        <button 
+            style="padding: 5pt"
+            onclick={toggleLanguagesModal}
+        >
+            <img src='/icons/translation.svg' alt="Nema sl">
+        </button>
+        <button onclick={() => isCartOpen = !isCartOpen}>🛒</button>
+        
+        {#if isCartOpen}
+            <Cart closeCart={() => isCartOpen = false}/>
+        {/if}
+    </div>
 </nav>
 <div>
         <button

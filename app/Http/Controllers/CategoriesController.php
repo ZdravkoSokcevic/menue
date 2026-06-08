@@ -30,7 +30,7 @@ class CategoriesController extends Controller
      * @return Collection
      *  Needs to be changed to return tables only for company
      */
-    public function get(Request $r): Collection
+    public function get(Request $r)
     {
         if(Gate::denies('view-categories',  $r)) {
             return response(null,403);

@@ -2,7 +2,7 @@ import Api from "./api";
 import { Store } from "@/reducers/Store";
 import { AxiosResponse } from "axios";
 import { IResponseItem } from "@/types/Api";
-import { IIngridient, TIngridients } from "@/types/Ingridient";
+import { IIngridient, IIngridientDataTranslations, IIngridientResponseItem, IIngridientTranslations, TIngridients } from "@/types/Ingridient";
 import { IAllergen } from "@/types/Allergen";
 
 class IngridientsAPI extends Api
@@ -63,11 +63,15 @@ class IngridientsAPI extends Api
 
     static async getItems(): Promise<TIngridients | undefined >
     {
-        let companyId = Store.getState().app.defaultCompany?.id;
  
         // debugger;
         let items: Array<IIngridient> = [];
-        const data = {};
+        let companyId = Store.getState().app.defaultCompany?.id;
+ 
+        // debugger;
+        const data: {company_id?: string} = {}
+        if(companyId)
+            data.company_id = companyId;
         try {
             let response = await this.get('/api/ingridients', data, {});
             if(response && response.data) {
@@ -81,6 +85,19 @@ class IngridientsAPI extends Api
             // debugger;
             // return Promise.resolve([]);
             return Promise.resolve(items);
+        }
+    }
+
+    static async addOrEditTranslations(id:string, data: IIngridientDataTranslations)
+    {
+        // TODO: Add logic for sending translations on beckend
+        // return;
+        try {
+            const success: AxiosResponse<IIngridientResponseItem> = await this.post(`/api/translations/ingridient/${id}`, data, {}, true);
+            if(success)
+                return Promise.resolve({ success:true, data: success.data });
+        }catch(err) {
+            return Promise.resolve({ success:false, data: {}, reason: (err as Error).cause })
         }
     }
 }

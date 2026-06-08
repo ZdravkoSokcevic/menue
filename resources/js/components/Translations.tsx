@@ -21,6 +21,13 @@ import { IPreference } from "@/types/Preference";
 import { IOrder } from "@/types/Order";
 import ViewOrder from "./order/ViewOrder";
 import MenuTranslation from "./menu/MenuTranslation";
+import CategoryTranslation from "./categories/CategoryTranslation";
+import ExtraTranslation from "./extra/ExtraTranslation";
+import { ICategory } from "@/types/Categories";
+import IngridientTranslation from "./ingridient/IngridientTranslation";
+import { IIngridient } from "@/types/Ingridient";
+import AllergenTranslation from "./allergen/AllergenTranslation";
+import PreferenceTranslation from "./preferences/PreferenceTranslation";
 
 interface IProps {
     isOpen?: boolean;
@@ -29,7 +36,8 @@ interface IProps {
     // // Menu View, or Companies View
     // // Values `menu` or `companies`
     // page: string;
-    currentItem: TComponentProps
+    currentItem: TComponentProps;
+    editTranslationItem: Function;
 }
 interface IState {}
 
@@ -63,7 +71,36 @@ class Translations extends React.Component<IProps & WithRouterProps, IState>
         else return(
             <>
                 <ModalOrPage isOpen={this.props.isOpen as boolean} closeModal={this.closeModal}>
-                    {this.props.type == 'menu' && <MenuTranslation currentItem={this.props.currentItem as TMenu} />}
+                    {this.props.type == 'menu' && <MenuTranslation 
+                        currentItem={this.props.currentItem as TMenu} 
+                        closeModal={this.closeModal} 
+                        editTranslationItem={this.props.editTranslationItem}
+                    />}
+                    {this.props.type == 'category' && <CategoryTranslation 
+                        currentItem={this.props.currentItem as ICategory} 
+                        closeModal={this.closeModal} 
+                        editTranslationItem={this.props.editTranslationItem}
+                    />}
+                    {this.props.type == 'extra' && <ExtraTranslation 
+                        currentItem={this.props.currentItem as IExtra} 
+                        closeModal={this.closeModal}
+                        editTranslationItem={this.props.editTranslationItem} 
+                    />}
+                    {this.props.type == 'ingridient' && <IngridientTranslation 
+                        currentItem={this.props.currentItem as IIngridient} 
+                        closeModal={this.closeModal} 
+                        editTranslationItem={this.props.editTranslationItem}
+                    />}
+                    {this.props.type == 'allergen' && <AllergenTranslation 
+                        currentItem={this.props.currentItem as IAllergen} 
+                        closeModal={this.closeModal} 
+                        editTranslationItem={this.props.editTranslationItem}
+                    />}
+                    {this.props.type == 'preference' && <PreferenceTranslation 
+                        currentItem={this.props.currentItem as IPreference} 
+                        closeModal={this.closeModal} 
+                        editTranslationItem={this.props.editTranslationItem}
+                    />}
                 </ModalOrPage>
             </>
         )

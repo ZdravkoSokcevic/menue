@@ -4,7 +4,7 @@ import Navigation from "../admin/Navigation";
 import { CiCirclePlus } from "react-icons/ci"
 import { IoEye } from "react-icons/io5";
 import { HiMiniPencilSquare } from "react-icons/hi2";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdOutlineTranslate } from "react-icons/md";
 import { LuCookingPot } from "react-icons/lu";
 
 
@@ -19,12 +19,14 @@ import AllergensAPI from "@/api/AllergensAPI";
 import { IIngridient, TIngridients } from "@/types/Ingridient";
 import CreateIngridient from "@/components/ingridient/CreateIngridient";
 import IngridientsAPI from "@/api/IngridientsAPI";
+import Translations from "@/components/Translations";
 
 interface IProps {};
 interface IState {
     isCreateIngridientModalOpened: boolean;
     isViewIngridientModalOpened: boolean;
     isEditIngridientModalOpened: boolean;
+    isTranslationsModalOpened: boolean;
     isDeleteModalOpened: boolean;
     ingridients: TIngridients;
     currentItem: IIngridient;
@@ -38,6 +40,7 @@ class Ingridients extends React.Component<IProps, IState> {
             isViewIngridientModalOpened: false,
             isEditIngridientModalOpened: false,
             isDeleteModalOpened: false,
+            isTranslationsModalOpened: false,
             ingridients: [],
             currentItem: {} as IIngridient
         }
@@ -76,6 +79,7 @@ class Ingridients extends React.Component<IProps, IState> {
                                     <div className="ingridient-info">
                                         <span>{item.name}</span> 
                                         <div className="d-flex flex-direction-column card-actions">
+                                            <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)}/>
                                             <IoEye onClick={() => this.onViewClicked(item)}/>
                                             <HiMiniPencilSquare onClick={() => this.onEditClicked(item)}/>
                                             <MdDelete onClick={() => this.onDeleteClicked(item)}/>
@@ -122,6 +126,13 @@ class Ingridients extends React.Component<IProps, IState> {
                     closeModal={this.closeDeleteIngridientModal}
                     onDeleteClicked={this.onDeleteModalClicked}
                 />
+               <Translations
+                    type="ingridient"
+                    isOpen={this.state.isTranslationsModalOpened}
+                    currentItem={this.state.currentItem}
+                    closeModal={this.closeIngridientTranslationsModal}
+                    editTranslationItem={this.editTranslationItem}
+                />
             </div>
 
         )
@@ -164,6 +175,11 @@ class Ingridients extends React.Component<IProps, IState> {
         this.openDeleteIngridientModal();
     }
 
+    onTranslationClicked = (item: IIngridient) => {
+        this.setState({ currentItem: item });
+        this.openIngridientTranslationModal();
+    }
+
     onDeleteModalClicked = async() => {
         const currentItem = this.state.currentItem;
         if(currentItem && currentItem.id) {
@@ -196,6 +212,10 @@ class Ingridients extends React.Component<IProps, IState> {
         this.setState({ isDeleteModalOpened: true });
     }
 
+    openIngridientTranslationModal = () => {
+        this.setState({ isTranslationsModalOpened: true });
+    }
+
     closeCreateIngridientModal = () => {
         this.setState({ isCreateIngridientModalOpened: false });
     }
@@ -213,6 +233,23 @@ class Ingridients extends React.Component<IProps, IState> {
     closeDeleteIngridientModal = () => {
         this.setState({ currentItem: {} as IIngridient });
         this.setState({ isDeleteModalOpened: false })
+    }
+
+    closeIngridientTranslationsModal = () => {
+        this.setState({ currentItem: {} as IIngridient });
+        this.setState({ isTranslationsModalOpened: false })
+    }
+
+    editTranslationItem = (item: IIngridient) => {
+        let stat = this.state.ingridients;
+        let newState = stat.map((ingridient: IIngridient) => {
+            if(item.id == ingridient.id) {
+                ingridient.translations = item.translations;
+            }
+            return ingridient;
+        })
+
+        this.setState({ ingridients: newState });
     }
 }
 

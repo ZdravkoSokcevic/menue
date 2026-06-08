@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 interface IngridientsRepositoryInterface 
 {
-    public function all(Request $r): Collection;
+    public function all(Request $r);
     public function store(Array $data): Ingridient | bool;
     public function edit($id, Array $data): Ingridient | bool;
     public function delete($id): bool | null;

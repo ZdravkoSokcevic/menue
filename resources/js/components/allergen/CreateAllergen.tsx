@@ -29,12 +29,12 @@ interface IState {
     image?: Image | null;
 };
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
     icon: File[] | null;
 }
 
-const initialValues: IintiialValues = {
+const initialValues: IInitialValues = {
     name: '',
     icon: null
 }
@@ -66,7 +66,7 @@ const allergenValidationSchema = Yup.object().shape({
 class CreateAllergen extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
     constructor(props: IProps) {
         super(props);
         this.state = {

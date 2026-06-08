@@ -8,13 +8,16 @@ export default defineConfig({
     plugins: [
         tailwindcss(),
         laravel({
-            // buildDirectory: 'js/app',
+            // buildDirectory: 'public/js',
             input: [
                 'resources/sass/app.scss',
                 'resources/sass/homepage/tailwind.css',
                 'resources/sass/homepage/app.scss',
+                'resources/sass/homepage/home.scss',
+                'resources/sass/homepage/details.scss',
                 'resources/sass/menu.scss',
-                'resources/js/app.ts', // React admin entry
+                'resources/sass/homepage/menu_translations.scss',
+                'resources/js/app.js', // React admin entry
                 'resources/js/svelte/App.js', // Svelte entry
                 'resources/js/libs/alpine.js',
             ],
@@ -38,7 +41,8 @@ export default defineConfig({
                     svelteVendor: ["svelte"]
                 }
             }
-        }
+        },
+        // outDir: './public/js'
     },
     css: {
         preprocessorOptions: {

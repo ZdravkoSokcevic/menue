@@ -52,7 +52,7 @@ interface IState {
     extraOpts: TMenuExtras;
 };
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
     description: string;
     picture: File[] | null;
@@ -64,7 +64,7 @@ interface IintiialValues {
     extras: TMenuExtras;
 }
 
-const initialValues: IintiialValues = {
+const initialValues: IInitialValues = {
     name: '',
     description: '',
     picture: null,
@@ -161,7 +161,7 @@ const menuValidationSchema = Yup.object().shape({
 class CreateMenu extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
     private categoryInputRef = React.createRef<HTMLSelectElement>();
     // private ingridientsRef = React.createRef<HTMLInputElement>([]);
     constructor(props: IProps) {

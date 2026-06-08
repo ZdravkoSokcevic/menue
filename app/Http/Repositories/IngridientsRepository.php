@@ -13,10 +13,11 @@ class IngridientsRepository implements IngridientsRepositoryInterface
     {
         $this->ingridient = new Ingridient();
     }
-    public function all(Request $r): Collection
+    public function all(Request $r)
     {
-        $q = Ingridient::with('allergens');
-        return $q->get();
+        $q = Ingridient::with('translations', 'translations.language', 'translations.language.countries');
+        $data = $q->get();
+        return collect($data->toArray());
     }
     public function store(Array $data): Ingridient | bool
     {

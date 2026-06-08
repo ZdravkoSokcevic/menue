@@ -18,9 +18,16 @@ return new class extends Migration
             $table->string('model');
             $table->string('model_id');
             $table->string('model_class');
-            $table->string('locale',2);
+            $table->string('locale',2)->nullable();
             $table->timestamps();
             $table->unique([ 'model', 'model_id',  'locale', 'key']);
+            $table->bigInteger('language_id')->unsigned()->nullable();
+        });
+
+        Schema::table('translations', function (Blueprint $table) {
+            $table->foreign('language_id')
+                ->references('id')
+                ->on('languages'); 
         });
     }
 

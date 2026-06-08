@@ -1,7 +1,8 @@
 import Api from "./api";
 import { AxiosResponse } from "axios";
 import { IResponseItem } from "@/types/Api";
-import { IPreference, TPreferences } from "@/types/Preference";
+import { IPreference, IPreferenceDataTranslations, IPreferenceResponseItem, IPreferenceTranslations, TPreferences } from "@/types/Preference";
+import { Store } from "@/reducers/Store";
 
 class PreferencesAPI extends Api
 {
@@ -42,7 +43,12 @@ class PreferencesAPI extends Api
     static async getItems(): Promise<TPreferences | undefined >
     {
         let items: TPreferences = [];
-        const data = {};
+        let companyId = Store.getState().app.defaultCompany?.id;
+ 
+        // debugger;
+        const data: {company_id?: string} = {}
+        if(companyId)
+            data.company_id = companyId;
         try {
             let response = await this.get('/api/preferences', data, {});
             // console.log('### RESPONSE GET EXTRAS ###');
@@ -57,6 +63,20 @@ class PreferencesAPI extends Api
         }finally {
         }
     }
+
+    static async addOrEditTranslations(id:string, data: IPreferenceDataTranslations)
+    {
+        // TODO: Add logic for sending translations on beckend
+        // return;
+        try {
+            const success: AxiosResponse<IPreferenceResponseItem> = await this.post(`/api/translations/preference/${id}`, data, {}, true);
+            if(success)
+                return Promise.resolve({ success:true, data: success.data });
+        }catch(err) {
+            return Promise.resolve({ success:false, data: {}, reason: (err as Error).cause })
+        }
+    }    
+
 }
 
 export default PreferencesAPI;

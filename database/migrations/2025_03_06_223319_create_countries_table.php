@@ -23,6 +23,10 @@ return new class extends Migration
             $table->tinyInteger('frequent')
                 ->default(0)
                 ->index();
+            // This rows every translation must have
+            $table->tinyInteger('mandatory')
+                ->default(0)
+                ->index();
             $table->tinyInteger('use_imperial')
                 ->default(0)
                 ->index();

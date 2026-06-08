@@ -35,7 +35,7 @@ const initialValues = {
     name: '',
 }
 
-interface IintiialValues {
+interface IInitialValues {
     name: string;
 }
 
@@ -49,7 +49,7 @@ const categoryValidationSchema = Yup.object().shape({
 class CreateCompanyTable extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
-    private formikRef = React.createRef<FormikProps<IintiialValues>>();
+    private formikRef = React.createRef<FormikProps<IInitialValues>>();
     constructor(props: IProps) {
         super(props);
         this.state = {

@@ -14,10 +14,11 @@ import { IExtra, TExtras } from "@/types/Extra";
 import ExtrasAPI from "@/api/ExtrasAPI";
 import { GrView } from "react-icons/gr";
 import { CiEdit } from "react-icons/ci";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdOutlineTranslate } from "react-icons/md";
 import CreateExtra from "@/components/extra/CreateExtra";
 import { FaRegSquarePlus } from "react-icons/fa6";
 import { GoPlus } from "react-icons/go";
+import Translations from "@/components/Translations";
 
 interface IProps {};
 interface IState {
@@ -26,6 +27,7 @@ interface IState {
     isViewExtrasModalOpened: boolean;
     isEditExtrasModalOpened: boolean;
     isDeleteModalOpened: boolean;
+    isTranslationsModalOpened: boolean;
     extras: TExtras;
     currentItem: IExtra;
 };
@@ -38,6 +40,7 @@ class Extras extends React.Component<IProps, IState> {
             isViewExtrasModalOpened: false,
             isEditExtrasModalOpened: false,
             isDeleteModalOpened: false,
+            isTranslationsModalOpened: false,
             extras: [],
             currentItem: {} as IExtra,
             user: {} as TUser,
@@ -96,6 +99,12 @@ class Extras extends React.Component<IProps, IState> {
                                                         <>
                                                             <a 
                                                                 role="button"
+                                                                onClick={() => this.onTranslationClicked(extra)}
+                                                            >
+                                                                <MdOutlineTranslate />
+                                                            </a>
+                                                            <a 
+                                                                role="button"
                                                                 onClick={() => this.onViewClicked(extra)}
                                                             >
                                                                 <GrView />
@@ -143,6 +152,13 @@ class Extras extends React.Component<IProps, IState> {
                     closeModal={this.closeDeleteExtrasModal}
                     isOpen={this.state.isDeleteModalOpened}
                 />
+               <Translations
+                    type="extra"
+                    isOpen={this.state.isTranslationsModalOpened}
+                    currentItem={this.state.currentItem}
+                    closeModal={this.closeExtraTranslationsModal}
+                    editTranslationItem={this.editTranslationItem}
+                />
             </div>
 
         )
@@ -185,6 +201,11 @@ class Extras extends React.Component<IProps, IState> {
         this.openDeleteExtrasModal();
     }
 
+   onTranslationClicked = (item: IExtra) => {
+        this.setState({ currentItem: item });
+        this.openExtraTranslationsModal();
+    }
+
     onDeleteModalClicked = async() => {
         const currentItem = this.state.currentItem;
         if(currentItem && currentItem.id) {
@@ -217,6 +238,10 @@ class Extras extends React.Component<IProps, IState> {
         this.setState({ isDeleteModalOpened: true });
     }
 
+    openExtraTranslationsModal = () => {
+        this.setState({ isTranslationsModalOpened: true });
+    }
+
     closeCreateExtrasModal = () => {
         this.setState({ isCreateExtrasModalOpened: false });
     }
@@ -234,6 +259,23 @@ class Extras extends React.Component<IProps, IState> {
     closeDeleteExtrasModal = () => {
         this.setState({ currentItem: {} as IExtra });
         this.setState({ isDeleteModalOpened: false })
+    }
+
+    closeExtraTranslationsModal = () => {
+        this.setState({ currentItem: {} as IExtra });
+        this.setState({ isTranslationsModalOpened: false });
+    }
+
+    editTranslationItem = (item: IExtra) => {
+        let stat = this.state.extras;
+        let newState = stat.map((extra: IExtra) => {
+            if(item.id == extra.id) {
+                extra.translations = item.translations;
+            }
+            return extra;
+        })
+
+        this.setState({ extras: newState });
     }
 }
 

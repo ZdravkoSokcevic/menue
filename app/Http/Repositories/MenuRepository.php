@@ -14,17 +14,35 @@ class MenuRepository implements MenuRepositoryInterface
     {
         $this->menu = new Menu();
     }
-    public function all(Request $r): Collection
+    public function all(Request $r)
     {
         $isAdmin = auth('sanctum')->user()->isAdmin();
         // allow admin and demo users to see every company list
         $isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
-        $q = Menu::with(['ingridients', 'extras', 'extras.prices', 'portions', 'portions.prices', 'preferences']);
+        $q = Menu::with([
+            'ingridients', 
+            'extras', 
+            'extras.prices', 
+            'portions', 
+            'portions.prices', 
+            'preferences',
+            'translations',
+            'translations.language.countries',
+            'name_translations.language',
+            'name_translations.language.countries',
+        ]);
         if($isNotAdmin)
             $q->where('company_id', $r->input('company_id'));
         else if ($r->filled('company_id'))
             $q->where('company_id', $r->input('company_id'));
-        return $q->get();
+
+        $q->with('translations.language', function($q) {
+            // filter language
+            // $q->where('code', 'deu');
+        });
+
+        $data = $q->get();
+        return collect($data->toArray());
     }
 
     public function store(array $data): array|Menu

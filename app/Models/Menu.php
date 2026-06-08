@@ -65,6 +65,19 @@ class Menu extends BaseModel
         return $this->belongsToMany(Ingridient::class, 'ingridient_menus');
     }
 
+    public function translations(): HasMany
+    {
+        return $this->HasMany(Translation::class, 'model_id')
+            ->where('model', 'menu');
+    }
+
+    public function name_translations(): HasMany
+    {
+        return $this->hasMany(Translation::class, 'model_id')
+            ->where('model', 'menu')
+            ->where('key', 'name');
+    }
+
     // Portions / prices
     public function syncPortions(Request $r): bool
     {

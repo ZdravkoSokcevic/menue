@@ -14,6 +14,11 @@ export interface IMenuTranslations {
     [lang: string]: IMenuTranslation;
 } 
 
+export interface IMenuDataTranslations {
+    menu_id: string;
+    translations: IMenuTranslations
+}
+
 
 interface ITranslationsData {
     id: string, translations: IMenuTranslations

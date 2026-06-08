@@ -55,11 +55,11 @@ export const appSlice = createSlice({
         },
         enableLoading(state, action) {
             state.isLoading = true;
-            setTimeout(() => {
-                // 10s loading
-                // We need to disable it after
-                state.isLoading = false;
-            }, 10000);
+            // setTimeout(() => {
+            //     // 10s loading
+            //     // We need to disable it after
+            //     state.isLoading = false;
+            // }, 10000);
         },
         disableLoading(state, action) {
             state.isLoading = false;

@@ -14,8 +14,9 @@
         }
         public function all(): Collection
         {
-            $q = Preference::query();
-            return $q->get();
+            $q = Preference::with('translations', 'translations.language', 'translations.language.countries');
+            $data = $q->get();
+            return collect($data->toArray());
         }
         public function create($data): Preference | bool 
         {

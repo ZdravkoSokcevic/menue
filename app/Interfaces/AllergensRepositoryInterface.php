@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 interface AllergensRepositoryInterface 
 {
-    public function all(Request $r): Collection;
+    public function all(Request $r);
     public function store(Array $data): Allergen | null;
     public function edit($id, Array $data): Allergen | bool;
     public function delete($id): bool | null;

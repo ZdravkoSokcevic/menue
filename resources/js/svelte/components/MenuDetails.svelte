@@ -1,7 +1,8 @@
 <script>
+    import { globalState } from "../store.svelte";
+
     let { menuItem } = $props();
 </script>
-
 <div class="mx-auto max-w-5xl px-4 pb-24 pt-6">
 
     <!-- IMAGE -->

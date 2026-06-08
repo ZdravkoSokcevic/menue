@@ -1,0 +1,15 @@
+.category-translations {
+    .translation-item img {
+        padding: 4pt;
+        opacity: 50%;
+    }
+
+    .translation-item img.filled {
+        opacity: 1;
+    }
+
+    .translation-item.active img {
+        opacity: 1;
+        transform: scale(140%);
+    }
+}

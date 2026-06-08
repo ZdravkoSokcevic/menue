@@ -3,6 +3,7 @@ const AxiosApiInstance = axios.create();
 class Api
 {
     static apiUrl   = '/api/';
+    static webUrl = '/';
     static apiToken = null; 
     /**
      * @param(path) : string
@@ -11,6 +12,32 @@ class Api
     static async get(path, queryParams, headers ) {
         try {
             let response = await AxiosApiInstance(Api.apiUrl + path, {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                params: queryParams
+            })
+
+            if(response && response.data) {
+                return Promise.resolve(response);
+            }
+
+            let data = null;
+            return Promise.resolve(data);
+        }catch(e) {
+            return Promise.reject(e);
+        }
+    }
+
+    /**
+     * @param(path) : string
+     * @param(queryParams) : Object
+     */
+    static async getWeb(path, queryParams, headers ) {
+        try {
+            let response = await AxiosApiInstance(Api.webUrl + path, {
                 method: "GET",
                 headers: {
                     Accept: "application/json",
