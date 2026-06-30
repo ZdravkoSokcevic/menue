@@ -9,6 +9,11 @@
         globalState.setIsLanguageModalOpened(!opened);
         console.log(opened);
     }
+
+    const isLanguageChoosen = () => {
+        // console.log(Object.keys(globalState.selectedLanguage).length);
+        return Object.keys(globalState.selectedLanguage).length == 0;
+    }
 </script>
 
 <nav class="navbar">
@@ -24,7 +29,12 @@
             style="padding: 5pt"
             onclick={toggleLanguagesModal}
         >
-            <img src='/icons/translation.svg' alt="Nema sl">
+            {#if (isLanguageChoosen()) == 1}
+                <img src='/icons/translation.svg' alt="Missing photo">
+            {/if}
+            {#if (isLanguageChoosen()) == 0}
+                {globalState.selectedLanguage.flag}
+            {/if}
         </button>
         <button onclick={() => isCartOpen = !isCartOpen}>🛒</button>
         

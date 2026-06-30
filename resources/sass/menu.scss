@@ -2,141 +2,27 @@
 @use 'variables';
 .menu-page {
   .main-container {
-    display: flex;
-    flex-wrap: wrap;
-    .rounded-dotted-div {
-      /* Set the border properties */
-      border-style: dotted;
-      border-width: 2pt; /* Adjust thickness as needed */
-      border-color: variables.$border-color; /* Adjust color as needed */
-      
-      /* Set the border radius to round the corners */
-      border-radius: 15px; /* Adjust roundness as needed */
-      
-      /* Add dimensions and padding for visibility */
-      height: auto;
-      // max-width: 200px;
-      // padding: 10pt;
-      text-align: center;
-      // height: 180pt;
-      
-    }
-    
-    .rounded-dotted-div {
-      text-align: center;
-      &:not(.add-template) {
-        background-image: url('/storage/menu/menu.avif');
-        background-position: center -30px;
-        background-size: cover;
-      }
-      background-color: rgba(255, 255, 255, 0.55);
-      background-blend-mode: lighten;
-      position: relative;
-      overflow: hidden; 
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.8);
-        transition: transform 0.5s ease-in-out; 
-        transition-delay: .3s;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-          // opacity: .56;
-          transform: scale(1.05);
-          transition: transform 0.3s ease-in-out; 
-    
-        span {
-          opacity: 0.5;
-        }
-    
-        // INFO CARD HOVER
-        .menu-info {
-          opacity: 1; /* Fully visible on hover */
-          visibility: visible;
-          display: flex;
-          opacity: 0.9;
-          span {
-            color: black;
-          }
-        }
-      }
-    
-      // INFO
-      .menu-info {
-          /* Position the info overlay to cover the entire card */
+    .rounded-dotted-div.menu-item-container {
+
+      .ribbon.new {
           position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 100%; /* Ensures it covers the entire card area */
-          background-color: variables.$card-background-color; /* Dark overlay with transparency */
-          color: black;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          opacity: 0; /* Hidden by default */
-          visibility: hidden; /* Also hidden by default for accessibility */
-          transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; /* Smooth transition */
-          padding: 20px;
-          box-sizing: border-box;
+          top: 12px;
+          right: -35px;
+          width: 120px;
           text-align: center;
-          display: none;
-  
-          svg {
-            font-size: 20pt;
-            cursor: pointer;
-          }
-  
-          div.card-actions {
-            position: absolute;
-            bottom: 30pt;
-          }
+          color: white;
+          font-weight: bold;
+          font-size: 12px;
+          padding: 4px 0;
+          transform: rotate(45deg);
+          z-index: 5;
       }
-    
-      span.name {
-        position: absolute;
-        // top: 10%;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 10pt;
-        width: 100%;
-        font-size: 1rem;
+
+      .ribbon-primary {
+          background: #0d6efd; /* bootstrap primary */
       }
-    }
-    
-    .rounded-dotted-div.add-template {
-        position: relative;
-        &:hover {
-          opacity: .56;
-          transform: scale(1.05);
-          transition: transform 0.3s ease-in-out; 
-    
-        }
-        .temp-overlay {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 100%;
-            height: 100%;
-            transform: translate(-50%, -50%);
-            svg {
-                top: 50%;
-                height: 50%;
-                font-size: 100px;
-            }
-    
-          }
-          .name-demo {
-            position: absolute;
-            border-style: dotted;
-            border-width: 2pt; /* Adjust thickness as needed */
-            border-color: variables.$border-color; /* Adjust color as needed */
-            height: 15pt;
-            width: 100pt;
-            left: 50%;
-            transform: translate(-50%, 0%);
-            bottom: 10pt;
-          }
+
+      
     }
     
   }

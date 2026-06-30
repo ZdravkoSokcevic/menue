@@ -16,7 +16,7 @@ import { WidthHeight } from "@/types/Media";
 import CategoriesAPI from "@/api/CategoriesAPI";
 import { ICategory, TCategories } from "@/types/Categories";
 import FormikSearchSelect from "../FormikSelectSearch";
-import { Option } from "@/types/App";
+import { IOption } from "@/types/App";
 import { GoPlus } from 'react-icons/go'
 import IngridientsAPI from "@/api/IngridientsAPI";
 import { IIngridient, TIngridients, TMenuIngridients } from "@/types/Ingridient";
@@ -42,7 +42,7 @@ interface IState {
     // @ts-ignore
     image?: Image | null;
     categories: TCategories;
-    categoryOptions: Array<Option>;
+    categoryOptions: Array<IOption>;
     key: number;
     ingridients: TIngridients;
     preferences: TPreferences;
@@ -357,8 +357,10 @@ class CreateMenu extends React.Component<IProps, IState>
                 <div className="form-page">
 
 
-                    <h2>Create menu</h2>
-                    <button className="close-btn" onClick={() => this.closeModal()}>x</button>
+                    <div className="modal-header">
+                        <h2>Create Menu Item</h2>
+                        <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
+                    </div>
 
                     <Formik
                         initialValues={initialValues}
@@ -370,9 +372,9 @@ class CreateMenu extends React.Component<IProps, IState>
 
                     {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty, values}) => (
 
-                        <Form encType="multipart/form-data">
-                        <div className="container-fluid">
-                            <div className="row">
+                        <Form encType="multipart/form-data" className="modal-form-content">
+                        <div className="container-fluid p-0">
+                            <div className="row g-4">
 
                                 <div className="col-md-6 border-end p-2">
                                     <div className="form-group">
@@ -469,7 +471,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                     <div className="form-group">
                                         <label>Category</label>
                                         <FormikSearchSelect
-                                            options={(this.state.categoryOptions as unknown) as Option[]}
+                                            options={(this.state.categoryOptions as unknown) as IOption[]}
                                             name="category"
                                             id="category"
                                             aria-describedby="categoryHelp"
@@ -630,7 +632,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                     })}
 
                                     {/* SHOW / HIDE ENTRIES / ERRORS */}
-                                    <div className="">
+                                    <div className="d-none">
                                         {'Is submitting: ' + isSubmitting}<br />
                                         {'Is valid: ' + isValid} <br />
                                         {'Is dirty: ' + dirty} <br />
@@ -788,7 +790,9 @@ class CreateMenu extends React.Component<IProps, IState>
             // update menu items
             this.closeModal();
             const data: MenuCreateResponseItem = response.data as MenuCreateResponseItem;
-            this.props.addNewMenuItem(data.item);
+            const it: TMenu = data.item;
+            it.new = true;
+            this.props.addNewMenuItem(it);
         }
         else {
             alert('Unexpected error occured');
@@ -798,7 +802,7 @@ class CreateMenu extends React.Component<IProps, IState>
     async fetchCategories() {
         const categories = await CategoriesAPI.getItems();
         if(categories && categories.length) {
-            const options: Array<Option> = [];
+            const options: Array<IOption> = [];
             this.setState({ categories: categories as TCategories });
             categories.forEach((category: ICategory) => {
                 options.push({

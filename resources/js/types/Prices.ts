@@ -1,4 +1,5 @@
 export interface IPortionPrice {
+    id?: string;
     name: string;
     portion_size: number;
     portion_unit?: string;
@@ -6,6 +7,7 @@ export interface IPortionPrice {
 }
 
 export interface IPrice {
+    id?: string;
     name?: string;
     price: number;
     currency_id: string;   

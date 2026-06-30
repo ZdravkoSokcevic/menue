@@ -79,10 +79,10 @@ class MenuController extends Controller
                                 // error inserting price
                             }
                     }
-                        $price = Price::find($price);
+                        // $price = Price::find($price);
                     $data[] = [
                         'extra_id' => $inputExtra['id'],
-                        'price_id' => $priceModelId,
+                        'price_id' => isset($priceModelId) ? $priceModelId : $price->id,
                         'menu_id'  => $success->id
                     ];
                 }

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Request;
 use Log;
+use Storage;
 
 class Menu extends BaseModel
 {
@@ -24,6 +25,7 @@ class Menu extends BaseModel
         'company_id',
         'category_id',
         'prep_time',
+        // TODO: add active column
     ];
 
     public function company(): BelongsTo
@@ -71,6 +73,11 @@ class Menu extends BaseModel
             ->where('model', 'menu');
     }
 
+    public function discounts(): HasMany
+    {
+        return $this->hasMany(Discount::class);
+    }
+
     public function name_translations(): HasMany
     {
         return $this->hasMany(Translation::class, 'model_id')
@@ -116,10 +123,21 @@ class Menu extends BaseModel
         // safest way
         // }
         // dd($this->portions);
+        // $this->portions()->prices()->delete();
+        // dd($this->prices);
+        if($this->portions) {
+            foreach($this->portions as $portion) {
+                if($portion->prices)
+                    $portion->prices()->delete();
+            }
+                
+        }
         $this->portions()->delete();
+        // dd($r->all());
 
 
         foreach($prices as $price) {
+            // dd($price);
 
             $dbPriceId = null;
             $dbPrice = Price::where([ 
@@ -145,5 +163,24 @@ class Menu extends BaseModel
             ]);
         }
         return true;
+    }
+
+    public static function booted()
+    {
+        static::deleting(function ($menu) {
+            $picture = $menu->picture;
+            if($picture) {
+                $disk = config('filesystems.default') == 'local' ? 'public' : 's3';
+                $file_exists = Storage::disk($disk)->exists($picture);
+                if($file_exists) {
+                    try {
+                        Storage::disk($disk)->delete($picture);
+
+                    }catch(err) {
+                        Log::error('Cannot delete menu picture');
+                    }
+                }
+            }
+        });
     }
 }

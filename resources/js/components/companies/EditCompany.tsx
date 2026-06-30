@@ -15,7 +15,7 @@ import { Store } from "@/reducers/Store";
 import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import { AxiosResponse } from "axios";
 import FormikSearchSelect from "../FormikSelectSearch";
-import { Option } from "@/types/App";
+import { IOption } from "@/types/App";
 import { TLicenses } from "@/types/TLicenses";
 import { ILanguage, TLanguages } from "@/types/TLanguages";
 import { ICurrency, TCurrencies } from "@/types/TCurrencies";
@@ -35,12 +35,12 @@ interface IState {
     logo?: Image | null;
     licenses: TLicenses;
     currencies: TCurrencies;
-    currencyOptions: Array<Option>;
-    licenseOptions: Array<Option>;
+    currencyOptions: Array<IOption>;
+    licenseOptions: Array<IOption>;
     languages: TLanguages,
-    languageOptions: Array<Option>;
+    languageOptions: Array<IOption>;
     countries: TCountries;
-    countryOptions: Array<Option>;
+    countryOptions: Array<IOption>;
 };
 
 interface IInitialValues {
@@ -307,7 +307,7 @@ class EditCompany extends React.Component<IProps, IState>
                 value: language.id
             };
         });
-        this.setState({ languageOptions: languageOptions as Option[] });
+        this.setState({ languageOptions: languageOptions as IOption[] });
         // debugger;
     }
 
@@ -519,7 +519,7 @@ class EditCompany extends React.Component<IProps, IState>
                                     <div className="form-group">
                                         <label>Country</label>
                                         <FormikSearchSelect 
-                                            options={(this.state.countryOptions as unknown) as Option[]}
+                                            options={(this.state.countryOptions as unknown) as IOption[]}
                                             name="country"
                                             id="country"
                                             aria-describedby="countryHelp"

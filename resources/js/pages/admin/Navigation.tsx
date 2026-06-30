@@ -11,6 +11,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { IoIosExit } from "react-icons/io";
 import { MdOutlineRestaurantMenu, MdOutlineRoomPreferences } from "react-icons/md";
 import { BiCategory, BiShoppingBag } from "react-icons/bi";
+import { TbShoppingCartDiscount } from "react-icons/tb";
 import { PiDeskBold } from "react-icons/pi";
 import { BiDish } from "react-icons/bi";
 import { MdDashboard } from "react-icons/md";
@@ -190,6 +191,21 @@ class Navigation extends React.Component<IProps, IState>
             : false;   
     }
 
+    isAllowedToRenderDiscounts = (): boolean => {
+        let {defaultCompany} = this.props;
+        const userSettings = this.props.userSettings;
+        // console.log('#### MENU PERMISSION FUNCTION::USER SETTINGS ####')
+        // console.log(userSettings);
+        // console.log('#### /MENU PERMISSION FUNCTION::/USER SETTINGS ####')
+
+        // console.log('#### MENU PERMISSION FUNCTION::DEFAULT COMPANY ####')
+        // console.log(Store.getState().app.defaultCompany);
+        // console.log('#### /MENU PERMISSION FUNCTION::/DEFAULT COMPANY ####')
+        return userSettings.isLoggedIn && (Store.getState().app.defaultCompany.id != '')
+            ? true
+            : false;   
+    }
+
     renderCompanySidebarInfo = (): ReactNode => {
         const company = Store.getState().app.defaultCompany;
         return (
@@ -280,6 +296,16 @@ class Navigation extends React.Component<IProps, IState>
                     >
                         <MdOutlineRestaurantMenu /> <span style={{lineHeight: '15px'}}>Menu</span>
                     </Link>}
+
+                    {/* DISCOUNTS */}
+                    {this.isAllowedToRenderDiscounts() && <Link 
+                        to="/discounts"
+                        className={this.props.location?.pathname === '/discounts' ? 'nav-link active': 'nav-link'}
+                        viewTransition
+                    > 
+                        <TbShoppingCartDiscount /> <span style={{ lineHeight: '15px' }}>Discounts</span>
+                    </Link>}
+
                     {this.isAllowedToRenderAllergens() || true && <Link 
                         to="/allergens"
                         className={this.props.location?.pathname === '/allergens' ? 'nav-link active': 'nav-link'}

@@ -21,6 +21,8 @@ import EditExtra from "./extra/EditExtra";
 import { IExtra } from "@/types/Extra";
 import { IPreference } from "@/types/Preference";
 import EditPreference from "./preferences/EditPreference";
+import EditDiscount from "./ciscount/EditDiscount";
+import { IDiscount } from "@/types/Discount";
 
 interface IProps {
     isOpen?: boolean;
@@ -63,7 +65,11 @@ class Edit extends React.Component<IProps & WithRouterProps, IState>
             // return (<><Navigate to={`/admin/menue/view/${this.props.currentItem.id}`} item={this.props.currentItem}/></>)
         else return(
             <>
-                <ModalOrPage isOpen={this.props.isOpen as boolean} closeModal={this.closeModal}>
+                <ModalOrPage 
+                    isOpen={this.props.isOpen as boolean} 
+                    closeModal={this.closeModal}
+                    type={`edit-form ${this.props.type}` }
+                >
                     {this.props.type == 'menu' && <EditMenu 
                         currentItem={this.props.currentItem as TMenu} 
                         closeModal={this.closeModal}
@@ -104,6 +110,12 @@ class Edit extends React.Component<IProps & WithRouterProps, IState>
 
                     {this.props.type == 'preference' && <EditPreference 
                         currentItem={this.props.currentItem as IPreference}
+                        closeModal={this.closeModal}
+                        editCurrentItem={this.props.editCurrentItem as Function}
+                    />}
+                    {this.props.type == 'discount' && <EditDiscount 
+                        type="modal"
+                        currentItem={this.props.currentItem as IDiscount}
                         closeModal={this.closeModal}
                         editCurrentItem={this.props.editCurrentItem as Function}
                     />}

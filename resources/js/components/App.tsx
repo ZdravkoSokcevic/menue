@@ -17,6 +17,7 @@ import Login from '@/pages/admin/Login';
 import Admin from '@/pages/Admin';
 import Menu from '@/pages/admin/Menu';
 import Categories from '@/pages/admin/Categories';
+import Discounts from "@/pages/admin/Discounts";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import Storage from '@/helpers/Storage';
 // eslint-disable-next-line
@@ -116,7 +117,7 @@ const App: React.FC = () => {
                 <div className="admin-nav-c">
                 <Navigation />
 
-                <AnimatePresence mode="Wait">
+                {/* <AnimatePresence mode="Wait"> */}
                 <motion.div 
                     key={location.pathname}
                     // initial="initial"
@@ -195,6 +196,12 @@ const App: React.FC = () => {
                         </ProtectedRoute>
                     } />
 
+                    <Route path="/discounts" element={
+                        <ProtectedRoute>
+                            <Discounts />
+                        </ProtectedRoute>
+                    } />
+
                     {/*<Route path="/admin" element = {
                         <Admin />
                     } /> */}
@@ -207,7 +214,7 @@ const App: React.FC = () => {
                 </Routes>
                 <Outlet />
                 </motion.div>
-                </AnimatePresence>
+                {/* </AnimatePresence> */}
                 </div>
                 <ToastContainer />
                 <DotLoader loading={Store.getState().app.isLoading} className="main-loader"/>

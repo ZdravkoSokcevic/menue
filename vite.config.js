@@ -15,8 +15,10 @@ export default defineConfig({
                 'resources/sass/homepage/app.scss',
                 'resources/sass/homepage/home.scss',
                 'resources/sass/homepage/details.scss',
+                'resources/sass/homepage/cart.scss',
                 'resources/sass/menu.scss',
-                'resources/sass/homepage/menu_translations.scss',
+                'resources/sass/discounts.scss',
+                'resources/sass/menu_translation.scss',
                 'resources/js/app.js', // React admin entry
                 'resources/js/svelte/App.js', // Svelte entry
                 'resources/js/libs/alpine.js',
@@ -65,9 +67,12 @@ export default defineConfig({
             // Ignore everything EXCEPT .js and .ts files
             ignored: ['!**/*.js', '!**/*.ts'],
         },
-        // host: true,
+        host: '0.0.0.0',
         // strictPort: true,
         // port: 8080
+        hmr: {
+            host: '192.168.1.102'
+        }
     },
     define: {
         _global: ({})

@@ -65,3 +65,10 @@ div.form-page .row > div {
   right: 0;
   bottom: 0;
 }
+
+.form-modal:not(.edit-form) {
+    form {
+        overflow-y: scroll;
+        max-height: 75vh;
+    }
+}

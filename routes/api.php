@@ -28,6 +28,7 @@
 
 		Route::post('/companies/create', '\App\Http\Controllers\CompaniesController@create');
 		Route::post('/companies/edit/{id}', [\App\Http\Controllers\CompaniesController::class , 'edit']);
+		
 		Route::middleware(['auth:sanctum'])->group(function($router) {
 
 			// logout
@@ -37,10 +38,17 @@
 			Route::get('/companies/delete/{id}', '\App\Http\Controllers\CompaniesController@delete');
 			Route::get('/companies/all', '\App\Http\Controllers\CompaniesController@all');
 			
+			// Menu routes
 			Route::get('/menu', '\App\Http\Controllers\MenuController@get');
 			Route::post('/menu/create', '\App\Http\Controllers\MenuController@insert');
 			Route::post('/menu/edit/{id}', '\App\Http\Controllers\MenuController@edit');
 			Route::get('/menu/delete/{id}', '\App\Http\Controllers\MenuController@delete');
+
+			// Discount routes
+			Route::post('/discounts/create', '\App\Http\Controllers\DiscountController@insert');
+			Route::get('/discounts', '\App\Http\Controllers\DiscountController@get');
+			Route::post('/discounts/edit/{id}', '\App\Http\Controllers\DiscountController@edit');
+			Route::get('/discounts/delete/{id}', '\App\Http\Controllers\DiscountController@delete');
 
 			// Categories routes
 			Route::get('/categories', '\App\Http\Controllers\CategoriesController@get');

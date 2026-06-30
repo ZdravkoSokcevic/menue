@@ -1,0 +1,29 @@
+// Variables
+@use 'variables';
+.discount-page {
+  .main-container {
+    .rounded-dotted-div.discount-item-container {
+
+      .ribbon.new {
+          position: absolute;
+          top: 12px;
+          right: -35px;
+          width: 120px;
+          text-align: center;
+          color: white;
+          font-weight: bold;
+          font-size: 12px;
+          padding: 4px 0;
+          transform: rotate(45deg);
+          z-index: 5;
+      }
+
+      .ribbon-primary {
+          background: #0d6efd; /* bootstrap primary */
+      }
+
+      
+    }
+    
+  }
+}

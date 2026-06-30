@@ -42,6 +42,15 @@ class AppServiceProvider extends ServiceProvider
 
             return false;  
         });
+
+        Gate::define('view-discounts', function(User $user, Request $r) {
+            if($user->isAdminOrDemo())
+                return true;
+            else if($r->filled('company_id'))
+                return true;
+
+            return false;  
+        });
     }
 
     /**

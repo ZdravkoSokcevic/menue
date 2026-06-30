@@ -7,10 +7,11 @@ interface IProps {
     isOpen: boolean;
     closeModal: Function;
     page?: string;
+    type?: string;
 };
 interface IState {};
 
-const ModalOrPage: React.FC<IProps> = ({ children, isOpen, closeModal, page }: IProps) => {
+const ModalOrPage: React.FC<IProps> = ({ children, isOpen, closeModal, page, type }: IProps) => {
     const useModal = useSelector((state: RootState) => state.app.settings.useModals);
 
     const renderWithModal = (): React.ReactNode => {
@@ -19,7 +20,7 @@ const ModalOrPage: React.FC<IProps> = ({ children, isOpen, closeModal, page }: I
                 isOpen={isOpen as boolean} 
                 onRequestClose={() => closeModal()}
                 overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
-                className={`${page} view-modal form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none ${Math.random()}`}
+                className={`${page} ${type} view-modal form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none ${Math.random()}`}
                 style={{ }}
                 contentLabel="Example"
             >

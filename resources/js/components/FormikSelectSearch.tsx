@@ -1,17 +1,12 @@
 import React, { ChangeEvent } from 'react';
 import { useField, FieldHookConfig } from 'formik';
 import Select, { SingleValue, ActionMeta, StylesConfig } from 'react-select';
-import { Option } from '@/types/App';
-
-type OptionType = {
-  value: string;
-  label: string;
-};
+import { IOption, IOptionType } from '@/types/App';
 
 
 type FormikSearchSelectProps =  FieldHookConfig<string | number> & {
   label?: string;
-  options: Option[];
+  options: IOption[];
   placeholder?: string;
   name: string;
   isSearchable?: boolean;
@@ -25,8 +20,8 @@ const FormikSearchSelect: React.FC<FormikSearchSelectProps> = ({ label, options,
 
   // Sync react-select's object-based value with Formik's primitive value
   const onChange = (
-    newValue: SingleValue<Option>, 
-    actionMeta: ActionMeta<Option>
+    newValue: SingleValue<IOption>, 
+    actionMeta: ActionMeta<IOption>
   ) => {
     setValue(newValue ? newValue.value : '');
     // debugger;
@@ -46,7 +41,7 @@ const FormikSearchSelect: React.FC<FormikSearchSelectProps> = ({ label, options,
       props.onChange(mockEvent as any);
   };
 
-  const customStyles: StylesConfig<OptionType, false> = {
+  const customStyles: StylesConfig<IOptionType, false> = {
     control: (baseStyles, state) => ({
         backgroundColor: 'white'
     }),

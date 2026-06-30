@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
-            $table->integer('price');
+            $table->decimal('price')->default(0);
             // extras does have their own name
             $table->string('name')->nullable();
             $table->bigInteger('currency_id')->unsigned()->nullable();

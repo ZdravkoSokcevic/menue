@@ -8,8 +8,8 @@ import { MdDelete, MdOutlineTranslate } from "react-icons/md";
 import { LuCookingPot } from "react-icons/lu";
 
 
-
-import "../../../sass/ingridients.scss"
+import "../../../sass/list-card.scss"
+// import "../../../sass/ingridients.scss"
 import View from "@/components/View";
 import { TComponentProps } from "@/types/TComponentProps";
 import Edit from "@/components/Edit";
@@ -55,46 +55,61 @@ class Ingridients extends React.Component<IProps, IState> {
             <div className="ingridients-page page" key={Math.random()}>
                 {/* <Navigation /> */}
 
-                <div className="main-content p-5">
+                <div className="main-content p-5 container">
                     {/* <div className="p-5"> */}
                         <div className="w-12 d-flex justify-content-between">
                             <h4><LuCookingPot /> Ingridients</h4>
                         </div>
 
                         {/* MAIN CONTAINER */}
-                        <div className="col-12 mt-5 main-container">
+                        <div className="col-12 mt-5 main-container row">
 
 
                             {/* MAIN CONTAINER ITEMS */}
                             {this.state.ingridients.map((item: IIngridient, index) => {
                                 return <div 
-                                            className="rounded-dotted-div card shadow-sm border-0 card-soft" 
+                                            className="m-2 placeholder-4-3 col-3 rounded-dotted-div card shadow-sm border-0 card-soft position-relative item-container" 
                                             key={Math.random()}
                                         >
                                     {/* <span className="name">{item.name}</span>  */}
+                                    <div className="card-overlay"></div>
+                                    {/* Title */}
+                                    <div className="card-title-wrapper">
+                                        <span className="card-title">
+                                            {item.name}
+                                        </span>
+                                    </div>
                                     <div className="card-body">
                                         <h5 className="card-text text-muted mt-4">{<LuCookingPot style={{fontSize: '55pt'}}/>}</h5>
-                                        <h5 className="card-title name">{item.name}</h5>
                                     </div>
-                                    <div className="ingridient-info">
-                                        <span>{item.name}</span> 
-                                        <div className="d-flex flex-direction-column card-actions">
+                                    <div className="ingridient-info item-info">
+                                        <div className="card-actions">
+
+                                        <p className="hover-description">{item.name}</p> 
+                                        <div className="card-actions-wrapper">
                                             <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)}/>
                                             <IoEye onClick={() => this.onViewClicked(item)}/>
                                             <HiMiniPencilSquare onClick={() => this.onEditClicked(item)}/>
                                             <MdDelete onClick={() => this.onDeleteClicked(item)}/>
                                         </div>
                                     </div>
+                                    </div>
                                 </div>
                             })}
 
                             {/* TEMPLATE CONTAINER ITEM */}
-                            <div className="rounded-dotted-div m-2 add-template">
-                                
-                                <div className="temp-overlay">
-                                    <CiCirclePlus onClick={this.openCreateModal}/>
+                            <div 
+                                className="rounded-dotted-div m-2 col-3 add-template placeholder-4-3 item-container"
+                                onClick={this.openCreateModal} // Making the entire container clickable is much better UX
+                            >
+                                <div className="add-content-wrapper">
+                                    <CiCirclePlus className="add-icon" />
                                 </div>
-                                    <div className="name-demo"></div>
+                                
+                                {/* Bottom placeholder matching the style of the food card titles */}
+                                <div className="card-title-wrapper">
+                                    <span className="card-title-placeholder"></span>
+                                </div>
                             </div>
 
                         </div>

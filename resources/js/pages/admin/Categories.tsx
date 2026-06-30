@@ -57,7 +57,7 @@ class Categories extends React.Component<IProps, IState> {
                     {/* <div className="p-5"> */}
                         <div className="w-12 d-flex justify-content-between">
                             <h4>Categories</h4>
-                            <h3>{'Exchange <- ->'}</h3>
+                            {/* <h3>{'Exchange <- ->'}</h3> */}
                         </div>
 
                         {/* MAIN CONTAINER */}

@@ -15,7 +15,7 @@ import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import { AxiosResponse } from "axios";
 import { WidthHeight } from "@/types/Media";
 import CategoriesAPI from "@/api/CategoriesAPI";
-import { Option } from "@/types/App";
+import { IOption } from "@/types/App";
 import { ICategory, TCategories } from "@/types/Categories";
 import FormikSearchSelect from "../FormikSelectSearch";
 import { IExtra, IMenuExtra, TExtras, TMenuExtras } from "@/types/Extra";
@@ -41,7 +41,7 @@ interface IState {
     image?: Image | null;
     key: number;
     categories: TCategories;
-    categoryOptions: Array<Option>;
+    categoryOptions: Array<IOption>;
     ingridients: TIngridients;
     preferences: TPreferences;
     choosenIngridients: Array<string | number>;
@@ -553,7 +553,7 @@ class EditMenu extends React.Component<IProps, IState>
                                     <div className="form-group">
                                         <label>Category</label>
                                         <FormikSearchSelect
-                                            options={(this.state.categoryOptions as unknown) as Option[]}
+                                            options={(this.state.categoryOptions as unknown) as IOption[]}
                                             name="category"
                                             id="category"
                                             aria-describedby="categoryHelp"
@@ -863,7 +863,7 @@ class EditMenu extends React.Component<IProps, IState>
     async fetchCategories() {
         const categories = await CategoriesAPI.getItems();
         if(categories && categories.length) {
-            const options: Array<Option> = [];
+            const options: Array<IOption> = [];
             this.setState({ categories: categories as TCategories });
             categories.forEach((category: ICategory) => {
                 options.push({

@@ -33,30 +33,33 @@
     </div>
 
     <div class="max-h-[300px] overflow-y-auto overscroll-contain pr-1">
-    <div class="grid grid-cols-3 gap-3">
-        {#each languages as lang}
-            {#if (lang.mandatory || lang.frequent)}
-            <button
-                type="button"
-                onclick={() => selectLanguage(lang)}
-                class={`flex flex-col items-center rounded-2xl border p-4 transition-all hover:scale-105
-                ${
-                    globalState.selectedLanguage.code === lang.code
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 bg-white hover:border-blue-300'
-                }`}
-            >
-                <span class="text-4xl">
-                    {lang.flag}
-                </span>
+        <div class="grid grid-cols-2 gap-2">
+            {#each languages as lang}
+                {#if (lang.mandatory || lang.frequent)}
+                <button
+                    type="button"
+                    onclick={() => selectLanguage(lang)}
+                    class={`flex items-center gap-3 rounded-xl border px-3 py-2 transition-all hover:scale-[1.02]
+                    ${
+                        globalState.selectedLanguage.code === lang.code
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-100 bg-white hover:border-blue-300'
+                    }`}
+                >
+                    <!-- Shrunk flag size -->
+                    <span class="text-2xl leading-none">
+                        {lang.flag}
+                    </span>
 
-                <span class="mt-2 text-sm font-medium text-gray-700">
-                    {lang.name}
-                </span>
-            </button>
-            {/if}
-        {/each}
-    </div>
+                    <!-- Shrunk text size -->
+                    <span class="text-xs font-medium text-gray-700 truncate">
+                        {lang.name}
+                    </span>
+                </button>
+                {/if}
+            {/each}
+        </div>
+
     </div>
 
     <button

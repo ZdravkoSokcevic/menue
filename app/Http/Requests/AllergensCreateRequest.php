@@ -25,7 +25,7 @@ class AllergensCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:4|max:30',
-            'icon' => ['required', 'extensions:jpg,png,jpeg'],
+            // 'icon' => ['required', 'extensions:jpg,png,jpeg,JPG'],
         ];
     }
 }

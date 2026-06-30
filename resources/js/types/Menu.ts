@@ -39,7 +39,10 @@ export interface TMenu extends TComponentProps{
     // Used as key in EditMenu submit
     prices?: TPrices;
     translations?: IMenuTranslations;
+    new?: boolean;
 }
+
+export type TMenuItems = Array<TMenu>;
 
 export interface MenuCreateResponseItem {
     item: TMenu

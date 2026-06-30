@@ -34,6 +34,7 @@ class HomePage extends Component
         if(!$company)
             return abort(403);
 
+
         $menu = $company->menu()->with([
             'category', 
             'extras', 
@@ -53,8 +54,9 @@ class HomePage extends Component
             return abort(403);
 
         $license = $company->license;
-        if(!$license)
-            return abort(403);
+        // dd($menu);
+        // if(!$license)
+        //     return abort(403);
 
         // Modify 403 response to show page
         // with instructions for user to login to local network
@@ -70,6 +72,7 @@ class HomePage extends Component
         ];
 
         $this->code = $code;
+        
 
         foreach ($dataForLayout as $key => $val) {
             $this->$key = $val;
@@ -81,7 +84,6 @@ class HomePage extends Component
 
     public function render()
     {
-        
         $data = [];
         if($this->code != '')
             $data['code'] = $this->code;

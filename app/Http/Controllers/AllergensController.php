@@ -33,6 +33,7 @@ class AllergensController extends Controller
     public function create(AllergensCreateRequest $r)
     {
         $data = $r->only(Allergen::getFillableFields());
+        // dd($r->all());
 
         $icon_path = '';
         if($r->file('icon'))

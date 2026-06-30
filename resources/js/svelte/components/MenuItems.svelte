@@ -87,13 +87,13 @@
                         wire:navigate 
                     >
                         <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                            {item.name}
+                            {globalState.getNameTranslation(item)}
                         </h3>
                         <span class="text-lg font-black text-blue-600">${ (item && item.portions && item.portions[0] && item.portions[0].prices) ? item.portions[0].prices.price : 0}</span>
                     </a>
                     
                     <p class="mb-5 text-sm leading-relaxed text-gray-500 line-clamp-2">
-                        {item.description}
+                        {globalState.getDescriptionTranslation(item)}
                     </p>
 
                     <button 

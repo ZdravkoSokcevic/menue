@@ -26,5 +26,11 @@ Workers in the bar have open admin panel, and they will get notifications whenev
 App is compatible with desktop computer, or tablet computers, so you don't feel any disadventages about using it on the phone.
 
 
+# Necessary dependencies:
+### **jpegoptim optipng pngquant gifsicle** - for image optimization
+### Install php8.5-imagick
+### Install php8.5-xml
+### Install php8.5-mbstring
+### Install php8.5-gd
 
 

@@ -41,6 +41,8 @@ class MenuRepository implements MenuRepositoryInterface
             // $q->where('code', 'deu');
         });
 
+        $q->whereHas('portions');
+
         $data = $q->get();
         return collect($data->toArray());
     }

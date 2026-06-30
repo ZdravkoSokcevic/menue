@@ -10,12 +10,16 @@ class OrderItem extends BaseModel
     public $fillable = [
         'order_id',
         'menu_id',
+        'combo_id',
         'portion_id',
         'quantity',
         'status',
         'prep_time',
         'table_id',
-        'note'
+        'note',
+        // Handles price change, for statistics
+        // it shows actual paid price
+        'price',
     ];
 
     public function order(): BelongsTo

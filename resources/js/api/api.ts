@@ -35,7 +35,7 @@ AxiosApiInstance.interceptors.request.use(
 )
 
 AxiosApiInstance.interceptors.response.use((response: AxiosResponse<any, any>) => {
-    console.log(response);
+    // console.log(response);
     return response;
 }, (error: AxiosError) => {
     if(error.response && error.response.status === 401) {

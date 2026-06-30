@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.2",
         "inertiajs/inertia-laravel": "^2.0",
+        "intervention/image-laravel": "^4.0",
         "ipqualityscore/ipqs-php-db-reader": "^1.0",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
@@ -19,6 +20,7 @@
         "livewire/livewire": "^4.2",
         "mcamara/laravel-localization": "^2.3",
         "simplesoftwareio/simple-qrcode": "^4.2",
+        "spatie/laravel-image-optimizer": "^1.8",
         "tightenco/ziggy": "^2.4",
         "tymon/jwt-auth": "^2.2"
     },

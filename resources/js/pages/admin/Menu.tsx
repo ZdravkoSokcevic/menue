@@ -6,7 +6,7 @@ import { IoEye } from "react-icons/io5";
 import { HiMiniPencilSquare } from "react-icons/hi2";
 import { MdDelete, MdOutlineTranslate } from "react-icons/md";
 
-
+import "../../../sass/list-card.scss"
 import "../../../sass/menu.scss"
 import CreateMenu from "@/components/menu/CreateMenu";
 import MenuAPI from "@/api/MenuAPI";
@@ -68,31 +68,55 @@ class Menu extends React.Component<IProps, IState> {
                                 let picPath: String = item.picture as String;
                                 const picFullPath = (picPath) ? "url('/storage/" + picPath.replaceAll('\'', '') + "')" : '';
                                 return <div 
-                                            className="m-2 placeholder-4-3 col-3 rounded-dotted-div" 
-                                            style={{backgroundImage: picFullPath ? picFullPath : ''}}
-                                            key={Math.random()}
-                                        >
-                                    <span className="name">{item.name}</span> 
-                                    <div className="menu-info">
-                                        <span>{item.name}</span> 
-                                        <span>{item.description}</span>
-                                        <div className="d-flex flex-direction-column card-actions">
-                                            <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)}/>
-                                            <IoEye onClick={() => this.onViewClicked(item)}/>
-                                            <HiMiniPencilSquare onClick={() => this.onEditClicked(item)}/>
-                                            <MdDelete onClick={() => this.onDeleteClicked(item)}/>
+                                    className={'m-2 placeholder-4-3 col-3 rounded-dotted-div menu-item-container position-relative item-container' +
+                                        (!item.portions?.length ? ' border-danger' : '')}
+                                    style={{backgroundImage: picFullPath ? picFullPath : ''}}
+                                    key={index}
+                                >
+                                    {/* Dark gradient */}
+                                    <div className="card-overlay"></div>
+                                    {/* INDICATES WEATHER ITEM IS NEW */}
+                                    {item.new && <div className="ribbon ribbon-primary new">NEW</div>}
+                                    
+                                    <div className="item-info menu-info">
+                                        <div className="card-actions">
+                                            {item.description && (
+                                                <p className="hover-description">{item.description}</p>
+                                            )}
+                                            {!item.portions?.length && <span className="badge bg-danger">
+                                                No price
+                                            </span>}
+                                            <div className="card-actions-wrapper">
+                                                <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)}/>
+                                                <IoEye onClick={() => this.onViewClicked(item)}/>
+                                                <HiMiniPencilSquare onClick={() => this.onEditClicked(item)}/>
+                                                <MdDelete onClick={() => this.onDeleteClicked(item)}/>
+                                            </div>
                                         </div>
+                                    </div>
+
+                                    {/* Title */}
+                                    <div className="card-title-wrapper">
+                                        <span className="card-title">
+                                            {item.name}
+                                        </span>
                                     </div>
                                 </div>
                             })}
 
                             {/* TEMPLATE CONTAINER ITEM */}
-                            <div className="rounded-dotted-div m-2 col-3 add-template placeholder-4-3">
-                                
-                                <div className="temp-overlay">
-                                    <CiCirclePlus onClick={this.openCreateModal}/>
+                            <div 
+                                className="rounded-dotted-div m-2 col-3 add-template placeholder-4-3 item-container"
+                                onClick={this.openCreateModal} // Making the entire container clickable is much better UX
+                            >
+                                <div className="add-content-wrapper">
+                                    <CiCirclePlus className="add-icon" />
                                 </div>
-                                    <div className="name-demo"></div>
+                                
+                                {/* Bottom placeholder matching the style of the food card titles */}
+                                <div className="card-title-wrapper">
+                                    <span className="card-title-placeholder"></span>
+                                </div>
                             </div>
 
                         </div>

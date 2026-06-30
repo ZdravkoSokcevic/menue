@@ -68,7 +68,7 @@ export const globalState = $state({
     currentOrderStatus: -1,
     currentPage: '',
     languages: get(appPreferences).languages || [],
-    selectedLanguage: get(appPreferences).selectedLanguage || [],
+    selectedLanguage: get(appPreferences).selectedLanguage || {},
     isLanguageModalOpened: false,
     setCartModalSelectedItem(item) {
         this.cartModalSelectedItem = item;
@@ -103,6 +103,25 @@ export const globalState = $state({
     },
     setIsLanguageModalOpened(value) {
         this.isLanguageModalOpened = value;
+    },
+    getNameTranslation(item) {
+        let code = (globalState.selectedLanguage && globalState.selectedLanguage.language) ? globalState.selectedLanguage.language.code : null;
+        if(!code)
+            return item.name;
+        console.log(code);
+        console.log(item.translations);
+        console.log(item.translations[code]);
+        if(item.translations && item.translations[code] && item.translations[code].name)
+            return item.translations[code].name;
+        else return item.name;
+    },
+    getDescriptionTranslation(item) {
+        let code = (globalState.selectedLanguage && globalState.selectedLanguage.language) ? globalState.selectedLanguage.language.code : null;
+        if(!code)
+            return item.name;
+        if(item.translations && item.translations[code] && item.translations[code].description)
+            return item.translations[code].description;
+        else return item.description;
     }
     // add data to cart:
 });

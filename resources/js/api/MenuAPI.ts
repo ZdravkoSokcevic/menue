@@ -4,6 +4,7 @@ import Storage from "@/helpers/Storage";
 import { ICreateResponse, IMenuDataTranslations, IMenuTranslations, MenuCreateResponseItem, TMenu } from "@/types/Menu";
 import { Store } from "@/reducers/Store";
 import { AxiosResponse } from "axios";
+import { IPortionPrice, TPrices } from "@/types/Prices";
 
 class MenuAPI extends Api
 {
@@ -20,6 +21,19 @@ class MenuAPI extends Api
 
     static async editMenu(data: TMenu) 
     {
+        let prices: any = [];
+        if(data.prices) {
+            data.prices.map((price: IPortionPrice) => {
+                let p = price as any;
+                prices.push({
+                    name: price.name,
+                    portion_size: price.portion_size,
+                    portion_unit: price.portion_unit,
+                    price: p.prices.price
+                });
+            })
+        }
+        data['prices'] = prices;
         try {
             const success: AxiosResponse<MenuCreateResponseItem> = await this.post(`/api/menu/edit/${data.id}`, data, {}, true);
             if(success)
@@ -49,7 +63,7 @@ class MenuAPI extends Api
             data.company_id = companyId;
         
         let items: Array<TMenu> = [];
-        console.log('Default company id: ' + companyId);
+        // console.log('Default company id: ' + companyId);
         try {
             let response = await this.get('/api/menu', { company_id: companyId }, {});
             if(response && response.data) {

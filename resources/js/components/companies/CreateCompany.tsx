@@ -18,7 +18,7 @@ import { ILicense, TLicenses } from "@/types/TLicenses";
 import { ICountry, TCountries } from "@/types/TCountries";
 import { ICurrency, TCurrencies } from "@/types/TCurrencies";
 import FormikSearchSelect from "../FormikSelectSearch";
-import { Option } from "@/types/App";
+import { IOption } from "@/types/App";
 
 import "../../../sass/add_company.scss"
 import { ILanguage, TLanguages } from "@/types/TLanguages";
@@ -38,13 +38,13 @@ interface IState {
     // @ts-ignore
     logo?: Image | null;
     countries: TCountries;
-    countryOptions: Array<Option>;
+    countryOptions: Array<IOption>;
     currencies: TCurrencies;
-    currencyOptions: Array<Option>;
+    currencyOptions: Array<IOption>;
     licenses: TLicenses;
-    licenseOptions: Array<Option>;
+    licenseOptions: Array<IOption>;
     languages: TLanguages;
-    languageOptions: Array<Option>;
+    languageOptions: Array<IOption>;
     // currencies: 
 };
 
@@ -281,7 +281,7 @@ class CreateCompany extends React.Component<IProps, IState>
                 value: language.id
             };
         });
-        this.setState({ languageOptions: languageOptions as Option[] });
+        this.setState({ languageOptions: languageOptions as IOption[] });
         // debugger;
     }
 
@@ -473,7 +473,7 @@ class CreateCompany extends React.Component<IProps, IState>
                                     <div className="form-group">
                                         <label>Country</label>
                                         <FormikSearchSelect 
-                                            options={(this.state.countryOptions as unknown) as Option[]}
+                                            options={(this.state.countryOptions as unknown) as IOption[]}
                                             name="country"
                                             id="country"
                                             aria-describedby="countryHelp"
@@ -651,7 +651,7 @@ class CreateCompany extends React.Component<IProps, IState>
         if(countries)
             this.setState({ countries: countries });
 
-        const options: Array<Option> = [];
+        const options: Array<IOption> = [];
         countries.map((country: ICountry) => {
             options.push({
                 id: country.id,
@@ -667,7 +667,7 @@ class CreateCompany extends React.Component<IProps, IState>
         if(licenses)
             this.setState({ licenses: licenses });
 
-        const options: Array<Option> = [];
+        const options: Array<IOption> = [];
         licenses.map((license: ILicense) => {
             options.push({
                 id: license.id,
