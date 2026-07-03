@@ -69,9 +69,10 @@ class EditPreference extends React.Component<IProps, IState>
         return (
                 <div className="form-page">
 
-
-                    <h2>Edit Preference</h2>
-                    <button className="close-btn" onClick={() => this.closeModal()}>x</button>
+                    <div className="modal-header">
+                        <h2>Edit preference</h2>
+                        <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
+                    </div>
 
                     <Formik 
                         initialValues={currentInitialValues}
@@ -86,77 +87,83 @@ class EditPreference extends React.Component<IProps, IState>
 
                     {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty, values }) => (
 
-                        <Form encType="multipart/form-data">
-                        <div className="container-fluid">
-                            <div className="row">
+                        <Form encType="multipart/form-data" className="modal-form-content">
+                            <div className="modal-scroll-body">
+                                <div className="container-fluid p-0 mb-5">
+                                    <div className="row g-4">
 
-                                <div className="col-md-6 border-end p-5">
-                                    {/* NAME */}
-                                    <div className="form-group">
-                                        <label>Name</label>
-                                        <Field 
-                                            name="name" 
-                                            className="form-control" 
-                                            placeholder="Enter name of your category" 
-                                            aria-describedby="nameHelp"
-                                        />
-                                        {errors.name && touched.name ? (
-                                            <><small id="nameHelp" className="form-text text-danger">{this.formikRef.current?.errors.name}</small><br /></>
-                                        ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                                    </div>
-                                    
-                                </div>
+                                        <div className="col-md-6 border-end p-5">
+                                            {/* NAME */}
+                                            <div className="form-group">
+                                                <label className="form-label">Name</label>
+                                                <Field 
+                                                    name="name" 
+                                                    className="form-control" 
+                                                    placeholder="Enter name of your category" 
+                                                    aria-describedby="nameHelp"
+                                                />
+                                                {errors.name && touched.name ? (
+                                                    <><small id="nameHelp" className="form-text text-danger">{this.formikRef.current?.errors.name}</small><br /></>
+                                                ) : null}
+                                                <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
+                                            
+                                        </div>
 
-                                <div className="col-md-6 p-5">
+                                        <div className="col-md-6 p-5">
 
-                                    {/* DESCRIPTION */}
-                                    <div className="form-group">
-                                        <label>Description</label>
-                                        <Field 
-                                            type="text" 
-                                            className="form-control" 
-                                            name="description" 
-                                            aria-describedby="descriptionHelp" 
-                                            rows={6} 
-                                            placeholder="Enter a description" 
-                                            as={'textarea'}
-                                        />
-                                        {errors.description && touched.description ? (
-                                            <><small id="descriptionHelp" className="form-text text-danger">{errors.description}</small><br /></>
-                                        ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                                    </div>
+                                            {/* DESCRIPTION */}
+                                            <div className="form-group">
+                                                <label className="form-label">Description</label>
+                                                <Field 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    name="description" 
+                                                    aria-describedby="descriptionHelp" 
+                                                    rows={6} 
+                                                    placeholder="Enter a description" 
+                                                    as={'textarea'}
+                                                />
+                                                {errors.description && touched.description ? (
+                                                    <><small id="descriptionHelp" className="form-text text-danger">{errors.description}</small><br /></>
+                                                ) : null}
+                                                <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
 
-                                    
+                                            
 
-                                    {/* SHOW / HIDE ENTRIES / ERRORS */}
-                                    <div className="d-none">
-                                        {'Is submitting: ' + isSubmitting}<br />
-                                        {'Is valid: ' + isValid} <br />
-                                        {'Is dirty: ' + dirty} <br />
-                                        <br />
-                                        <span>Errors: </span>
-                                        <small>{JSON.stringify(errors)}</small>
-                                        <br />
-                                        <span>Values:</span><br />
-                                        {Object.entries(values).map(function(value, key) {
-                                            // eslint-disable-next-line
-                                            return (<>
-                                                <small>Key: {key}</small><br />
-                                                <small>Value: {JSON.stringify(value)}</small><br />
-                                            </>)
-                                        })}
-                                    </div>
-                                    <div className="controls">
-                                        <button className="submit" type="submit" disabled={false}>
-                                            <FaSave />
-                                        </button>
+                                            {/* SHOW / HIDE ENTRIES / ERRORS */}
+                                            <div className="d-none">
+                                                {'Is submitting: ' + isSubmitting}<br />
+                                                {'Is valid: ' + isValid} <br />
+                                                {'Is dirty: ' + dirty} <br />
+                                                <br />
+                                                <span>Errors: </span>
+                                                <small>{JSON.stringify(errors)}</small>
+                                                <br />
+                                                <span>Values:</span><br />
+                                                {Object.entries(values).map(function(value, key) {
+                                                    // eslint-disable-next-line
+                                                    return (<>
+                                                        <small>Key: {key}</small><br />
+                                                        <small>Value: {JSON.stringify(value)}</small><br />
+                                                    </>)
+                                                })}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </Form>
+                            {/* FIXED STICKY FOOTER */}
+                            <div className="modal-actions-footer">
+                                <button 
+                                    className="submit btn btn-primary btn-submit-save" 
+                                    disabled={isSubmitting || !isValid || !dirty}
+                                >
+                                    <FaSave />
+                                </button>
+                            </div>
+                        </Form>
                     )}
                     </Formik>
                 </div>  

@@ -176,8 +176,10 @@ class EditCategory extends React.Component<IProps, IState>
                 <div className="form-page">
 
 
-                    <h2>Edit Category</h2>
-                    <button className="close-btn" onClick={() => this.closeModal()}>x</button>
+                    <div className="modal-header">
+                        <h2>Edit Category</h2>
+                        <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
+                    </div>
 
                     <Formik 
                         initialValues={currentInitialValues}
@@ -190,85 +192,105 @@ class EditCategory extends React.Component<IProps, IState>
                         enableReinitialize={true}
                     >
 
-                    {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty }) => (
+                    {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty, values }) => (
 
-                        <Form encType="multipart/form-data">
-                        <div className="container-fluid">
-                            <div className="row">
+                        <Form encType="multipart/form-data" className="modal-form-content">
+                        <div className="container-fluid p-0 mb-5">
+                            <div className="modal-scroll-body">
+                                <div className="row g-4">
 
-                                <div className="col-md-6 border-end p-5">
-                                    <div className="form-group">
-                                        <label>Choose picture</label>
-                                        <div
-                                        onDrop={this.handleDrop}
-                                        onDragOver={this.handleDragOver}
-                                        onDragEnter={this.handleDragEnter}
-                                        onDragLeave={this.handleDragLeave}
-                                        onClick={this.handleAreaClick}
-                                        style={{
-                                            border: "2px dashed #ccc",
-                                            padding: "20px",
-                                            textAlign: "center",
-                                            borderRadius: "10px",
-                                            backgroundColor: this.state.isDragging ? "#f0f8ff" : "#fff",
-                                            height: '200px',
-                                            width: '200px',
-                                            backgroundImage: 
-                                                (this.props.currentItem.picture && !this.state.image) ? 
-                                                    `url(/storage/${this.props.currentItem.picture})` : 
-                                                    `url(${this.state.image.src})`,
-                                            backgroundSize: 'cover',
-                                            position: 'relative'
-                                        }}
-                                        >
-                                            <p>Drag file here</p>
+                                    <div className="col-md-6 border-end p-5">
+                                        <div className="form-group">
+                                            <label>Choose picture</label>
+                                            <div
+                                            onDrop={this.handleDrop}
+                                            onDragOver={this.handleDragOver}
+                                            onDragEnter={this.handleDragEnter}
+                                            onDragLeave={this.handleDragLeave}
+                                            onClick={this.handleAreaClick}
+                                            style={{
+                                                border: "2px dashed #ccc",
+                                                padding: "20px",
+                                                textAlign: "center",
+                                                borderRadius: "10px",
+                                                backgroundColor: this.state.isDragging ? "#f0f8ff" : "#fff",
+                                                height: '200px',
+                                                width: '200px',
+                                                backgroundImage: 
+                                                    (this.props.currentItem.picture && !this.state.image) ? 
+                                                        `url(/storage/${this.props.currentItem.picture})` : 
+                                                        `url(${this.state.image.src})`,
+                                                backgroundSize: 'cover',
+                                                position: 'relative'
+                                            }}
+                                            >
+                                                <p>Drag file here</p>
 
-                                            <input
-                                                type="file"
-                                                ref={this.fileInputRef}
-                                                onChange={(event: any) => this.handleFileChange(event as ChangeEventHandler<HTMLInputElement>)}
-                                                // Hide the actual input element, but keep it accessible to screen readers using opacity: 0
-                                                style={{ opacity: 0, height: 0, width: 0, position: 'absolute' }}
-                                                name="picture"
-                                            />
+                                                <input
+                                                    type="file"
+                                                    ref={this.fileInputRef}
+                                                    onChange={(event: any) => this.handleFileChange(event as ChangeEventHandler<HTMLInputElement>)}
+                                                    // Hide the actual input element, but keep it accessible to screen readers using opacity: 0
+                                                    style={{ opacity: 0, height: 0, width: 0, position: 'absolute' }}
+                                                    name="picture"
+                                                />
+                                            </div>
+                                            {errors.picture && touched.picture ? (
+                                                <><small id="pictureHelp" className="form-text text-danger">{this.formikRef.current?.errors.picture}</small><br /></>
+                                            ) : null}
                                         </div>
-                                        {errors.picture && touched.picture ? (
-                                            <><small id="pictureHelp" className="form-text text-danger">{this.formikRef.current?.errors.picture}</small><br /></>
-                                        ) : null}
-                                    </div>
-                                    
-                                </div>
-
-                                <div className="col-md-6 p-5">
-
-                                    <div className="form-group">
-                                        <label>Name</label>
-                                        <Field 
-                                            name="name" 
-                                            className="form-control" 
-                                            placeholder="Enter name of your category" 
-                                            aria-describedby="nameHelp"
-                                        />
-                                        {errors.name && touched.name ? (
-                                            <><small id="nameHelp" className="form-text text-danger">{this.formikRef.current?.errors.name}</small><br /></>
-                                        ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                        
                                     </div>
 
-                                    
+                                    <div className="col-md-6 p-5">
 
-                                    {/* {'Is submitting: ' + isSubmitting}<br />
-                                    {'Is valid: ' + isValid} <br />
-                                    {'Is dirty: ' + dirty} <br />
-                                    { 'Errors: ' + JSON.stringify(errors) } */}
-                                    {/* { 'CurrentItem' + JSON.stringify(this.props.currentItem) } */}
-                                    <div className="controls">
-                                        <button className="submit" type="submit" disabled={false}>
-                                            <FaSave />
-                                        </button>
+                                        <div className="form-group">
+                                            <label>Name</label>
+                                            <Field 
+                                                name="name" 
+                                                className="form-control" 
+                                                placeholder="Enter name of your category" 
+                                                aria-describedby="nameHelp"
+                                            />
+                                            {errors.name && touched.name ? (
+                                                <><small id="nameHelp" className="form-text text-danger">{this.formikRef.current?.errors.name}</small><br /></>
+                                            ) : null}
+                                            <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                        </div>
+
+                                        
+
+                                            {/* SHOW / HIDE ENTRIES / ERRORS */}
+                                        <div className="d-none">
+                                            {'Is submitting: ' + isSubmitting}<br />
+                                            {'Is valid: ' + isValid} <br />
+                                            {'Is dirty: ' + dirty} <br />
+                                            <br />
+                                            <span>Errors: </span>
+                                            <small>{JSON.stringify(errors)}</small>
+                                            <br />
+                                            <span>Values:</span><br />
+                                            {Object.entries(values).map(function(value, key) {
+                                                // eslint-disable-next-line
+                                                return (<>
+                                                    <small>Key: {key}</small><br />
+                                                    <small>Value: {JSON.stringify(value)}</small><br />
+                                                </>)
+                                            })}
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        {/* FIXED STICKY FOOTER */}
+                        <div className="modal-actions-footer">
+                            <button 
+                                className="submit btn btn-primary btn-submit-save" 
+                                disabled={isSubmitting || !isValid || !dirty}
+                            >
+                                <FaSave />
+                            </button>
                         </div>
                     </Form>
                     )}

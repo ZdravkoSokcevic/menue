@@ -53,7 +53,7 @@ class Categories extends React.Component<IProps, IState> {
             <div className="categories-page page" key={Math.random()}>
                 {/* <Navigation /> */}
 
-                <div className="main-content p-5">
+                <div className="main-content p-5 container">
                     {/* <div className="p-5"> */}
                         <div className="w-12 d-flex justify-content-between">
                             <h4>Categories</h4>
@@ -61,7 +61,7 @@ class Categories extends React.Component<IProps, IState> {
                         </div>
 
                         {/* MAIN CONTAINER */}
-                        <div className="col-12 mt-5 main-container">
+                        <div className="col-12 mt-5 main-container row">
 
 
                             {/* MAIN CONTAINER ITEMS */}
@@ -69,30 +69,47 @@ class Categories extends React.Component<IProps, IState> {
                                 let picPath: String = item.picture as String;
                                 const picFullPath = (picPath) ? "url('/storage/" + picPath.replaceAll('\'', '') + "')" : '';
                                 return <div 
-                                            className="rounded-dotted-div m-2" 
-                                            style={{backgroundImage: picFullPath ? picFullPath : ''}}
-                                            key={Math.random()}
+                                    className={'m-2 placeholder-4-3 col-3 rounded-dotted-div menu-item-container position-relative item-container'}
+                                    style={{backgroundImage: picFullPath ? picFullPath : ''}}
+                                    key={index}
                                         >
-                                    <span className="name">{item.name}</span> 
-                                    <div className="category-info">
-                                        <span>{item.name}</span> 
-                                        <div className="d-flex flex-direction-column card-actions">
-                                            <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)}/>
-                                            <IoEye onClick={() => this.onViewClicked(item)}/>
-                                            <HiMiniPencilSquare onClick={() => this.onEditClicked(item)}/>
-                                            <MdDelete onClick={() => this.onDeleteClicked(item)}/>
+                                    {/* Dark gradient */}
+                                    <div className="card-overlay"></div>
+                                    {/* INDICATES WEATHER ITEM IS NEW */}
+                                    {item.new && <div className="ribbon ribbon-primary new">NEW</div>}
+                                    <div className="item-info category-info">
+                                        <div className="card-actions">
+                                            <p className="hover-description">{item.name}</p> 
+                                            <div className="card-actions-wrapper">
+                                                <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)} className="text-primary"/>
+                                                <IoEye onClick={() => this.onViewClicked(item)} className="text-info"/>
+                                                <HiMiniPencilSquare onClick={() => this.onEditClicked(item)} className="text-warning"/>
+                                                <MdDelete onClick={() => this.onDeleteClicked(item)} className="text-danger"/>
+                                            </div>
                                         </div>
+                                    </div>
+                                    {/* Title */}
+                                    <div className="card-title-wrapper">
+                                        <span className="card-title">
+                                            {item.name}
+                                        </span>
                                     </div>
                                 </div>
                             })}
 
                             {/* TEMPLATE CONTAINER ITEM */}
-                            <div className="rounded-dotted-div m-2 add-template">
-                                
-                                <div className="temp-overlay">
-                                    <CiCirclePlus onClick={this.openCreateModal}/>
+                            <div 
+                                className="rounded-dotted-div m-2 col-3 add-template placeholder-4-3 item-container"
+                                onClick={this.openCreateModal} // Making the entire container clickable is much better UX
+                            >
+                                <div className="add-content-wrapper">
+                                    <CiCirclePlus className="add-icon" />
                                 </div>
-                                    <div className="name-demo"></div>
+                                
+                                {/* Bottom placeholder matching the style of the food card titles */}
+                                <div className="card-title-wrapper">
+                                    <span className="card-title-placeholder"></span>
+                                </div>
                             </div>
 
                         </div>

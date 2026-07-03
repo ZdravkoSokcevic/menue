@@ -14,6 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // TODO: Overview every of gate separately
         Gate::define('view-table', function($user,Request $r) {
             if($user->isAdminOrDemo())
                 return true;
@@ -51,6 +52,17 @@ class AppServiceProvider extends ServiceProvider
 
             return false;  
         });
+
+        Gate::define('view-combos', function(User $user, Request $r) {
+            if($user->isAdminOrDemo())
+                return true;
+            else if($r->filled('company_id'))
+                return true;
+
+            return false;  
+        });
+
+
     }
 
     /**

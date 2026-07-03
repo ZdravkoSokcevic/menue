@@ -1,74 +1,239 @@
-.form-modal {
-    min-width: 800px;
-    // min-height: 300px;
-    max-width: 700px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    padding: 3rem;
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-
-    background-color: white;
-    // height: 90%;
-
-    button.close-btn {
-        position: absolute;
-        top: 8pt;
-        right: 5pt;
-    }
-
-    .controls {
-        position: absolute;
-        right: 10pt;
-        bottom: 10pt;
-        font-size: 25pt;
-    }
-
-    .submit {
-        border: none;
-        background-color: white;
-        cursor: pointer;
-    }
-}
-
-// FOR VIEW MENU
-.view-modal {
-    max-height: 80%;
-    overflow-y: scroll;
-}
-
-div.form-page .row > div {
-    height: auto;
-}
-
-/* Modern Blur Effect */
-.overlay-glass {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.3); /* Light tint */
-  backdrop-filter: blur(2px); /* Blurs the app behind it */
-  -webkit-backdrop-filter: blur(2px); /* Safari support */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.full-w-h {
+// Optimized Backdrop Layer (Hardware-Accelerated)
+.modal-backdrop-blur {
     position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45); // Smooth flat alpha tint is much faster than blur()
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // React-Modal uses these hooks if closeTimeoutMS is provided
+    opacity: 0;
+    transition: opacity 0.15s linear;
+
+    &.ReactModal__Overlay--after-open {
+        opacity: 1;
+    }
+
+    &.ReactModal__Overlay--before-close {
+        opacity: 0;
+    }
 }
 
-.form-modal:not(.edit-form) {
-    form {
-        overflow-y: scroll;
-        max-height: 75vh;
+// Global Form Modal Styles
+.form-modal {
+    background: #ffffff;
+    width: 100%;
+    max-width: 800px;
+    max-height: 85vh;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    outline: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    // High performance CSS transitions using will-change
+    will-change: transform, opacity;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), opacity 0.15s linear;
+
+    .form-page {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    // React-Modal Animation States
+    &.ReactModal__Content--after-open {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    &.ReactModal__Content--before-close {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #edf2f7;
+
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            color: #a0aec0;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: #4a5568;
+            }
+        }
+    }
+
+    .modal-form-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        max-height: calc(85vh - 70px); // Give room for the header
+        padding: 0; // Move padding to internal wrappers so scrollbars hit the edge nicely
+    }
+
+    // ONLY this element handles the scrolling now!
+    .modal-scroll-body {
+        padding: 2rem;
+        overflow-y: auto;
+        flex-grow: 1;
+        contain: content;
+    }
+
+    // The footer sits cleanly beneath the scroll body
+    .modal-actions-footer {
+        background: #ffffff;
+        border-top: 1px solid #edf2f7;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: flex-end;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.03); // Subtle top shadow to separate it
+    }
+
+    // Form Fields Styling
+    .form-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #4a5568;
+        margin-bottom: 0.4rem;
+        display: block;
+    }
+
+    .form-control,
+    .form-select {
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.6rem 0.75rem;
+        font-size: 0.95rem;
+        color: #2d3748;
+        transition: all 0.2s ease;
+
+        &:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            outline: none;
+        }
+    }
+
+    // Checkbox Lists Arrangement
+    .form-section {
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.6rem;
+            border-bottom: 1px solid #f7fafc;
+            padding-bottom: 4px;
+        }
+
+        .checkbox-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 160px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            color: #4a5568;
+            cursor: pointer;
+            user-select: none;
+
+            input[type="checkbox"] {
+                width: 17px;
+                height: 17px;
+                cursor: pointer;
+                border-radius: 4px;
+                border: 1.5px solid #cbd5e0;
+            }
+        }
+    }
+
+    // Image Box Area
+    .image-upload-placeholder {
+        border: 2px dashed #cbd5e0;
+        border-radius: 12px;
+        background: #f7fafc;
+        min-height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background: #edf2f7;
+            border-color: #a0aec0;
+        }
+    }
+
+    // Action Bar Footer
+    .modal-actions-footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        border-top: 1px solid #edf2f7;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: flex-end;
+        z-index: 10;
+
+        .btn-submit-save {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.6rem 1.75rem;
+            font-weight: 600;
+            border-radius: 8px;
+            background-color: #3b82f6;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: #2563eb;
+                transform: translateY(-1px);
+            }
+        }
+    }
+}
+
+// Side column split boundary for tablets/desktop layout
+@media (min-width: 768px) {
+    .border-start-md {
+        border-left: 1px solid #edf2f7;
+        padding-left: 1.5rem;
     }
 }

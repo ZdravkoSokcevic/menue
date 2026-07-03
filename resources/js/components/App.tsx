@@ -27,7 +27,6 @@ import Companies from '@/pages/admin/Companies';
 import {Store, RootState, persistor } from "../reducers/Store";
 import { DotLoader } from "react-spinners"
 import ReactModal from 'react-modal';
-import { setLoggedIn } from '@/reducers/userSlice';
 import { motion, AnimatePresence } from "framer-motion";
 import { Outlet } from 'react-router-dom';
 import Navigation from '@/pages/admin/Navigation';
@@ -38,6 +37,7 @@ import Ingridients from '@/pages/admin/Ingridients';
 import Extras from '@/pages/admin/Extras';
 import Preferences from '@/pages/admin/Preferences';
 import Order from '@/pages/admin/Order';
+import Combos from '@/pages/admin/Combos';
 
 const pageVariants = {
     initial: { opacity: 0, x: "-100vw" },
@@ -199,6 +199,12 @@ const App: React.FC = () => {
                     <Route path="/discounts" element={
                         <ProtectedRoute>
                             <Discounts />
+                        </ProtectedRoute>
+                    } />
+
+                    <Route path="/combos" element={
+                        <ProtectedRoute>
+                            <Combos />
                         </ProtectedRoute>
                     } />
 

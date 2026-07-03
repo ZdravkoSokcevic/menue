@@ -12,7 +12,7 @@ import { IAllergen, TAllergens } from "@/types/Allergen";
 import AllergensAPI from "@/api/AllergensAPI";
 import { IResponseItem } from "@/types/Api";
 import { IIngridient } from "@/types/Ingridient";
-import { Option } from "@/types/App";
+import { IOption } from "@/types/App";
 import Select, { GroupBase, MultiValue } from "react-select"
 import IngridientsAPI from "@/api/IngridientsAPI";
 
@@ -25,8 +25,8 @@ interface IProps {
 
 interface IState {
     allergens: TAllergens;
-    allergenOptions: Array<Option>;
-    selectedOptions: Array<Option>;
+    allergenOptions: Array<IOption>;
+    selectedOptions: Array<IOption>;
 };
 
 interface IInitialValues {
@@ -80,7 +80,7 @@ class EditIngridient extends React.Component<IProps, IState>
     componentDidMount(): void {
         this.loadAllergens();
 
-        const markedAllergens: Array<Option> = [];
+        const markedAllergens: Array<IOption> = [];
         this.props.currentItem.allergens?.map((allergen: IAllergen) => {
             markedAllergens.push({
                 id: allergen.id,
@@ -95,11 +95,11 @@ class EditIngridient extends React.Component<IProps, IState>
         this.formikRef?.current?.setFieldValue('allergens', this.props.currentItem.allergens);
     }
 
-    onAllergenChange(values: MultiValue<Option>) {
+    onAllergenChange(values: MultiValue<IOption>) {
         console.log(values);
-        let selectedOpts: Array<Option> = [];
+        let selectedOpts: Array<IOption> = [];
         let selectedAllergens: TAllergens = [];
-        values.forEach((value: Option) => {
+        values.forEach((value: IOption) => {
             selectedOpts.push(value);
             this.state.allergens.map((allergen: IAllergen) => {
                 if(allergen.id === value.id)
@@ -119,7 +119,7 @@ class EditIngridient extends React.Component<IProps, IState>
         };
         // this.formikRef.current?.setFieldTouched('name', true);
         this.formikRef.current?.setFieldValue('is_vegan', this.props.currentItem.is_vegan ? true : false);
-        this.state.allergenOptions.map((option: Option) => {
+        this.state.allergenOptions.map((option: IOption) => {
             option.selected = 1;
             option.checked = 1;
         })
@@ -130,9 +130,10 @@ class EditIngridient extends React.Component<IProps, IState>
         return (
                 <div className="form-page">
 
-
-                    <h2>Edit Ingridient</h2>
-                    <button className="close-btn" onClick={() => this.closeModal()}>x</button>
+                    <div className="modal-header">
+                        <h2>Edit Ingridient</h2>
+                        <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
+                    </div>
 
                     <Formik 
                         initialValues={currentInitialValues}
@@ -147,101 +148,106 @@ class EditIngridient extends React.Component<IProps, IState>
 
                     {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty, values }) => (
 
-                        <Form encType="multipart/form-data">
-                        <div className="container-fluid">
-                            <div className="row">
+                        <Form encType="multipart/form-data"  className="modal-form-content">
+                            <div className="modal-scroll-body">
+                                <div className="container-fluid p-0 mb-5">
+                                    <div className="row g-4">
 
-                                <div className="col-md-6 border-end p-5">
-                                    {/* NAME */}
-                                    <div className="form-group">
-                                        <label>Name</label>
-                                        <Field 
-                                            name="name" 
-                                            className="form-control" 
-                                            placeholder="Enter name of your allergen" 
-                                            aria-describedby="nameHelp"
-                                        />
-                                        {errors.name && touched.name ? (
-                                            <><small id="nameHelp" className="form-text text-danger">{this.formikRef.current?.errors.name}</small><br /></>
-                                        ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                                    </div>
+                                        <div className="col-md-6 border-end p-5">
+                                            {/* NAME */}
+                                            <div className="form-group">
+                                                <label className="form-label">Name</label>
+                                                <Field 
+                                                    name="name" 
+                                                    className="form-control" 
+                                                    placeholder="Enter name of your allergen" 
+                                                    aria-describedby="nameHelp"
+                                                />
+                                                {errors.name && touched.name ? (
+                                                    <><small id="nameHelp" className="form-text text-danger">{this.formikRef.current?.errors.name}</small><br /></>
+                                                ) : null}
+                                                <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
 
-                                    {/* IS VEGAN? */}
-                                    <div className="form-check">
-                                        {/* <label>Is vegan food</label> */}
-                                            <Field 
-                                                name="is_vegan" 
-                                                className="form-check-input" 
-                                                placeholder="Is your food vegan" 
-                                                aria-describedby="isVeganHelp"
-                                                value="true"
-                                                type="checkbox"
-                                                label="Is vegan?"
-                                                checked={values.is_vegan}
-                                            />
-                                            <label className="form-check-label" htmlFor="flexCheckDefault">
-                                                Is vegan
-                                            </label>
-                                    </div>
+                                            {/* IS VEGAN? */}
+                                            <div className="form-check">
+                                                {/* <label>Is vegan food</label> */}
+                                                    <Field 
+                                                        name="is_vegan" 
+                                                        className="form-check-input" 
+                                                        placeholder="Is your food vegan" 
+                                                        aria-describedby="isVeganHelp"
+                                                        value="true"
+                                                        type="checkbox"
+                                                        label="Is vegan?"
+                                                        checked={values.is_vegan}
+                                                    />
+                                                    <label className="form-check-label" htmlFor="flexCheckDefault">
+                                                        Is vegan
+                                                    </label>
+                                            </div>
 
-                                </div>
-
-                                <div className="col-md-6 p-5">
-                                    {/* ALLERGENS */}
-                                    <div className="form-group">
-                                        <label htmlFor="name">Choose allergens</label>
-                                        <Select
-                                            options={this.state.allergenOptions}
-                                            name="allergens"
-                                            id="allergens"
-                                            aria-describedby="allergensHelp"
-                                            onChange={this.onAllergenChange.bind(this)}
-                                            isSearchable={false}
-                                            isMulti={true}
-                                            value={this.state.selectedOptions}
-                                            // ref={this.allergenRef}
-                                            // as="select"
-                                        />
-                                        {errors.allergens && touched.allergens ? (
-                                            <><small id="nameHelp" className="form-text text-danger">{errors.allergens}</small><br /></>
-                                        ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">Choose one from allergens.</small>
-                                    </div> 
-
-
-                                    {/* SHOW / HIDE ENTRIES / ERRORS */}
-                                    <div className="d-none">
-                                        {'Is submitting: ' + isSubmitting}<br />
-                                        {'Is valid: ' + isValid} <br />
-                                        {'Is dirty: ' + dirty} <br />
-                                        <br />
-                                        <span>Errors: </span>
-                                        <small>{JSON.stringify(errors)}</small>
-                                        <br />
-                                        <span>Values:</span><br />
-                                        {Object.entries(values).map(function(value, key) {
-                                            // eslint-disable-next-line
-                                            return (<>
-                                                <small>Key: {key}</small><br />
-                                                <small>Value: {JSON.stringify(value)}</small><br />
-                                            </>)
-                                        })}
-                                        <div className="d-none">
-                                            <span>Current item: </span>
-                                            <small>{JSON.stringify(this.props.currentItem)}</small>
                                         </div>
-                                    </div>
 
-                                    <div className="controls">
-                                        <button className="submit" type="submit" disabled={false}>
-                                            <FaSave />
-                                        </button>
+                                        <div className="col-md-6 p-5">
+                                            {/* ALLERGENS */}
+                                            <div className="form-group">
+                                                <label htmlFor="name">Choose allergens</label>
+                                                <Select
+                                                    options={this.state.allergenOptions}
+                                                    name="allergens"
+                                                    id="allergens"
+                                                    aria-describedby="allergensHelp"
+                                                    onChange={this.onAllergenChange.bind(this)}
+                                                    isSearchable={false}
+                                                    isMulti={true}
+                                                    value={this.state.selectedOptions}
+                                                    // ref={this.allergenRef}
+                                                    // as="select"
+                                                />
+                                                {errors.allergens && touched.allergens ? (
+                                                    <><small id="nameHelp" className="form-text text-danger">{errors.allergens}</small><br /></>
+                                                ) : null}
+                                                <small id="nameHelp" className="form-text text-muted">Choose one from allergens.</small>
+                                            </div> 
+
+
+                                            {/* SHOW / HIDE ENTRIES / ERRORS */}
+                                            <div className="d-none">
+                                                {'Is submitting: ' + isSubmitting}<br />
+                                                {'Is valid: ' + isValid} <br />
+                                                {'Is dirty: ' + dirty} <br />
+                                                <br />
+                                                <span>Errors: </span>
+                                                <small>{JSON.stringify(errors)}</small>
+                                                <br />
+                                                <span>Values:</span><br />
+                                                {Object.entries(values).map(function(value, key) {
+                                                    // eslint-disable-next-line
+                                                    return (<>
+                                                        <small>Key: {key}</small><br />
+                                                        <small>Value: {JSON.stringify(value)}</small><br />
+                                                    </>)
+                                                })}
+                                                <div className="d-none">
+                                                    <span>Current item: </span>
+                                                    <small>{JSON.stringify(this.props.currentItem)}</small>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </Form>
+                            {/* FIXED STICKY FOOTER */}
+                            <div className="modal-actions-footer">
+                                <button 
+                                    className="submit btn btn-primary btn-submit-save" 
+                                    disabled={isSubmitting || !isValid || !dirty}
+                                >
+                                    <FaSave />
+                                </button>
+                            </div>
+                        </Form>
                     )}
                     </Formik>
                 </div>  
@@ -254,7 +260,7 @@ class EditIngridient extends React.Component<IProps, IState>
             if(allergens) {
                 this.setState({ allergens: allergens });
 
-                const allergenOpts: Array<Option> = [];
+                const allergenOpts: Array<IOption> = [];
                 allergens.forEach((allergen:IAllergen) => {
                     allergenOpts.push({ 
                         name: allergen.name, 

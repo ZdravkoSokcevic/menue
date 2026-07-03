@@ -172,16 +172,17 @@ class CreateAllergen extends React.Component<IProps, IState>
             <Modal 
                 isOpen={this.props.isOpen as boolean} 
                 onRequestClose={() => this.closeModal()}
-                overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
-                className="form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none"
-                style={{}}
-                contentLabel="Example"
+                overlayClassName="modal-backdrop-blur"
+                className="form-modal"
+                contentLabel="Create allergen"
             >
                 <div className="form-page">
 
 
-                    <h2>Create Allergen</h2>
-                    <button className="close-btn" onClick={() => this.closeModal()}>x</button>
+                    <div className="modal-header">
+                        <h2>Create allergen</h2>
+                        <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
+                    </div>
 
                     <Formik 
                         initialValues={initialValues}
@@ -193,7 +194,7 @@ class CreateAllergen extends React.Component<IProps, IState>
                     {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty }) => (
 
                         <Form encType="multipart/form-data">
-                        <div className="container-fluid">
+                        <div className="container-fluid mb-5">
                             <div className="row">
 
                                 <div className="col-md-6 border-end p-5">
@@ -250,13 +251,18 @@ class CreateAllergen extends React.Component<IProps, IState>
                                     {'Is valid: ' + isValid} <br />
                                     {'Is dirty: ' + dirty} <br />
                                     { 'Errors: ' + JSON.stringify(errors) } */}
-                                    <div className="controls">
-                                        <button className="submit" disabled={isSubmitting || !isValid || !dirty}>
-                                            <FaSave />
-                                        </button>
-                                    </div>
                                 </div>
                             </div>
+                        </div>
+
+                        {/* FIXED STICKY FOOTER */}
+                        <div className="modal-actions-footer">
+                            <button 
+                                className="submit btn btn-primary btn-submit-save" 
+                                disabled={isSubmitting || !isValid || !dirty}
+                            >
+                                <FaSave />
+                            </button>
                         </div>
                     </Form>
                     )}

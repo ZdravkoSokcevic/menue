@@ -50,6 +50,12 @@
 			Route::post('/discounts/edit/{id}', '\App\Http\Controllers\DiscountController@edit');
 			Route::get('/discounts/delete/{id}', '\App\Http\Controllers\DiscountController@delete');
 
+			// Combo routes
+			Route::post('/combos/create', '\App\Http\Controllers\CombosController@insert');
+			Route::get('/combos', '\App\Http\Controllers\CombosController@get');
+			Route::post('/combos/edit/{id}', '\App\Http\Controllers\CombosController@edit');
+			Route::get('/combos/delete/{id}', '\App\Http\Controllers\CombosController@delete');
+
 			// Categories routes
 			Route::get('/categories', '\App\Http\Controllers\CategoriesController@get');
 			Route::post('/categories/create', '\App\Http\Controllers\CategoriesController@insert');

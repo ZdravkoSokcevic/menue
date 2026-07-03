@@ -19,6 +19,7 @@ export interface ICategory extends TComponentProps{
     picture?: File | String | null;
     company_id?: string;
     translations?: ICategoryTranslations;
+    new?: boolean;
 }
 
 export type TCategories = Array<ICategory>

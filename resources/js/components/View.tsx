@@ -20,6 +20,8 @@ import ViewPreference from "./preferences/ViewPreference";
 import { IPreference } from "@/types/Preference";
 import { IOrder } from "@/types/Order";
 import ViewOrder from "./order/ViewOrder";
+import { IDiscount } from "@/types/Discount";
+import { ICombo } from "@/types/Combo";
 
 interface IProps {
     isOpen?: boolean;
@@ -67,14 +69,16 @@ class View extends React.Component<IProps & WithRouterProps, IState>
                     page={this.props.type}
                 >
                     <div className="view-page">
-                        {this.props.type == 'menu' && <ViewMenu currentItem={this.props.currentItem as TMenu} />}
-                        {this.props.type == 'category' && <ViewCategory currentItem={this.props.currentItem as TMenu} />}
+                        {this.props.type == 'menu' && <ViewMenu currentItem={this.props.currentItem as TMenu} closeModal={this.props.closeModal as Function}/>}
+                        {this.props.type == 'category' && <ViewCategory currentItem={this.props.currentItem as TMenu} closeModal={this.props.closeModal as Function}/>}
                         {this.props.type == 'company' && <ViewCompany currentItem={this.props.currentItem as TCompany} />}
                         {this.props.type == 'table' && <ViewCompanyTable currentItem={this.props.currentItem as ICompanyTable} />}
-                        {this.props.type == 'allergen' && <ViewAllergen currentItem={this.props.currentItem as IAllergen} />}
-                        {this.props.type == 'extra' && <ViewExtra currentItem={this.props.currentItem as IExtra} />}
-                        {this.props.type == 'preference' && <ViewPreference currentItem={this.props.currentItem as IPreference} />}
+                        {this.props.type == 'allergen' && <ViewAllergen currentItem={this.props.currentItem as IAllergen} closeModal={this.props.closeModal as Function } />}
+                        {this.props.type == 'extra' && <ViewExtra currentItem={this.props.currentItem as IExtra} closeModal={this.props.closeModal as Function}/>}
+                        {this.props.type == 'preference' && <ViewPreference currentItem={this.props.currentItem as IPreference} closeModal={this.props.closeModal as Function}/>}
                         {this.props.type == 'order' && <ViewOrder currentItem={this.props.currentItem as IOrder} />}
+                        {/* {this.props.type == 'discount' && <ViewDiscount currentItem={this.props.currentItem as IDiscount} closeModal={this.props.closeModal as Function} />} */}
+                        {/* {this.props.type == 'discount' && <ViewCombo currentItem={this.props.currentItem as ICombo} closeModal={this.props.closeModal as Function} />} */}
                     </div>
                 </ModalOrPage>
             </>

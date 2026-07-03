@@ -370,8 +370,10 @@ class EditDiscount extends React.Component<IProps, IState>
         return (
             <div className="form-page" style={{position: 'relative'}}>
 
-
-                <h2>Edit discount</h2>
+                <div className="modal-header">
+                    <h2>Edit Discount</h2>
+                    <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
+                </div>
                 {/* <button className="close-btn" onClick={() => this.closeModal()}>x</button> */}
 
                 <Formik 
@@ -383,394 +385,400 @@ class EditDiscount extends React.Component<IProps, IState>
 
                 {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty, values }) => (
 
-                    <Form encType="multipart/form-data">
-                    <div className="container-fluid">
-                        <div className="row">
+                    <Form encType="multipart/form-data" className="modal-form-content">
+                        <div className="modal-scroll-body">
+                            <div className="container-fluid p-0">
+                                <div className="row g-4">
 
 
-                            <div className="row g-3">
+                                    <div className="row g-3">
 
-                                {/* MENU ITEMS */}
-                                <div className="col-md-7">
-                                    <div className="p-3">
-                                        <h6 className="mb-2 fw-bold">
-                                            Menu Items
-                                        </h6>
+                                        {/* MENU ITEMS */}
+                                        <div className="col-md-7">
+                                            <div className="p-3">
+                                                <h4 className="mb-2 fw-bold">
+                                                    Menu Items
+                                                </h4>
 
-                                        <input
-                                            type="search"
-                                            className="form-control"
-                                            placeholder="🔍 Search menu item..."
-                                            value={this.state.search}
-                                            onChange={(e) => this.setSearchQuery(e.target.value)}
-                                        />
-                                    </div>
-                                    <div
-                                        className="rounded p-2"
-                                        style={{
-                                            maxHeight: '500px',
-                                            overflowY: 'auto'
-                                        }}
-                                    >
-                                        {this.state.filteredItems.map((item: TMenu) => (
+                                                <input
+                                                    type="search"
+                                                    className="form-control"
+                                                    placeholder="🔍 Search menu item..."
+                                                    value={this.state.search}
+                                                    onChange={(e) => this.setSearchQuery(e.target.value)}
+                                                />
+                                            </div>
                                             <div
-                                                key={item.id}
-                                                onClick={() =>
-                                                    this.setSelectedMenuItem(item)
-                                                }
-                                                className={`d-flex align-items-center p-2 mb-2 rounded cursor-pointer ${
-                                                    this.state.selectedMenuItem?.id === item.id
-                                                        ? 'border border-primary bg-primary-subtle'
-                                                        : 'border'
-                                                }`}
+                                                className="rounded p-2"
                                                 style={{
-                                                    cursor: 'pointer',
-                                                    transition: 'all .2s'
+                                                    maxHeight: '500px',
+                                                    overflowY: 'auto'
                                                 }}
                                             >
-                                                <img
-                                                    src={'/storage/' + item.picture as string}
-                                                    alt={item.name}
-                                                    width={70}
-                                                    height={70}
-                                                    className="rounded object-fit-cover"
-                                                />
+                                                {this.state.filteredItems.map((item: TMenu) => (
+                                                    <div
+                                                        key={item.id}
+                                                        onClick={() =>
+                                                            this.setSelectedMenuItem(item)
+                                                        }
+                                                        className={`d-flex align-items-center p-2 mb-2 rounded cursor-pointer ${
+                                                            this.state.selectedMenuItem?.id === item.id
+                                                                ? 'border border-primary bg-primary-subtle'
+                                                                : 'border'
+                                                        }`}
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                            transition: 'all .2s'
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={'/storage/' + item.picture as string}
+                                                            alt={item.name}
+                                                            width={70}
+                                                            height={70}
+                                                            className="rounded object-fit-cover"
+                                                        />
 
-                                                <div className="ms-3 flex-grow-1">
-                                                    <h6 className="mb-1">
-                                                        {item.name}
-                                                    </h6>
+                                                        <div className="ms-3 flex-grow-1">
+                                                            <h6 className="mb-1">
+                                                                {item.name}
+                                                            </h6>
 
-                                                    <small className="text-muted">
-                                                        {item.portions?.length ?? 0} portions
-                                                    </small>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    {errors.menu_id  ? (
-                                        <div><small id="menuIdHelp" className="form-text text-danger">{errors.menu_id}</small><br /></div>
-                                    ) : null}
-                                </div>
-
-                                {/* PORTIONS */}
-                                <div className="col-md-5">
-                                    <div
-                                        className="rounded p-3"
-                                        style={{
-                                            minHeight: '500px'
-                                        }}
-                                    >
-                                        {!this.state.selectedMenuItem && (
-                                            <div className="text-center text-muted mt-5">
-                                                Select menu item
-                                            </div>
-                                        )}
-
-                                        {this.state.selectedMenuItem && (
-                                            <>
-                                                <h5 className="mb-3">
-                                                    {this.state.selectedMenuItem.name}
-                                                </h5>
-
-                                                {this.state.selectedMenuItem?.portions?.map(
-                                                    (portion: any) => (
-                                                        <div
-                                                            key={portion.id}
-                                                            onClick={() =>
-                                                                this.setSelectedPortion(portion)
-                                                            }
-                                                            className={`p-3 mb-2 rounded ${
-                                                                this.state.selectedPortion?.id ===
-                                                                portion.id
-                                                                    ? 'border border-success bg-success-subtle'
-                                                                    : 'border'
-                                                            }`}
-                                                            style={{
-                                                                cursor: 'pointer',
-                                                                transition: 'all .2s'
-                                                            }}
-                                                        >
-                                                            <div className="d-flex justify-content-between align-items-center">
-                                                                <div>
-                                                                    <div className="fw-bold">
-                                                                        {portion.name}
-                                                                    </div>
-
-                                                                    <small className="text-muted">
-                                                                        {portion.portion_size}
-                                                                    </small>
-                                                                </div>
-
-                                                                <div className="fw-bold text-success">
-                                                                    $
-                                                                    {
-                                                                        portion.prices?.price
-                                                                    }
-                                                                </div>
-                                                            </div>
+                                                            <small className="text-muted">
+                                                                {item.portions?.length ?? 0} portions
+                                                            </small>
                                                         </div>
-                                                    )
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            {errors.menu_id  ? (
+                                                <div><small id="menuIdHelp" className="form-text text-danger">{errors.menu_id}</small><br /></div>
+                                            ) : null}
+                                        </div>
+
+                                        {/* PORTIONS */}
+                                        <div className="col-md-5">
+                                            <div
+                                                className="rounded p-3"
+                                                style={{
+                                                    minHeight: '500px'
+                                                }}
+                                            >
+                                                {!this.state.selectedMenuItem && (
+                                                    <div className="text-center text-muted mt-5">
+                                                        Select menu item
+                                                    </div>
                                                 )}
-                                                {errors.portion_id  ? (
-                                                    <div><small id="portionIdHelp" className="form-text text-danger">{errors.portion_id}</small><br /></div>
+
+                                                {this.state.selectedMenuItem && (
+                                                    <>
+                                                        <h5 className="mb-3">
+                                                            {this.state.selectedMenuItem.name}
+                                                        </h5>
+
+                                                        {this.state.selectedMenuItem?.portions?.map(
+                                                            (portion: any) => (
+                                                                <div
+                                                                    key={portion.id}
+                                                                    onClick={() =>
+                                                                        this.setSelectedPortion(portion)
+                                                                    }
+                                                                    className={`p-3 mb-2 rounded ${
+                                                                        this.state.selectedPortion?.id ===
+                                                                        portion.id
+                                                                            ? 'border border-success bg-success-subtle'
+                                                                            : 'border'
+                                                                    }`}
+                                                                    style={{
+                                                                        cursor: 'pointer',
+                                                                        transition: 'all .2s'
+                                                                    }}
+                                                                >
+                                                                    <div className="d-flex justify-content-between align-items-center">
+                                                                        <div>
+                                                                            <div className="fw-bold">
+                                                                                {portion.name}
+                                                                            </div>
+
+                                                                            <small className="text-muted">
+                                                                                {portion.portion_size}
+                                                                            </small>
+                                                                        </div>
+
+                                                                        <div className="fw-bold text-success">
+                                                                            $
+                                                                            {
+                                                                                portion.prices?.price
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        )}
+                                                        {errors.portion_id  ? (
+                                                            <div><small id="portionIdHelp" className="form-text text-danger">{errors.portion_id}</small><br /></div>
+                                                        ) : null}
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* DISCOUNT SECTION */}
+                                    <div className="mt-3 pt-3">
+
+                                        <h6 className="text-primary fw-bold mb-3 h4">
+                                            Discount
+                                        </h6>
+
+                                        <div className="row g-2">
+
+                                            {/* DISCOUNT VALUE */}
+                                            <div className="col-md-6">
+                                                <label className="form-label">
+                                                    Discount Value
+                                                </label>
+
+                                                <Field
+                                                    type="number"
+                                                    name="value"
+                                                    className="form-control"
+                                                    placeholder="Enter value"
+                                                />
+                                                {errors.value  ? (
+                                                    <div><small id="valueHelp" className="form-text text-danger">{errors.value}</small><br /></div>
                                                 ) : null}
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
+                                            </div>
 
-                            {/* DISCOUNT SECTION */}
-                            <div className="mt-3 pt-3">
+                                            {/* DISCOUNT TYPE */}
+                                            <div className="col-md-6">
+                                                <label className="form-label">
+                                                    Discount Type
+                                                </label>
 
-                                <h6 className="text-primary fw-bold mb-3 h4">
-                                    Discount
-                                </h6>
+                                                <Field
+                                                    as="select"
+                                                    name="type"
+                                                    className="form-select"
+                                                >
+                                                    <option value="percent" selected>
+                                                        Percent (%)
+                                                    </option>
 
-                                <div className="row g-2">
+                                                    <option value="fixed">
+                                                        Fixed Price
+                                                    </option>
+                                                </Field>
+                                                {errors.type  ? (
+                                                    <div><small id="typeHelp" className="form-text text-danger">{errors.type}</small><br /></div>
+                                                ) : null}
+                                            </div>
 
-                                    {/* DISCOUNT VALUE */}
-                                    <div className="col-md-6">
-                                        <label className="form-label">
-                                            Discount Value
-                                        </label>
-
-                                        <Field
-                                            type="number"
-                                            name="value"
-                                            className="form-control"
-                                            placeholder="Enter value"
-                                        />
-                                        {errors.value  ? (
-                                            <div><small id="valueHelp" className="form-text text-danger">{errors.value}</small><br /></div>
-                                        ) : null}
+                                        </div>
                                     </div>
 
-                                    {/* DISCOUNT TYPE */}
-                                    <div className="col-md-6">
-                                        <label className="form-label">
-                                            Discount Type
-                                        </label>
+                                    <div className="row mb-3 mt-3">
+                                        <div className="text-primary fw-bold h4">
+                                            Validity Period
+                                        </div>
 
-                                        <Field
-                                            as="select"
-                                            name="type"
-                                            className="form-select"
-                                        >
-                                            <option value="percent" selected>
-                                                Percent (%)
-                                            </option>
+                                        <div className="">
 
-                                            <option value="fixed">
-                                                Fixed Price
-                                            </option>
-                                        </Field>
-                                        {errors.type  ? (
-                                            <div><small id="typeHelp" className="form-text text-danger">{errors.type}</small><br /></div>
-                                        ) : null}
+                                            <label className="form-label">
+                                                Status
+                                            </label>
+
+                                            <div className="btn-group w-100 mb-3">
+
+                                                <button
+                                                    type="button"
+                                                    className={
+                                                        values.is_active
+                                                            ? 'btn btn-success'
+                                                            : 'btn btn-outline-success'
+                                                    }
+                                                    onClick={() =>
+                                                        setFieldValue('is_active', true)
+                                                    }
+                                                >
+                                                    Active
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className={
+                                                        !values.is_active
+                                                            ? 'btn btn-danger'
+                                                            : 'btn btn-outline-danger'
+                                                    }
+                                                    onClick={() =>
+                                                        setFieldValue('is_active', false)
+                                                    }
+                                                >
+                                                    Inactive
+                                                </button>
+
+                                            </div>
+                                        </div>
                                     </div>
 
-                                </div>
-                            </div>
+                                    <div className="row">
 
-                            <div className="row mb-3 mt-3">
+                                        <div className="text-primary fw-bold h4">
+                                            Active dates
+                                        </div>
+
+                                        <div className="col-md-6">
+                                            <label className="form-label">
+                                                Start Date
+                                            </label>
+
+                                            <Field
+                                                type="date"
+                                                name="start_at"
+                                                className="form-control"
+                                            />
+                                            {errors.start_at  ? (
+                                                <div><small id="startAtHelp" className="form-text text-danger">{errors.start_at}</small><br /></div>
+                                            ) : null}
+                                        </div>
+
+                                        <div className="col-md-6">
+                                            <label className="form-label">
+                                                End Date
+                                            </label>
+
+                                            <Field
+                                                type="date"
+                                                name="end_at"
+                                                className="form-control"
+                                            />
+                                            {errors.end_at  ? (
+                                                <div><small id="endAtHelp" className="form-text text-danger">{errors.end_at}</small><br /></div>
+                                            ) : null}
+                                        </div>
+
+                                    </div>
+
+                            <div className="row mt-3">
+
                                 <div className="text-primary fw-bold h4">
-                                    Validity Period
+                                    Schedule
                                 </div>
 
                                 <div className="">
 
                                     <label className="form-label">
-                                        Status
-                                    </label>
-
-                                    <div className="btn-group w-100 mb-3">
-
-                                        <button
-                                            type="button"
-                                            className={
-                                                values.is_active
-                                                    ? 'btn btn-success'
-                                                    : 'btn btn-outline-success'
-                                            }
-                                            onClick={() =>
-                                                setFieldValue('is_active', true)
-                                            }
-                                        >
-                                            Active
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            className={
-                                                !values.is_active
-                                                    ? 'btn btn-danger'
-                                                    : 'btn btn-outline-danger'
-                                            }
-                                            onClick={() =>
-                                                setFieldValue('is_active', false)
-                                            }
-                                        >
-                                            Inactive
-                                        </button>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
-
-                                <div className="text-primary fw-bold h4">
-                                    Active dates
-                                </div>
-
-                                <div className="col-md-6">
-                                    <label className="form-label">
-                                        Start Date
+                                        Active Times
                                     </label>
 
                                     <Field
-                                        type="date"
-                                        name="start_at"
-                                        className="form-control"
-                                    />
-                                    {errors.start_at  ? (
-                                        <div><small id="startAtHelp" className="form-text text-danger">{errors.start_at}</small><br /></div>
-                                    ) : null}
-                                </div>
-
-                                <div className="col-md-6">
-                                    <label className="form-label">
-                                        End Date
-                                    </label>
-
-                                    <Field
-                                        type="date"
-                                        name="end_at"
-                                        className="form-control"
-                                    />
-                                    {errors.end_at  ? (
-                                        <div><small id="endAtHelp" className="form-text text-danger">{errors.end_at}</small><br /></div>
-                                    ) : null}
-                                </div>
-
-                            </div>
-
-                    <div className="row mt-3">
-
-                        <div className="text-primary fw-bold h4">
-                            Schedule
-                        </div>
-
-                        <div className="">
-
-                            <label className="form-label">
-                                Active Times
-                            </label>
-
-                            <Field
-                                as="select"
-                                name="active_times"
-                                className="form-select mb-3"
-                            >
-                                <option value="0">
-                                    Always Active
-                                </option>
-
-                                <option value="1">
-                                    Every Day
-                                </option>
-
-                                <option value="2">
-                                    Weekly
-                                </option>
-                            </Field>
-                            {errors.active_times  ? (
-                                <div><small id="activeTimesHelp" className="form-text text-danger">{errors.active_times}</small><br /></div>
-                            ) : null}
-                        </div>
-                    </div>
-
-                    {values.active_times == 2 && 
-                        <div className="row mb-3 mt-3">
-                            {Object.values(DayOfWeek).map((day) => {
-                                const isSelected = values.times.includes(day);
-
-                                return (
-                                    <div 
-                                        key={day}
-                                        className="col"
+                                        as="select"
+                                        name="active_times"
+                                        className="form-select mb-3"
                                     >
-                                        <button
-                                            type="button"
-                                            onClick={(e) => this.addOrRemoveDayOfWeek(day)}
-                                            className={
-                                                isSelected
-                                                    ? 'btn btn-success'
-                                                    : 'btn btn-outline-success'
-                                            }
-                                        >{day.substring(0, 3)}</button>
+                                        <option value="0">
+                                            Always Active
+                                        </option>
+
+                                        <option value="1">
+                                            Every Day
+                                        </option>
+
+                                        <option value="2">
+                                            Weekly
+                                        </option>
+                                    </Field>
+                                    {errors.active_times  ? (
+                                        <div><small id="activeTimesHelp" className="form-text text-danger">{errors.active_times}</small><br /></div>
+                                    ) : null}
+                                </div>
+                            </div>
+
+                            {values.active_times == 2 && 
+                                <div className="row mb-3 mt-3">
+                                    {Object.values(DayOfWeek).map((day) => {
+                                        const isSelected = values.times.includes(day);
+
+                                        return (
+                                            <div 
+                                                key={day}
+                                                className="col"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => this.addOrRemoveDayOfWeek(day)}
+                                                    className={
+                                                        isSelected
+                                                            ? 'btn btn-success'
+                                                            : 'btn btn-outline-success'
+                                                    }
+                                                >{day.substring(0, 3)}</button>
+                                            </div>
+                                        )
+                                    })}
+                                    {errors.times  ? (
+                                        <div><small id="timesHelp" className="form-text text-danger">{errors.times}</small><br /></div>
+                                    ) : null}
+                                </div>
+                            }
+
+                            {values.active_times && (
+                                <div className="row mb-3 mt-3">
+
+                                    <div className="col-md-6">
+                                        <label className="form-label">
+                                            Time From
+                                        </label>
+
+                                        <Field
+                                            type="time"
+                                            name="time_from"
+                                            className="form-control"
+                                        />
+                                        {errors.time_from  ? (
+                                            <div><small id="timeFromHelp" className="form-text text-danger">{errors.time_from}</small><br /></div>
+                                        ) : null}
                                     </div>
-                                )
-                            })}
-                            {errors.times  ? (
-                                <div><small id="timesHelp" className="form-text text-danger">{errors.times}</small><br /></div>
-                            ) : null}
-                        </div>
-                    }
 
-                    {values.active_times && (
-                        <div className="row mb-3 mt-3">
+                                    <div className="col-md-6">
+                                        <label className="form-label">
+                                            Time To
+                                        </label>
 
-                            <div className="col-md-6">
-                                <label className="form-label">
-                                    Time From
-                                </label>
+                                        <Field
+                                            type="time"
+                                            name="time_to"
+                                            className="form-control"
+                                        />
+                                        {errors.time_to  ? (
+                                            <div><small id="timeToHelp" className="form-text text-danger">{errors.time_to}</small><br /></div>
+                                        ) : null}
+                                    </div>
 
-                                <Field
-                                    type="time"
-                                    name="time_from"
-                                    className="form-control"
-                                />
-                                {errors.time_from  ? (
-                                    <div><small id="timeFromHelp" className="form-text text-danger">{errors.time_from}</small><br /></div>
-                                ) : null}
-                            </div>
+                                </div>
+                            )}
 
-                            <div className="col-md-6">
-                                <label className="form-label">
-                                    Time To
-                                </label>
-
-                                <Field
-                                    type="time"
-                                    name="time_to"
-                                    className="form-control"
-                                />
-                                {errors.time_to  ? (
-                                    <div><small id="timeToHelp" className="form-text text-danger">{errors.time_to}</small><br /></div>
-                                ) : null}
-                            </div>
-
-                        </div>
-                    )}
-
-                            <div className="col-md-6 p-5">
+                                    <div className="col-md-6 p-5">
 
 
-                                {'Is submitting: ' + isSubmitting}<br />
-                                {'Is valid: ' + isValid} <br />
-                                {'Is dirty: ' + dirty} <br />
-                                { 'Errors: ' + JSON.stringify(errors) }
-                                <div className="controls">
-                                    <button className="submit" disabled={isSubmitting || !isValid || !dirty}>
-                                        <FaSave />
-                                    </button>
+                                        {'Is submitting: ' + isSubmitting}<br />
+                                        {'Is valid: ' + isValid} <br />
+                                        {'Is dirty: ' + dirty} <br />
+                                        { 'Errors: ' + JSON.stringify(errors) }
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        {/* FIXED STICKY FOOTER */}
+                        <div className="modal-actions-footer">
+                            <button 
+                                className="submit btn btn-primary btn-submit-save" 
+                                disabled={isSubmitting || !isValid || !dirty}
+                            >
+                                <FaSave />
+                            </button>
+                        </div>
                 </Form>
                 )}
                 </Formik>

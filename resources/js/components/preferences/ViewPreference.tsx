@@ -2,7 +2,8 @@ import { IPreference } from "@/types/Preference";
 import { ICountry } from "@/types/TCountries";
 import React from "react";
 interface IProps {
-    currentItem: IPreference
+    currentItem: IPreference;
+    closeModal: Function;
 }
 interface IState {}
 
@@ -25,49 +26,61 @@ class ViewPreference extends React.Component<IProps, IState>
 
     render(): React.ReactNode {
         return(
-            <div className="d-flex flex-column">
-                <div className="col-md-12">
+            <div className="form-page">
+                <div className="modal-header">
                     <h1>{this.props.currentItem.name}</h1>
+                    <button className="close-btn" onClick={() => this.props.closeModal()}>&times;</button>
 
                 </div>
-                <div className="col-md-12 d-flex p-2">
-                    <br />
-                    <h5>Price: &nbsp; {this.props.currentItem.description} </h5>
-                </div>
-                <div className="mt-4">
-                    <h6 className="fw-bold text-muted mb-3">
-                        🌍 Translations
-                    </h6>
 
-                    {Object.entries(this.props.currentItem.translations || {}).map(
-                        ([lang, translation]: [string, any]) => (
-                            <div
-                                key={lang}
-                                data-lang={lang}
-                                className="card mb-2 border-0 bg-light"
-                            >
-                                <div className="card-body py-2">
+                {/* CONTENT */}
+                <div className="d-flex flex-column modal-form-content">
+                        <div className="modal-scroll-body">
+                            <div className="row g-4">
+                                <h5>{this.props.currentItem.description} </h5>
 
-                                    <div className="d-flex align-items-center mb-2">
-                                        <span className="fs-5 me-2">
-                                            {this.getFlag(translation)}
-                                        </span>
+                                {/* TRANSLATIONS */}
+                                <div className="mt-4">
+                                    {Object.entries(this.props.currentItem.translations || {}).length > 0 &&
+                                    <h6 className="fw-bold text-muted mb-3">
+                                        🌍 Translations
+                                    </h6>
+                                    }
 
-                                        <span className="badge bg-primary">
-                                            {lang.toUpperCase()}
-                                        </span>
-                                    </div>
+                                    {Object.entries(this.props.currentItem.translations || {}).map(
+                                        ([lang, translation]: [string, any]) => (
+                                            <div
+                                                key={lang}
+                                                data-lang={lang}
+                                                className="card mb-2 border-0 bg-light"
+                                            >
+                                                <div className="card-body py-2">
 
-                                    <div>
-                                        <strong>Name:</strong>
-                                        <div>{translation.name || '-'}</div>
-                                    </div>
+                                                    <div className="d-flex align-items-center mb-2">
+                                                        <span className="fs-5 me-2">
+                                                            {this.getFlag(translation)}
+                                                        </span>
 
+                                                        <span className="badge bg-primary">
+                                                            {lang.toUpperCase()}
+                                                        </span>
+                                                    </div>
+
+                                                    <div>
+                                                        <strong>Name:</strong>
+                                                        <div>{translation.name || '-'}</div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        )
+                                    )}
                                 </div>
+
                             </div>
-                        )
-                    )}
+                        </div>
                 </div>
+
             </div>
         )
     }

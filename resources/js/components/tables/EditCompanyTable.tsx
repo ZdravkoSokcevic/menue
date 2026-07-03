@@ -155,9 +155,10 @@ class EditCompanyTable extends React.Component<IProps, IState>
         return (
                 <div className="form-page">
 
-
-                    <h2>Edit Table</h2>
-                    <button className="close-btn" onClick={() => this.closeModal()}>x</button>
+                    <div className="modal-header">
+                        <h2>Translations</h2>
+                        <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
+                    </div>
 
                     <Formik 
                         initialValues={currentInitialValues}
@@ -172,42 +173,49 @@ class EditCompanyTable extends React.Component<IProps, IState>
 
                     {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty }) => (
 
-                        <Form encType="multipart/form-data">
-                        <div className="container-fluid">
-                            <div className="row">
+                        <Form encType="multipart/form-data" className="modal-form-content">
+                             <div className="modal-scroll-body">
+                                <div className="container-fluid p-0 mb-5">
+                                    <div className="row g-4">
 
-                                <div className="col-md-6 p-5">
+                                        <div className="col-md-6 p-5">
 
-                                    <div className="form-group">
-                                        <label>Name</label>
-                                        <Field 
-                                            name="name" 
-                                            className="form-control" 
-                                            placeholder="Enter name of your category" 
-                                            aria-describedby="nameHelp"
-                                        />
-                                        {errors.name && touched.name ? (
-                                            <><small id="nameHelp" className="form-text text-danger">{this.formikRef.current?.errors.name}</small><br /></>
-                                        ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                                    </div>
+                                            <div className="form-group">
+                                                <label>Name</label>
+                                                <Field 
+                                                    name="name" 
+                                                    className="form-control" 
+                                                    placeholder="Enter name of your category" 
+                                                    aria-describedby="nameHelp"
+                                                />
+                                                {errors.name && touched.name ? (
+                                                    <><small id="nameHelp" className="form-text text-danger">{this.formikRef.current?.errors.name}</small><br /></>
+                                                ) : null}
+                                                <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
 
-                                    
+                                            
 
-                                    {/* {'Is submitting: ' + isSubmitting}<br />
-                                    {'Is valid: ' + isValid} <br />
-                                    {'Is dirty: ' + dirty} <br />
-                                    { 'Errors: ' + JSON.stringify(errors) } */}
-                                    {/* { 'CurrentItem' + JSON.stringify(this.props.currentItem) } */}
-                                    <div className="controls">
-                                        <button className="submit" type="submit" disabled={false}>
-                                            <FaSave />
-                                        </button>
+                                            {/* {'Is submitting: ' + isSubmitting}<br />
+                                            {'Is valid: ' + isValid} <br />
+                                            {'Is dirty: ' + dirty} <br />
+                                            { 'Errors: ' + JSON.stringify(errors) } */}
+                                            {/* { 'CurrentItem' + JSON.stringify(this.props.currentItem) } */}
+                                        </div>
                                     </div>
                                 </div>
+                             </div>
+
+                            {/* FIXED STICKY FOOTER */}
+                            <div className="modal-actions-footer">
+                                <button 
+                                    className="submit btn btn-primary btn-submit-save" 
+                                    disabled={isSubmitting || !isValid || !dirty}
+                                >
+                                    <FaSave />
+                                </button>
                             </div>
-                        </div>
-                    </Form>
+                        </Form>
                     )}
                     </Formik>
                 </div>  

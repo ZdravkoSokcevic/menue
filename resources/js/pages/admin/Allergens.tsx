@@ -83,10 +83,10 @@ class Allergens extends React.Component<IProps, IState> {
                                         <div className="card-actions">
                                             <p className="hover-description">{item.name}</p> 
                                             <div className="card-actions-wrapper">
-                                                <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)}/>
-                                                <IoEye onClick={() => this.onViewClicked(item)}/>
-                                                <HiMiniPencilSquare onClick={() => this.onEditClicked(item)}/>
-                                                <MdDelete onClick={() => this.onDeleteClicked(item)}/>
+                                                <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)} className="text-primary"/>
+                                                <IoEye onClick={() => this.onViewClicked(item)} className="text-info"/>
+                                                <HiMiniPencilSquare onClick={() => this.onEditClicked(item)} className="text-warning"/>
+                                                <MdDelete onClick={() => this.onDeleteClicked(item)} className="text-danger"/>
                                             </div>
                                         </div>
                                     </div>

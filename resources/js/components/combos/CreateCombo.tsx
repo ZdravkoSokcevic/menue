@@ -18,6 +18,7 @@ import DiscountsAPI from "@/api/DiscountsAPI";
 import { DayOfWeek, DISCOUNT_TYPE, IDiscount, IDiscountResponseItem } from "@/types/Discount";
 import { IPrice } from "@/types/Prices";
 import AppHelper from "@/helpers/AppHelper";
+import { IComboSelection, TArrayOfComboSelection, TArrayOfComboSimpleSelections } from "@/types/Combo";
 
 interface IProps {
     // can be page or modal
@@ -33,19 +34,19 @@ interface IState {
     // @ts-ignore
     image?: Image | null;
     menuItems: TMenuItems;
+    currentSelectedMenuItem: TMenu;
     // Based on search
     filteredItems: TMenuItems;
     menuItemOptions: TSelectSearchOptions;
-    selectedMenuItem: TMenu;
-    selectedPortion: IPrice;
+    comboSelections: TArrayOfComboSelection;
     search: string;
     // daysOfWeek: DayOfWeek,
-    selectedDaysOfWeek: Array<DayOfWeek>,
+    selectedDaysOfWeek: Array<DayOfWeek>;
+    key: number;
 };
 
 interface IInitialValues {
-    menu_id: string;
-    portion_id: string;
+    comboSelections: TArrayOfComboSimpleSelections;
     value: string | number;
     type?: DISCOUNT_TYPE;
     active_times: number;
@@ -68,8 +69,7 @@ const dayValues = [
 ];
 
 const initialValues: IInitialValues = {
-    menu_id: '',
-    portion_id: '',
+    comboSelections: [],
     value: '',
     type: DISCOUNT_TYPE.FIXED,
     active_times: 0,
@@ -86,7 +86,7 @@ const initialValues: IInitialValues = {
 // });
 
 
-class CreateDiscount extends React.Component<IProps, IState>
+class CreateCombo extends React.Component<IProps, IState>
 {
     private fileInputRef = React.createRef<HTMLInputElement>();
     private formikRef = React.createRef<FormikProps<IInitialValues>>();
@@ -99,39 +99,27 @@ class CreateDiscount extends React.Component<IProps, IState>
             menuItems: [],
             filteredItems: [],
             menuItemOptions: [] as TSelectSearchOptions,
-            selectedMenuItem: {} as TMenu,
-            selectedPortion: {} as IPrice,
+            comboSelections: [] as TArrayOfComboSelection,
+            currentSelectedMenuItem: {} as TMenu,
             search: '',
             // daysOfWeek: [],
             selectedDaysOfWeek: [],
+            key: Math.random()
         }
         this.handleImageLoad = this.handleImageLoad.bind(this);
         this.handleFileLoad = this.handleFileLoad.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
 
         this.discountValidationSchema = Yup.object().shape({
-            menu_id: Yup.string()
-                .required('Choose one of menu items')
-                .test(
-                    'menu-exists',
-                    'Menu item doesn\'t exists',
-                    async (value) => {
-                        let items = this.state.menuItems;
-                        const itemExists = items.some(item => item.id == value);
-                        return itemExists;
-                    }
-                ),
-            portion_id: Yup.string()
-                .required('Choose on of portions')
-                .test(
-                    'portion-exists',
-                    'Portion item doesn\'t exists',
-                    value => {
-                        let selectedItemId = this.state.selectedMenuItem;
-                        const exists = selectedItemId.portions?.some(portion => portion.id == value);
-                        return exists;
-                    }
-                ),
+            comboSelections: Yup.array()
+                .of(
+                    Yup.object().shape({
+                        menu_id: Yup.string().required('Menu item selection is required!'),
+                        portion_id: Yup.string().required('Portion selection is required!')
+                    })
+                )
+                .min(2, 'A combo must contain at least 2 distinct items!')
+                .required('Combo items are required'),
             value: Yup.string()
                 .required('Value is required')
                 .when('type', {
@@ -293,20 +281,84 @@ class CreateDiscount extends React.Component<IProps, IState>
         }else this.setState({ filteredItems: this.state.menuItems });
     }
 
-    setSelectedMenuItem = (item: TMenu) => {
-        this.setState({
-            selectedMenuItem: item,
-            selectedPortion: {} as IPrice
-        })
+    addMenuItemToCombo = (menu_id: string | number ) => {
+        // debugger;
+        // TODO: make item selected or unselected
 
-        this.formikRef.current!.setFieldValue('menu_id', item.id);
+        const targetItem = this.state.menuItems.find(item => item.id === menu_id);
+                if (!targetItem) return;
+
+        // TODO: make deletion if already exists
+        const alreadyExists = this.state.comboSelections.some(selected => selected.menuItem.id)
+        if(alreadyExists) {
+            alert('Already exists');
+            return;
+        }
+
+        const defaultPortion = targetItem.portions && targetItem.portions.length > 0 
+            ? targetItem.portions[0]
+            : null;
+        
+        if(!defaultPortion) {
+            alert('This item has no available portions');
+            return;
+        }
+
+        const newSelection: IComboSelection = {
+            menuItem: targetItem,
+            selectedPortion: defaultPortion
+        }
+        debugger;
+
+        this.setState({
+            comboSelections: [...this.state.comboSelections, newSelection], 
+            currentSelectedMenuItem: targetItem,
+            key: Math.random()
+        });
     }
 
-    setSelectedPortion = (portion: IPrice) => {
-        this.setState({
-            selectedPortion: portion
-        })
-        this.formikRef.current!.setFieldValue('portion_id', portion.id);
+    // 2. UPDATE THE PORTION FOR A SPECIFIC ITEM IN THE COMBO
+    handlePortionChange = (menuItemId: string | number, portionId: string | number) => {
+        this.setState(prevState => ({
+            comboSelections: prevState.comboSelections.map(sel => {
+                // Find the targeted row
+                if (sel.menuItem.id === menuItemId && sel.menuItem.portions) {
+                    const updatedPortion = sel.menuItem?.portions.find(p => p.id === portionId);
+                    if (updatedPortion) {
+                        return { ...sel, selectedPortion: updatedPortion }; // Swap portion smoothly
+                    }
+                }
+                return sel;
+            })
+        }));
+        // let comboSelections = this.state.comboSelections.map(sel => {
+        //         // Find the targeted row
+        //         debugger;
+        //         if (sel.menuItem.id === menuItemId && sel.menuItem.portions) {
+        //             const updatedPortion = sel.menuItem?.portions.find(p => p.id === portionId);
+        //             if (updatedPortion) {
+        //                 debugger;
+        //                 return { ...sel, selectedPortion: updatedPortion }; // Swap portion smoothly
+        //             }
+        //         }
+        //         return sel;
+        //     });
+
+        // this.setState({ comboSelections: comboSelections });
+    }
+
+    isportionSelected = (portionId: string | number) => {
+        // debugger;
+        let exists = this.state.comboSelections.some(comboSelection => comboSelection.selectedPortion.id === portionId);
+        // debugger;
+        return exists;
+    }
+
+    // 3. REMOVE AN ITEM FROM THE COMBO
+    removeComboItem = (menuItemId: string | number) => {
+        this.setState(prevState => ({
+            comboSelections: prevState.comboSelections.filter(sel => sel.menuItem.id !== menuItemId)
+        }));
     }
 
     addOrRemoveDayOfWeek = (day: DayOfWeek) => {
@@ -335,7 +387,7 @@ class CreateDiscount extends React.Component<IProps, IState>
 
 
                     <div className="modal-header">
-                        <h2>Create discount</h2>
+                        <h2>Create Combo</h2>
                         <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
                     </div>
 
@@ -382,10 +434,10 @@ class CreateDiscount extends React.Component<IProps, IState>
                                                         <div
                                                             key={item.id}
                                                             onClick={() =>
-                                                                this.setSelectedMenuItem(item)
+                                                                this.addMenuItemToCombo(item.id)
                                                             }
                                                             className={`d-flex align-items-center p-2 mb-2 rounded cursor-pointer ${
-                                                                this.state.selectedMenuItem?.id === item.id
+                                                                this.state.currentSelectedMenuItem?.id === item.id
                                                                     ? 'border border-primary bg-primary-subtle'
                                                                     : 'border'
                                                             }`}
@@ -414,8 +466,8 @@ class CreateDiscount extends React.Component<IProps, IState>
                                                         </div>
                                                     ))}
                                                 </div>
-                                                {errors.menu_id  ? (
-                                                    <div><small id="menuIdHelp" className="form-text text-danger">{errors.menu_id}</small><br /></div>
+                                                {errors.comboSelections  ? (
+                                                    <div><small id="menuIdHelp" className="form-text text-danger">{JSON.stringify(errors.comboSelections)}</small><br /></div>
                                                 ) : null}
                                             </div>
 
@@ -427,28 +479,27 @@ class CreateDiscount extends React.Component<IProps, IState>
                                                         minHeight: '500px'
                                                     }}
                                                 >
-                                                    {!this.state.selectedMenuItem && (
+                                                    {!this.state.currentSelectedMenuItem && (
                                                         <div className="text-center text-muted mt-5">
                                                             Select menu item
                                                         </div>
                                                     )}
 
-                                                    {this.state.selectedMenuItem && (
+                                                    {this.state.currentSelectedMenuItem && (
                                                         <>
-                                                            <h5 className="mb-3">
-                                                                {this.state.selectedMenuItem.name}
+                                                            <h5 className="mb-3" key={this.state.key}>
+                                                                {this.state.currentSelectedMenuItem.name}
                                                             </h5>
 
-                                                            {this.state.selectedMenuItem?.portions?.map(
+                                                            {this.state.currentSelectedMenuItem?.portions?.map(
                                                                 (portion: any) => (
                                                                     <div
                                                                         key={portion.id}
                                                                         onClick={() =>
-                                                                            this.setSelectedPortion(portion)
+                                                                            this.handlePortionChange(this.state.currentSelectedMenuItem.id, portion.id)
                                                                         }
                                                                         className={`p-3 mb-2 rounded ${
-                                                                            this.state.selectedPortion?.id ===
-                                                                            portion.id
+                                                                            this.isportionSelected(portion.id)
                                                                                 ? 'border border-success bg-success-subtle'
                                                                                 : 'border'
                                                                         }`}
@@ -478,8 +529,8 @@ class CreateDiscount extends React.Component<IProps, IState>
                                                                     </div>
                                                                 )
                                                             )}
-                                                            {errors.portion_id  ? (
-                                                                <div><small id="portionIdHelp" className="form-text text-danger">{errors.portion_id}</small><br /></div>
+                                                            {errors.comboSelections  ? (
+                                                                <div><small id="portionIdHelp" className="form-text text-danger">{JSON.stringify(errors.comboSelections)}</small><br /></div>
                                                             ) : null}
                                                         </>
                                                     )}
@@ -756,7 +807,7 @@ class CreateDiscount extends React.Component<IProps, IState>
         // (event as Event).preventDefault();
         // let form = event.target;
         let d = event;
-        debugger;
+        // debugger;
         let eventStr = ''
         if(event.times) {
             let eventTimes: Array<string> = [];
@@ -812,4 +863,4 @@ class CreateDiscount extends React.Component<IProps, IState>
     }
 }
 
-export default CreateDiscount;
+export default CreateCombo;

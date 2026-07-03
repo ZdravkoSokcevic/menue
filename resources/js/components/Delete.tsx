@@ -38,19 +38,30 @@ class Delete extends React.Component<IProps & WithRouterProps, IState>
                 isOpen={this.props.isOpen as boolean} 
                 // isOpen={true}
                 onRequestClose={() => this.closeModal()}
-                overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
-                className="form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none"
-                contentLabel="Example"
+                overlayClassName="modal-backdrop-blur"
+                className="form-modal"
+                contentLabel="Delete item"
             >
-                <h2>Delete item</h2>
-                <button className="close-btn" onClick={() => this.closeModal()}>x</button>
-                <div className="content">
-                    <h5 dangerouslySetInnerHTML={{__html: this.props.text as TrustedHTML}}></h5>
+                <div className="modal-header">
+                    <h2>Delete item</h2>
+                    <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
                 </div>
-                <div className="controls" style={{fontSize: '15pt'}} onClick={this.closeModal}>
-                    <button>Cancel</button>
-                    &nbsp;
-                    <button className="text-danger" onClick={() => this.props.onDeleteClicked()}>
+
+                <div className="modal-form-content">
+                     <div className="modal-scroll-body">
+                        <div className="container-fluid p-0 mb-5">
+                            <div className="row g-4">
+                                <h5 dangerouslySetInnerHTML={{__html: this.props.text as TrustedHTML}}></h5>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+                {/* FIXED STICKY FOOTER */}
+                <div className="modal-actions-footer" onClick={this.closeModal}>
+                    <button 
+                        className="submit btn btn-primary btn-submit-save" 
+                        onClick={() => this.props.onDeleteClicked()}
+                    >
                         Delete
                     </button>
                 </div>

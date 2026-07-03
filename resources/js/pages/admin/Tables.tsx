@@ -44,6 +44,7 @@ interface IState {
     isViewCompanyTableModalOpened: boolean;
     currentItem: ICompanyTable;
     companies: TCompaniesArr;
+    deleteItemText: string;
 };
 
 
@@ -62,7 +63,8 @@ class Tables extends React.Component<IProps, IState>
             isViewCompanyTableModalOpened: false,
             isDeleteCompanyTableModalOpened: false,
             currentItem: {} as ICompanyTable,
-            companies: []
+            companies: [],
+            deleteItemText: '',
         }
     }
 
@@ -177,6 +179,7 @@ class Tables extends React.Component<IProps, IState>
                     onDeleteClicked={this.onDeleteModalClicked}
                     closeModal={this.closeDeleteCompanyTableModal}
                     isOpen={this.state.isDeleteCompanyTableModalOpened}
+                    text={this.state.deleteItemText}
                 />
             </div>
         )
@@ -262,6 +265,7 @@ class Tables extends React.Component<IProps, IState>
 
     onDeleteClicked = (item: ICompanyTable) => {
         this.setState({ currentItem: item });
+        this.setState({ deleteItemText: `Do you wanna delete table: <b>${item.name}</b> ?` });
         this.openDeleteCompanyTableModal();
     }
 
@@ -274,7 +278,7 @@ class Tables extends React.Component<IProps, IState>
                 this.setState({ tables: newItems });
                 this.closeDeleteCompanyTableModal();
             }else {
-                alert('Cannot delete menu!');
+                alert('Cannot delete table!');
             }
         }else {
             alert('Cannot delete table');

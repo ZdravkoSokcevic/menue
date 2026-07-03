@@ -349,10 +349,9 @@ class CreateMenu extends React.Component<IProps, IState>
             <Modal
                 isOpen={this.props.isOpen as boolean}
                 onRequestClose={() => this.closeModal()}
-                overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
-                className="form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none"
-                style={{}}
-                contentLabel="Example"
+                overlayClassName="modal-backdrop-blur"
+                className="form-modal"
+                contentLabel="Create Menu item"
             >
                 <div className="form-page">
 
@@ -373,373 +372,400 @@ class CreateMenu extends React.Component<IProps, IState>
                     {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty, values}) => (
 
                         <Form encType="multipart/form-data" className="modal-form-content">
-                        <div className="container-fluid p-0">
-                            <div className="row g-4">
+                            <div className="modal-scroll-body">
+                                <div className="container-fluid p-0 mb-5">
+                                    <div className="row g-4">
 
-                                <div className="col-md-6 border-end p-2">
-                                    <div className="form-group">
-                                        <label>Choose picture</label>
-                                        {/* image should be 4:3 */}
-                                        <div
-                                        onDrop={this.handleDrop}
-                                        onDragOver={this.handleDragOver}
-                                        onDragEnter={this.handleDragEnter}
-                                        onDragLeave={this.handleDragLeave}
-                                        onClick={this.handleAreaClick}
-                                        style={{
-                                            border: "2px dashed #ccc",
-                                            padding: "20px",
-                                            textAlign: "center",
-                                            borderRadius: "10px",
-                                            backgroundColor: this.state.isDragging ? "#f0f8ff" : "#fff",
-                                            backgroundImage: this.state.image ? `url(${this.state.image.src})` : '',
-                                            backgroundSize: 'cover',
-                                            position: 'relative'
-                                        }}
-                                    className="placeholder-4-3"
-                                        >
-                                            <p>Drag file here</p>
+                                        <div className="col-md-6 d-flex flex-column gap-3">
+                                            <div className="">
+                                                <input
+                                                    type="file"
+                                                    ref={this.fileInputRef}
+                                                    onChange={(event: any) => this.handleFileChange(event as ChangeEventHandler<HTMLInputElement>)}
+                                                    // Hide the actual input element, but keep it accessible to screen readers using opacity: 0
+                                                    style={{ opacity: 0, height: 0, width: 0, position: 'absolute' }}
+                                                />
+                                                <label>Choose picture</label>
+                                                {/* image should be 4:3 */}
+                                                <div
+                                                    onDrop={this.handleDrop}
+                                                    onDragOver={this.handleDragOver}
+                                                    onDragEnter={this.handleDragEnter}
+                                                    onDragLeave={this.handleDragLeave}
+                                                    onClick={this.handleAreaClick}
+                                                    style={{
+                                                        border: "2px dashed #ccc",
+                                                        padding: "20px",
+                                                        textAlign: "center",
+                                                        borderRadius: "10px",
+                                                        backgroundColor: this.state.isDragging ? "#f0f8ff" : "#fff",
+                                                        backgroundImage: this.state.image ? `url(${this.state.image.src})` : '',
+                                                        backgroundSize: 'cover',
+                                                        position: 'relative'
+                                                    }}
+                                                    className="placeholder-4-3"
+                                                >
+                                                {/* <div className="text-muted text-center p-4">
+                                                    <span className="d-block mb-1">📸 Upload Item Image</span>
+                                                    <small className="text-muted">Click or drag & drop</small>
+                                                </div> */}
 
-                                            <input
-                                                type="file"
-                                                ref={this.fileInputRef}
-                                                onChange={(event: any) => this.handleFileChange(event as ChangeEventHandler<HTMLInputElement>)}
-                                                // Hide the actual input element, but keep it accessible to screen readers using opacity: 0
-                                                style={{ opacity: 0, height: 0, width: 0, position: 'absolute' }}
-                                            />
+
+                                                </div>
+                                                {errors.picture  ? (
+                                                    <><small id="pictureHelp" className="form-text text-danger">{errors.picture}</small><br /></>
+                                                ) : null}
+                                            </div>
+
+                                            {/* QUANTITY */}
+                                            <div className="form-group">
+                                                <label className="form-label">Quantity</label>
+                                                <Field 
+                                                    name="quantity" 
+                                                    className="form-control" 
+                                                    id="quantity" 
+                                                    aria-describedby="quantityHelp" 
+                                                    placeholder="Quantity"
+                                                />
+                                                {errors.quantity && touched.quantity ? (
+                                                    <><small id="quantityHelp" className="form-text text-danger">{errors.quantity}</small><br /></>
+                                                ) : null}
+                                                <small id="quantityHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
+
+                                            {/* PREPARATION TIME */}
+                                            <div className="form-group">
+                                                <label className="form-label">Preparation time:</label>
+                                                <Field
+                                                    name="prep_time"
+                                                    className="form-control"
+                                                    id="quantity"
+                                                    aria-describedby="prepTimeHelp"
+                                                    placeholder="Preparation time"
+                                                />
+                                                {errors.prep_time && touched.prep_time ? (
+                                                    <><small id="prepTimeHelp" className="form-text text-danger">{errors.prep_time}</small><br /></>
+                                                ) : null}
+                                                <small id="prepTimeHelp" className="form-text text-muted">Dish preparation time (in minutes)</small>
+                                            </div>
+
                                         </div>
-                                        {errors.picture  ? (
-                                            <><small id="pictureHelp" className="form-text text-danger">{errors.picture}</small><br /></>
-                                        ) : null}
-                                    </div>
+                                        
+                                        {/* RIGHT COLUMN: Classification & Checkboxes */}
+                                        <div className="col-md-6 d-flex flex-column gap-4 border-start-md">
 
-                                    {/* QUANTITY */}
-                                    <div className="form-group">
-                                        <label>Quantity</label>
-                                        <Field name="quantity" className="form-control" id="quantity" aria-describedby="quantityHelp" placeholder="Quantity"/>
-                                        {errors.quantity && touched.quantity ? (
-                                            <><small id="quantityHelp" className="form-text text-danger">{errors.quantity}</small><br /></>
-                                        ) : null}
-                                        <small id="quantityHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                                    </div>
+                                            {/* NAME */}
+                                            <div className="form-group">
+                                                <label className="form-label">Name</label>
+                                                <Field 
+                                                    name="name" 
+                                                    className="form-control" 
+                                                    placeholder="Enter name of your menu" 
+                                                    aria-describedby="nameHelp"
+                                                />
+                                                {errors.name && touched.name ? (
+                                                    <><small id="nameHelp" className="form-text text-danger">{errors.name}</small><br /></>
+                                                ) : null}
+                                                <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
 
-                                    {/* PREPARATION TIME */}
-                                    <div className="form-group">
-                                        <label>Preparation time:</label>
-                                        <Field
-                                            name="prep_time"
-                                            className="form-control"
-                                            id="quantity"
-                                            aria-describedby="prepTimeHelp"
-                                            placeholder="Preparation time"
-                                        />
-                                        {errors.prep_time && touched.prep_time ? (
-                                            <><small id="prepTimeHelp" className="form-text text-danger">{errors.prep_time}</small><br /></>
-                                        ) : null}
-                                        <small id="prepTimeHelp" className="form-text text-muted">Dish preparation time (in minutes)</small>
-                                    </div>
+                                            {/* DESCRIPTION */}
+                                            <div className="form-group">
+                                                <label className="form-label">Description</label>
+                                                <Field 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    name="description" 
+                                                    aria-describedby="descriptionHelp" 
+                                                    rows={6} 
+                                                    placeholder="Enter a description" 
+                                                />
+                                                {errors.description && touched.description ? (
+                                                    <><small id="descriptionHelp" className="form-text text-danger">{errors.description}</small><br /></>
+                                                ) : null}
+                                                <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
 
-                                    <div className="col-12">
-                                        <h5>Test</h5>
-                                    </div>
+                                            {/* CATEGORY */}
+                                            <div className="form-group">
+                                                <label className="form-label">Category</label>
+                                                <FormikSearchSelect
+                                                    options={(this.state.categoryOptions as unknown) as IOption[]}
+                                                    name="category"
+                                                    id="category"
+                                                    aria-describedby="categoryHelp"
+                                                    ref={this.categoryInputRef}
+                                                    onChange={this.onCategoryChange}
+                                                />
+                                            </div>
 
-                                </div>
-
-                                <div className="col-md-6 p-2">
-
-                                    {/* NAME */}
-                                    <div className="form-group">
-                                        <label>Name</label>
-                                        <Field name="name" className="form-control" placeholder="Enter name of your menu" aria-describedby="nameHelp"/>
-                                        {errors.name && touched.name ? (
-                                            <><small id="nameHelp" className="form-text text-danger">{errors.name}</small><br /></>
-                                        ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                                    </div>
-
-                                    {/* DESCRIPTION */}
-                                    <div className="form-group">
-                                        <label>Description</label>
-                                        <Field type="text" className="form-control" name="description" aria-describedby="descriptionHelp" rows={6} placeholder="Enter a description" />
-                                        {errors.description && touched.description ? (
-                                            <><small id="descriptionHelp" className="form-text text-danger">{errors.description}</small><br /></>
-                                        ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                                    </div>
-
-                                    {/* CATEGORY */}
-                                    <div className="form-group">
-                                        <label>Category</label>
-                                        <FormikSearchSelect
-                                            options={(this.state.categoryOptions as unknown) as IOption[]}
-                                            name="category"
-                                            id="category"
-                                            aria-describedby="categoryHelp"
-                                            ref={this.categoryInputRef}
-                                            onChange={this.onCategoryChange}
-                                        />
-                                    </div>
-
-                                    {/* INGRIDIENTS */}
-                                    {this.state.ingridients.length &&
-                                    <div className="border-top mt-3 pt-2">
-                                        <h5>Ingridients:</h5>
-                                        <FieldArray
-                                            name="ingridients"
-                                            render={arrayHelpers => (
-                                                <div >
-                                                    {/* <small>{JSON.stringify(arrayHelpers)}</small> */}
-                                                    {this.state.ingridients.map((ingridient: IIngridient, index: number) => (
-                                                        <div className="form-check" key={ingridient.id}>
-                                                            <input
-                                                                name="ingridients"
-                                                                type="checkbox"
-                                                                className="form-check-input"
-                                                                value={ingridient.id}
-                                                                checked={values.ingridients.find((i) => i === ingridient.id) ? true: false}
-                                                                onChange={e => {
-                                                                if (e.target.checked) {
-                                                                    arrayHelpers.push(ingridient.id);
-                                                                } else {
-                                                                    const idx = values.ingridients.indexOf(ingridient.id);
-                                                                    arrayHelpers.remove(idx);
-                                                                }
-                                                                }}
-                                                            />
-                                                            <span>{ingridient.name}</span>
+                                            {/* INGRIDIENTS */}
+                                            {this.state.ingridients.length &&
+                                            <div className="form-section">
+                                                <h3 className="section-title">Ingridients:</h3>
+                                                <FieldArray
+                                                    name="ingridients"
+                                                    render={arrayHelpers => (
+                                                        <div className="checkbox-grid">
+                                                            {/* <small>{JSON.stringify(arrayHelpers)}</small> */}
+                                                            {this.state.ingridients.map((ingridient: IIngridient, index: number) => (
+                                                                <label className="checkbox-item" key={ingridient.id}>
+                                                                    <input
+                                                                        name="ingridients"
+                                                                        type="checkbox"
+                                                                        className="form-check-input"
+                                                                        value={ingridient.id}
+                                                                        checked={values.ingridients.find((i) => i === ingridient.id) ? true: false}
+                                                                        onChange={e => {
+                                                                        if (e.target.checked) {
+                                                                            arrayHelpers.push(ingridient.id);
+                                                                        } else {
+                                                                            const idx = values.ingridients.indexOf(ingridient.id);
+                                                                            arrayHelpers.remove(idx);
+                                                                        }
+                                                                        }}
+                                                                    />
+                                                                    <span>{ingridient.name}</span>
+                                                                </label>
+                                                            ))}
                                                         </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        />
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={this.openCreateIngidientModal}
-                                        >
-                                            <GoPlus /> Add ingridient
-                                        </button>
-                                    </div>
-                                    }
-
-                                    {/* PREFERENCES */}
-                                    {this.state.preferences.length &&
-                                    <div className="border-top mt-3 pt-2">
-                                        <h5>Preferences:</h5>
-                                        <FieldArray
-                                            name="preferences"
-                                            render={arrayHelpers => (
-                                                <div >
-                                                    {/* <small>{JSON.stringify(arrayHelpers)}</small> */}
-                                                    {this.state.preferences.map((ingridient: IPreference, index: number) => (
-                                                        <div className="form-check" key={ingridient.id}>
-                                                            <input
-                                                                name="preferences"
-                                                                type="checkbox"
-                                                                className="form-check-input"
-                                                                value={ingridient.id}
-                                                                checked={values.preferences.find((i) => i === ingridient.id) ? true: false}
-                                                                onChange={e => {
-                                                                if (e.target.checked) {
-                                                                    arrayHelpers.push(ingridient.id);
-                                                                } else {
-                                                                    const idx = values.preferences.indexOf(ingridient.id);
-                                                                    arrayHelpers.remove(idx);
-                                                                }
-                                                                }}
-                                                            />
-                                                            <span>{ingridient.name}</span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        />
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={this.openCreatePreferencesModal}
-                                        >
-                                            <GoPlus /> Add preference
-                                        </button>
-                                    </div>
-                                    }
-
-                                    {/* EXTRAS */}
-                                    {this.state.extraOpts.map((opt, ind: number) => {
-                                        const index = values.extras.findIndex(p => p.id === opt.id);
-                                        const isChecked = index !== -1;
-
-                                        return (
-                                            <div key={opt.id} className="row border-top mt-3 pt-2 mb-2 align-items-center">
-                                                <h5 className="col-12">Extras:</h5>
-                                                {/* CHECKBOX */}
-                                                <div className="col-md-6 form-group">
-                                                    <div className="form-check">
-                                                        <input
-                                                            type="checkbox"
-                                                            className="form-check-input form-control"
-                                                            checked={isChecked}
-                                                            onChange={(e) => {
-                                                                if (e.target.checked) {
-                                                                    setFieldValue('extras', [
-                                                                        ...values.extras,
-                                                                        { id: opt.id, price: 0 }
-                                                                    ]);
-                                                                } else {
-                                                                    setFieldValue(
-                                                                        'extras',
-                                                                        values.extras.filter(p => p.id !== opt.id)
-                                                                    );
-                                                                }
-                                                            }}
-                                                        />
-                                                        <label className="form-check-label">
-                                                            {opt.name}
-                                                        </label>
-                                                    </div>
-                                                </div>
-
-                                                {/* PRICE INPUT (only if checked) */}
-                                                {false && (<div className="col-md-12">
-                                                    {isChecked && (
-                                                        <Field
-                                                            type="number"
-                                                            name={`extras.${ind}.price`}
-                                                            className="form-control"
-                                                            placeholder="Enter price"
-                                                        />
-
-
                                                     )}
-                                                </div>)}
+                                                />
+                                                <button
+                                                    className="btn btn-primary"
+                                                    onClick={this.openCreateIngidientModal}
+                                                >
+                                                    <GoPlus /> Add ingridient
+                                                </button>
+                                            </div>
+                                            }
 
-                                                {true && isChecked && (
-                                                    <div className="col-md-6">
-                                                        <label htmlFor="pricePrice"> Price: </label>
-                                                        <div className="input-group">
-                                                            <Field
-                                                                name={`extras.${index}.price`}
-                                                                className="form-control"
-                                                                aria-describedby="prepPriceHelp"
-                                                            />
-                                                            <div className="input-group-append">
-                                                                <span className="input-group-text" id="basic-addon2">USD</span>
+                                            {/* PREFERENCES */}
+                                            {this.state.preferences.length &&
+                                            <div className="form-section">
+                                                <h3 className="section-title">Preferences</h3>
+                                                <FieldArray
+                                                    name="preferences"
+                                                    render={arrayHelpers => (
+                                                        <div className="checbox-grid">
+                                                            {/* <small>{JSON.stringify(arrayHelpers)}</small> */}
+                                                            {this.state.preferences.map((ingridient: IPreference, index: number) => (
+                                                                <label className="checkbox-item" key={ingridient.id}>
+                                                                    <input
+                                                                        name="preferences"
+                                                                        type="checkbox"
+                                                                        className="form-check-input"
+                                                                        value={ingridient.id}
+                                                                        checked={values.preferences.find((i) => i === ingridient.id) ? true: false}
+                                                                        onChange={e => {
+                                                                        if (e.target.checked) {
+                                                                            arrayHelpers.push(ingridient.id);
+                                                                        } else {
+                                                                            const idx = values.preferences.indexOf(ingridient.id);
+                                                                            arrayHelpers.remove(idx);
+                                                                        }
+                                                                        }}
+                                                                    />
+                                                                    <span>{ingridient.name}</span>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                />
+                                                <button
+                                                    className="btn btn-primary"
+                                                    onClick={this.openCreatePreferencesModal}
+                                                >
+                                                    <GoPlus /> Add preference
+                                                </button>
+                                            </div>
+                                            }
+
+                                            {/* EXTRAS */}
+                                            {this.state.extraOpts.map((opt, ind: number) => {
+                                                const index = values.extras.findIndex(p => p.id === opt.id);
+                                                const isChecked = index !== -1;
+
+                                                return (
+                                                    <div key={opt.id} className="row border-top mt-3 pt-2 mb-2 align-items-center">
+                                                        <h5 className="col-12">Extras:</h5>
+                                                        {/* CHECKBOX */}
+                                                        <div className="col-md-6 form-group">
+                                                            <div className="form-check">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    className="form-check-input form-control"
+                                                                    checked={isChecked}
+                                                                    onChange={(e) => {
+                                                                        if (e.target.checked) {
+                                                                            setFieldValue('extras', [
+                                                                                ...values.extras,
+                                                                                { id: opt.id, price: 0 }
+                                                                            ]);
+                                                                        } else {
+                                                                            setFieldValue(
+                                                                                'extras',
+                                                                                values.extras.filter(p => p.id !== opt.id)
+                                                                            );
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                <label className="form-check-label">
+                                                                    {opt.name}
+                                                                </label>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                )}
 
-                                            </div>
-                                        );
-                                    })}
+                                                        {/* PRICE INPUT (only if checked) */}
+                                                        {false && (<div className="col-md-12">
+                                                            {isChecked && (
+                                                                <Field
+                                                                    type="number"
+                                                                    name={`extras.${ind}.price`}
+                                                                    className="form-control"
+                                                                    placeholder="Enter price"
+                                                                />
 
-                                    {/* SHOW / HIDE ENTRIES / ERRORS */}
-                                    <div className="d-none">
-                                        {'Is submitting: ' + isSubmitting}<br />
-                                        {'Is valid: ' + isValid} <br />
-                                        {'Is dirty: ' + dirty} <br />
-                                        <br />
-                                        <span>Errors: </span>
-                                        <small>{JSON.stringify(errors)}</small>
-                                        <br />
-                                        <span>Values:</span><br />
-                                        {Object.entries(values).map(function(value, key) {
-                                            // eslint-disable-next-line
-                                            return (<>
-                                                <small>Key: {key}</small><br />
-                                                <small>Value: {JSON.stringify(value)}</small><br />
-                                            </>)
-                                        })}
-                                    </div>
 
-                                    <div className="controls">
-                                        <button className="submit" disabled={isSubmitting || !isValid || !dirty}>
-                                            <FaSave />
-                                        </button>
-                                    </div>
-                                </div>
+                                                            )}
+                                                        </div>)}
 
-                                {/* BOTTOM FULL WIDTH */}
-                                {/* PORTIONS / PRICES */}
-                                <div className="col-12 pb-3">
-                                    <div className="border-top container">
-                                        <div className="row">
-
-                                            <label htmlFor="pricesFor">Portions</label>
-                                            <FieldArray
-                                                key={this.state.key}
-                                                name="prices"
-                                                render={arrayHelpers => (
-                                                    <>
-                                                        {values.prices && values.prices.length > 0 ? (
-                                                            values.prices.map((price, index) => (
-                                                                <>
-                                                                    <div className="form-group col-md-5 ps-0 pe-0">
-                                                                        <label htmlFor="priceName">Portion name</label>
-                                                                        <Field
-                                                                            name={`prices.${index}.name`}
-                                                                            className="form-control"
-                                                                            aria-describedby="prepNameHelp"
-                                                                            />
+                                                        {true && isChecked && (
+                                                            <div className="col-md-6">
+                                                                <label htmlFor="pricePrice"> Price: </label>
+                                                                <div className="input-group">
+                                                                    <Field
+                                                                        name={`extras.${index}.price`}
+                                                                        className="form-control"
+                                                                        aria-describedby="prepPriceHelp"
+                                                                    />
+                                                                    <div className="input-group-append">
+                                                                        <span className="input-group-text" id="basic-addon2">USD</span>
                                                                     </div>
-                                                                    <div className="form-group col-md-4 ps-1 pe-1">
-                                                                        <label htmlFor="portionSize"> Portion Size: </label>
-                                                                        <div className="input-group">
-                                                                            <Field
-                                                                                name={`prices.${index}.portion_size`}
-                                                                                className="form-control"
-                                                                                aria-describedby="portionSizeHelp"
-                                                                            />
-                                                                            <div className="input-group-append">
-                                                                                <span className="input-group-text" id="basic-addon2">g</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="form-group col-md-3 ps-0 pe-0">
-                                                                        <label htmlFor="pricePrice"> Price: </label>
-                                                                        <div className="input-group">
-                                                                            <Field
-                                                                                name={`prices.${index}.price`}
-                                                                                className="form-control"
-                                                                                aria-describedby="prepPriceHelp"
-                                                                            />
-                                                                            <div className="input-group-append">
-                                                                                <span className="input-group-text" id="basic-addon2">USD</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <button className="btn btn-danger mt-2" type="button" onClick={() => arrayHelpers.remove(index)}> - </button>
-                                                                </>
-
-
-
-                                                            ))
-                                                        ) : (
-
-                                                        <></>
-
+                                                                </div>
+                                                            </div>
                                                         )}
-                                                            <button type="button"
-                                                            onClick={() => {
-                                                                arrayHelpers.push({name: '', price: 0})
-                                                                this.formikRef.current?.setFieldTouched('prices');
-                                                                // debugger;
-                                                                this.refreshFieldset()}}
-                                                                className="btn btn-primary mt-5"
-                                                            >
-                                                            <GoPlus />
-                                                            {/* show this when user has removed all friends from the list */}
 
-                                                            Add a portion
+                                                    </div>
+                                                );
+                                            })}
 
-                                                        </button>
-                                                    </>
-                                                )}
-                                            />
+                                            {/* SHOW / HIDE ENTRIES / ERRORS */}
+                                            <div className="d-none">
+                                                {'Is submitting: ' + isSubmitting}<br />
+                                                {'Is valid: ' + isValid} <br />
+                                                {'Is dirty: ' + dirty} <br />
+                                                <br />
+                                                <span>Errors: </span>
+                                                <small>{JSON.stringify(errors)}</small>
+                                                <br />
+                                                <span>Values:</span><br />
+                                                {Object.entries(values).map(function(value, key) {
+                                                    // eslint-disable-next-line
+                                                    return (<>
+                                                        <small>Key: {key}</small><br />
+                                                        <small>Value: {JSON.stringify(value)}</small><br />
+                                                    </>)
+                                                })}
+                                            </div>
+                                        </div>
+
+                                        {/* BOTTOM FULL WIDTH */}
+                                        {/* PORTIONS / PRICES */}
+                                        <div className="col-12 mt-4 pt-3 border-top">
+                                            <div className="border-top container">
+                                                <div className="row">
+
+                                                    <h3 className="section-title mb-3">Portions</h3>
+                                                    <FieldArray
+                                                        key={this.state.key}
+                                                        name="prices"
+                                                        render={arrayHelpers => (
+                                                            <>
+                                                                {values.prices && values.prices.length > 0 ? (
+                                                                    values.prices.map((price, index) => (
+                                                                        <>
+                                                                            <div className="form-group col-md-5 ps-0 pe-0">
+                                                                                <label htmlFor="priceName">Portion name</label>
+                                                                                <Field
+                                                                                    name={`prices.${index}.name`}
+                                                                                    className="form-control"
+                                                                                    aria-describedby="prepNameHelp"
+                                                                                    />
+                                                                            </div>
+                                                                            <div className="form-group col-md-4 ps-1 pe-1">
+                                                                                <label htmlFor="portionSize"> Portion Size: </label>
+                                                                                <div className="input-group">
+                                                                                    <Field
+                                                                                        name={`prices.${index}.portion_size`}
+                                                                                        className="form-control"
+                                                                                        aria-describedby="portionSizeHelp"
+                                                                                    />
+                                                                                    <div className="input-group-append">
+                                                                                        <span className="input-group-text" id="basic-addon2">g</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="form-group col-md-3 ps-0 pe-0">
+                                                                                <label htmlFor="pricePrice"> Price: </label>
+                                                                                <div className="input-group">
+                                                                                    <Field
+                                                                                        name={`prices.${index}.price`}
+                                                                                        className="form-control"
+                                                                                        aria-describedby="prepPriceHelp"
+                                                                                    />
+                                                                                    <div className="input-group-append">
+                                                                                        <span className="input-group-text" id="basic-addon2">USD</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <button className="btn btn-danger mt-2" type="button" onClick={() => arrayHelpers.remove(index)}> - </button>
+                                                                        </>
+
+
+
+                                                                    ))
+                                                                ) : (
+
+                                                                <></>
+
+                                                                )}
+                                                                    <button 
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            arrayHelpers.push({name: '', price: 0})
+                                                                            this.formikRef.current?.setFieldTouched('prices');
+                                                                            // debugger;
+                                                                            this.refreshFieldset()}}
+                                                                            className="btn btn-outline-secondary w-100 py-2"
+                                                                        >
+                                                                        <GoPlus />
+                                                                    {/* show this when user has removed all friends from the list */}
+
+                                                                    Add a portion
+
+                                                                </button>
+                                                            </>
+                                                        )}
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </Form>
+
+
+                            {/* FIXED STICKY FOOTER */}
+                            <div className="modal-actions-footer">
+                                <button 
+                                    className="submit btn btn-primary btn-submit-save" 
+                                    disabled={isSubmitting || !isValid || !dirty}
+                                >
+                                    <FaSave />
+                                </button>
+                            </div>
+                        </Form>
                     )}
                     </Formik>
                 </div>

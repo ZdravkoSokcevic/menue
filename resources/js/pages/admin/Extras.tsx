@@ -149,6 +149,7 @@ class Extras extends React.Component<IProps, IState> {
                 />
                 <Delete
                     onDeleteClicked={this.onDeleteModalClicked}
+                    text={`Do you realy want to delete Extra <b>${this.state.currentItem.name}</b>?`} 
                     closeModal={this.closeDeleteExtrasModal}
                     isOpen={this.state.isDeleteModalOpened}
                 />

@@ -148,6 +148,7 @@ class Preferences extends React.Component<IProps, IState> {
                 />
                 <Delete
                     onDeleteClicked={this.onDeleteModalClicked}
+                    text={`Do you realy want to delete peference: <b>${this.state.currentItem.name}</b>?`} 
                     closeModal={this.closeDeletePreferencesModal}
                     isOpen={this.state.isDeleteModalOpened}
                 />

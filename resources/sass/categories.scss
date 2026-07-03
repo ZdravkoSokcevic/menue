@@ -81,11 +81,11 @@
           box-sizing: border-box;
           text-align: center;
           display: none;
-  
-          svg {
-            font-size: 20pt;
-            cursor: pointer;
+
+          .card-actions-wrapper {
+            gap: 6px!important;
           }
+  
   
           div.card-actions {
             position: absolute;

@@ -89,7 +89,7 @@ class Discounts extends React.Component<IProps, IState> {
                                             {/* Hover actions */}
                                             <div className="item-info allergen-info">
                                                 <div className="card-actions-wrapper">
-                                                    <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)} className="text-primary"/>
+                                                    {/* <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)} className="text-primary"/> */}
                                                     <IoEye onClick={() => this.onViewClicked(item)} className="text-info"/>
                                                     <HiMiniPencilSquare onClick={() => this.onEditClicked(item)} className="text-warning"/>
                                                     <MdDelete onClick={() => this.onDeleteClicked(item)} className="text-danger" />
@@ -156,7 +156,7 @@ class Discounts extends React.Component<IProps, IState> {
                 /> 
                 <Delete 
                     isOpen={this.state.isDeleteModalOpened} 
-                    text={`Do you realy want to delete discount?`} 
+                    text={`Do you realy want to delete discount for item: <b>${this.state.currentItem.menu?.name}</b>?`} 
                     closeModal={this.closeDeleteDiscountModal}
                     onDeleteClicked={this.onDeleteModalClicked}
                 />

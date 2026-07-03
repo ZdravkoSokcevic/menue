@@ -17,7 +17,7 @@ import { IIngridient, TIngridients } from "@/types/Ingridient";
 import IngridientsAPI from "@/api/IngridientsAPI";
 import FormikSearchSelect from "../FormikSelectSearch";
 import Select, { ActionMeta, MultiValue, SingleValue } from 'react-select'
-import { Option } from "@/types/App";
+import { IOption } from "@/types/App";
 
 interface IProps {
     // can be page or modal
@@ -29,7 +29,7 @@ interface IProps {
 };
 interface IState {
     allergens: TAllergens;
-    allergenOptions: Array<Option>;
+    allergenOptions: Array<IOption>;
 };
 
 interface IInitialValues {
@@ -78,12 +78,12 @@ class CreateIngridient extends React.Component<IProps, IState>
     }
 
     onAllergenChange = (
-        newValue: MultiValue<Option>, 
-        actionMeta: ActionMeta<Option>
+        newValue: MultiValue<IOption>, 
+        actionMeta: ActionMeta<IOption>
     ) => {
     const values = newValue;
     let vals = [];
-    vals = values.map((value : Option) => value.id);
+    vals = values.map((value : IOption) => value.id);
     this.formikRef.current?.setFieldValue('allergens', vals);
     this.formikRef.current?.setFieldTouched('allergens');
   };
@@ -97,16 +97,17 @@ class CreateIngridient extends React.Component<IProps, IState>
             <Modal 
                 isOpen={this.props.isOpen as boolean} 
                 onRequestClose={() => this.closeModal()}
-                overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
-                className="form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none"
                 style={this.props.style ? this.props.style : {}}
-                contentLabel="Example"
+                overlayClassName="modal-backdrop-blur"
+                className="form-modal"
+                contentLabel="Create Ingridient"
             >
                 <div className="form-page">
 
-
-                    <h2>Create Ingridient</h2>
-                    <button className="close-btn" onClick={() => this.closeModal()}>x</button>
+                    <div className="modal-header">
+                        <h2>Create ingridient</h2>
+                        <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
+                    </div>
 
                     <Formik 
                         initialValues={initialValues}
@@ -117,94 +118,100 @@ class CreateIngridient extends React.Component<IProps, IState>
 
                     {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty, values }) => (
 
-                        <Form encType="multipart/form-data">
-                        <div className="container-fluid">
-                            <div className="row">
-                                <div className="col-md-6 border-end p-5">
-                                    {/* NAME */}
-                                    <div className="form-group">
-                                        <label htmlFor="name">Name</label>
-                                        <Field 
-                                            name="name" 
-                                            className="form-control" 
-                                            placeholder="Enter name of your allergen" 
-                                            aria-describedby="nameHelp"
-                                        />
-                                        {errors.name && touched.name ? (
-                                            <><small id="nameHelp" className="form-text text-danger">{errors.name}</small><br /></>
-                                        ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                                    </div> 
+                        <Form encType="multipart/form-data" className="modal-form-content">
+                            <div className="modal-scroll-body">
+                                <div className="container-fluid p-0 mb-5">
+                                    <div className="row g-4">
+                                        <div className="col-md-6 border-end p-5">
+                                            {/* NAME */}
+                                            <div className="form-group">
+                                                <label htmlFor="name">Name</label>
+                                                <Field 
+                                                    name="name" 
+                                                    className="form-control" 
+                                                    placeholder="Enter name of your allergen" 
+                                                    aria-describedby="nameHelp"
+                                                />
+                                                {errors.name && touched.name ? (
+                                                    <><small id="nameHelp" className="form-text text-danger">{errors.name}</small><br /></>
+                                                ) : null}
+                                                <small id="nameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div> 
 
-                                    {/* IS VEGAN? */}
-                                    <div className="form-check">
-                                        {/* <label>Is vegan food</label> */}
-                                            <Field 
-                                                name="is_vegan" 
-                                                className="form-check-input" 
-                                                placeholder="Is your food vegan" 
-                                                aria-describedby="isVeganHelp"
-                                                value="true"
-                                                type="checkbox"
-                                                label="Is vegan?"
-                                                ref={this.isVeganRef}
-                                                checked={this.isVeganRef.current?.checked}
-                                            />
-                                            <label className="form-check-label" htmlFor="flexCheckDefault">
-                                                Is vegan
-                                            </label>
-                                    </div>
-                                </div>
+                                            {/* IS VEGAN? */}
+                                            <div className="form-check">
+                                                {/* <label>Is vegan food</label> */}
+                                                    <Field 
+                                                        name="is_vegan" 
+                                                        className="form-check-input" 
+                                                        placeholder="Is your food vegan" 
+                                                        aria-describedby="isVeganHelp"
+                                                        value="true"
+                                                        type="checkbox"
+                                                        label="Is vegan?"
+                                                        ref={this.isVeganRef}
+                                                        checked={this.isVeganRef.current?.checked}
+                                                    />
+                                                    <label className="form-check-label" htmlFor="flexCheckDefault">
+                                                        Is vegan
+                                                    </label>
+                                            </div>
+                                        </div>
 
-                                <div className="col-md-6 p-5">
-                                    {/* ALLERGENS */}
-                                    <div className="form-group">
-                                        <label htmlFor="name">Choose allergens</label>
-                                        <Select
-                                            options={this.state.allergenOptions}
-                                            name="allergens"
-                                            id="allergens"
-                                            aria-describedby="allergensHelp"
-                                            onChange={this.onAllergenChange}
-                                            isSearchable={false}
-                                            isMulti={true}
-                                            // ref={this.allergenRef}
-                                            // as="select"
-                                        />
-                                        {errors.allergens && touched.allergens ? (
-                                            <><small id="nameHelp" className="form-text text-danger">{errors.allergens}</small><br /></>
-                                        ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">Choose one from allergens.</small>
-                                    </div> 
+                                        <div className="col-md-6 p-5">
+                                            {/* ALLERGENS */}
+                                            <div className="form-group">
+                                                <label htmlFor="name">Choose allergens</label>
+                                                <Select
+                                                    options={this.state.allergenOptions}
+                                                    name="allergens"
+                                                    id="allergens"
+                                                    aria-describedby="allergensHelp"
+                                                    onChange={this.onAllergenChange}
+                                                    isSearchable={false}
+                                                    isMulti={true}
+                                                    // ref={this.allergenRef}
+                                                    // as="select"
+                                                />
+                                                {errors.allergens && touched.allergens ? (
+                                                    <><small id="nameHelp" className="form-text text-danger">{errors.allergens}</small><br /></>
+                                                ) : null}
+                                                <small id="nameHelp" className="form-text text-muted">Choose one from allergens.</small>
+                                            </div> 
 
 
-                                    {/* SHOW / HIDE ENTRIES / ERRORS */}
-                                    <div className="d-none">
-                                        {'Is submitting: ' + isSubmitting}<br />
-                                        {'Is valid: ' + isValid} <br />
-                                        {'Is dirty: ' + dirty} <br />
-                                        <br />
-                                        <span>Errors: </span>
-                                        <small>{JSON.stringify(errors)}</small>
-                                        <br />
-                                        <span>Values:</span><br />
-                                        {Object.entries(values).map(function(value, key) {
-                                            // eslint-disable-next-line
-                                            return (<>
-                                                <small>Key: {key}</small><br />
-                                                <small>Value: {JSON.stringify(value)}</small><br />
-                                            </>)
-                                        })}
-                                    </div>
-                                    <div className="controls">
-                                        <button className="submit" disabled={isSubmitting || !isValid || !dirty}>
-                                            <FaSave />
-                                        </button>
+                                            {/* SHOW / HIDE ENTRIES / ERRORS */}
+                                            <div className="d-none">
+                                                {'Is submitting: ' + isSubmitting}<br />
+                                                {'Is valid: ' + isValid} <br />
+                                                {'Is dirty: ' + dirty} <br />
+                                                <br />
+                                                <span>Errors: </span>
+                                                <small>{JSON.stringify(errors)}</small>
+                                                <br />
+                                                <span>Values:</span><br />
+                                                {Object.entries(values).map(function(value, key) {
+                                                    // eslint-disable-next-line
+                                                    return (<>
+                                                        <small>Key: {key}</small><br />
+                                                        <small>Value: {JSON.stringify(value)}</small><br />
+                                                    </>)
+                                                })}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </Form>
+                            {/* FIXED STICKY FOOTER */}
+                            <div className="modal-actions-footer">
+                                <button 
+                                    className="submit btn btn-primary btn-submit-save" 
+                                    disabled={isSubmitting || !isValid || !dirty}
+                                >
+                                    <FaSave />
+                                </button>
+                            </div>
+                        </Form>
                     )}
                     </Formik>
                 </div>
@@ -218,7 +225,7 @@ class CreateIngridient extends React.Component<IProps, IState>
             if(allergens) {
                 this.setState({ allergens: allergens });
 
-                const allergenOpts: Array<Option> = [];
+                const allergenOpts: Array<IOption> = [];
                 allergens.forEach((allergen:IAllergen) => {
                     allergenOpts.push({ 
                         name: allergen.name, 

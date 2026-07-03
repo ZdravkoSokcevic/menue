@@ -19,17 +19,17 @@ const ModalOrPage: React.FC<IProps> = ({ children, isOpen, closeModal, page, typ
             <Modal
                 isOpen={isOpen as boolean} 
                 onRequestClose={() => closeModal()}
-                overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
-                className={`${page} ${type} view-modal form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none ${Math.random()}`}
+                overlayClassName="modal-backdrop-blur"
+                className={`${page} ${type} view-modal form-modal`}
                 style={{ }}
-                contentLabel="Example"
+                contentLabel={`${type}`}
             >
-                <div className="form-page">
+                {/* <div className="form-page"> */}
                     {/* <h2>Create </h2> */}
-                    <button className="close-btn main-btn" onClick={() => closeModal()}>x</button>
-                    <br />
+                    {/* <button className="close-btn main-btn" onClick={() => closeModal()}>x</button> */}
+                    {/* <br /> */}
                     {children}
-                </div>
+                {/* </div> */}
             </Modal>
         )
     }

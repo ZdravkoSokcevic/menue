@@ -16,7 +16,7 @@ export interface IExtraDataTranslations {
 export interface IAPIExtra {
     name: string;
     price?: number;
-    prices: Array<IPrice>;
+    prices?: Array<IPrice>;
     description: string;
     translations?: IExtraTranslations;
 }

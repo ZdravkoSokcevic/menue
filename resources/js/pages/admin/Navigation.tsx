@@ -206,6 +206,22 @@ class Navigation extends React.Component<IProps, IState>
             : false;   
     }
 
+    isAllowedToRenderCombos = (): boolean => {
+        return false;
+        let {defaultCompany} = this.props;
+        const userSettings = this.props.userSettings;
+        // console.log('#### MENU PERMISSION FUNCTION::USER SETTINGS ####')
+        // console.log(userSettings);
+        // console.log('#### /MENU PERMISSION FUNCTION::/USER SETTINGS ####')
+
+        // console.log('#### MENU PERMISSION FUNCTION::DEFAULT COMPANY ####')
+        // console.log(Store.getState().app.defaultCompany);
+        // console.log('#### /MENU PERMISSION FUNCTION::/DEFAULT COMPANY ####')
+        return userSettings.isLoggedIn && (Store.getState().app.defaultCompany.id != '')
+            ? true
+            : false;   
+    }
+
     renderCompanySidebarInfo = (): ReactNode => {
         const company = Store.getState().app.defaultCompany;
         return (
@@ -251,6 +267,8 @@ class Navigation extends React.Component<IProps, IState>
                 {defaultCompany.id && this.renderCompanySidebarInfo()}
                 {/* TOP CONTENT */}
                 <div>
+
+                    {/* DASHBOARD */}
                     <Link 
                         to="/admin"
                         className={this.props.location?.pathname === '/admin' ? 'nav-link active': 'nav-link' }      
@@ -258,6 +276,8 @@ class Navigation extends React.Component<IProps, IState>
                     >
                         <MdDashboard /> Dashboard
                     </Link>
+
+                    {/* COMPANIES */}
                     {this.isAllowedToRenderCompanies() && <Link 
                         to="/companies"
                         className={this.props.location?.pathname === '/companies' ? 'nav-link active': 'nav-link' }  
@@ -265,6 +285,8 @@ class Navigation extends React.Component<IProps, IState>
                     >
                         <GrRestaurant /> Companies
                     </Link>}
+
+                    {/* CATEGORIES */}
                     {this.isAllowedToRenderCategories() && <Link 
                         to="/categories"
                         className={this.props.location?.pathname === '/categories' ? 'nav-link active': 'nav-link' }  
@@ -272,6 +294,7 @@ class Navigation extends React.Component<IProps, IState>
                     >
                             <BiCategory /> Categories
                     </Link>}
+
                     {/* ORDER */}
                     {this.isAllowedToRenderCategories() && <Link 
                         to="/orders"
@@ -281,6 +304,7 @@ class Navigation extends React.Component<IProps, IState>
                             <BiShoppingBag /> Orders
                     </Link>}
 
+                    {/* TABLES */}
                     {this.isAllowedToRenderTables() && <Link 
                         to="/tables"
                         className={this.props.location?.pathname === '/tables' ? 'nav-link active': 'nav-link' }  
@@ -289,6 +313,7 @@ class Navigation extends React.Component<IProps, IState>
                             <PiDeskBold /> Tables
                     </Link>}
 
+                    {/* MENU */}
                     {this.isAllowedToRenderMenus() && <Link 
                         to="/menu"
                         className={this.props.location?.pathname === '/menu' ? 'nav-link active': 'nav-link' }  
@@ -306,6 +331,16 @@ class Navigation extends React.Component<IProps, IState>
                         <TbShoppingCartDiscount /> <span style={{ lineHeight: '15px' }}>Discounts</span>
                     </Link>}
 
+                    {/* COMBOS */}
+                    {this.isAllowedToRenderCombos() && <Link 
+                        to="/combos"
+                        className={this.props.location?.pathname === '/combos' ? 'nav-link active': 'nav-link'}
+                        viewTransition
+                    > 
+                        <TbShoppingCartDiscount /> <span style={{ lineHeight: '15px' }}>Combos</span>
+                    </Link>}
+
+                    {/* ALLERGENS */}
                     {this.isAllowedToRenderAllergens() || true && <Link 
                         to="/allergens"
                         className={this.props.location?.pathname === '/allergens' ? 'nav-link active': 'nav-link'}
@@ -313,6 +348,8 @@ class Navigation extends React.Component<IProps, IState>
                     >
                         <LiaAllergiesSolid /> <span style={{lineHeight: '15px'}}>Allergens</span>
                     </Link>}
+
+                    {/* INGRIDIENTS */}
                     {this.isAllowedToRenderIngridients() || true && <Link
                         to="/ingridients"
                         className={this.props.location?.pathname === '/ingridients' ? 'nav-link active': 'nav-link'}
@@ -320,6 +357,8 @@ class Navigation extends React.Component<IProps, IState>
                     >
                         <LuCookingPot /> <span style={{lineHeight: '15px'}}>Ingridients</span>
                     </Link>}
+
+                    {/* EXTRAS */}
                     {this.isAllowedToRenderExtras() || true && <Link
                         to="/extras"
                         className={this.props.location?.pathname === '/extras' ? 'nav-link active': 'nav-link'}
@@ -328,6 +367,7 @@ class Navigation extends React.Component<IProps, IState>
                         <FaRegSquarePlus /> <span style={{lineHeight: '15px'}}>Extras</span>
                     </Link>}
 
+                    {/* PREFERENCES */}
                     {this.isAllowedToRenderPreferences() || true && <Link
                         to="/preferences"
                         className={this.props.location?.pathname === '/preferences' ? 'nav-link active': 'nav-link'}
@@ -337,6 +377,8 @@ class Navigation extends React.Component<IProps, IState>
                     </Link>}
                     {/* <a href="/fap">FAP</a> */}
                     {/* <a href="/users">Users</a> */}
+
+                    {/* SETTINGS */}
                     <Link 
                         className={this.props.location?.pathname === '/settings' ? 'nav-link active': 'nav-link' } 
                         to="/settings" 

@@ -3,7 +3,8 @@ import { TMenu } from "@/types/Menu";
 import { ICountry } from "@/types/TCountries";
 import React from "react";
 interface IProps {
-    currentItem: ICategory
+    currentItem: ICategory,
+    closeModal: Function,
 }
 interface IState {}
 
@@ -26,72 +27,73 @@ class ViewCategory extends React.Component<IProps, IState>
 
     render(): React.ReactNode {
         return(
-            <div className="d-flex flex-column">
-                <div className="col-md-12">
-                    <h1>{this.props.currentItem.name}</h1>
-
+            <div className="form-page">
+                <div className="modal-header">
+                    <h2>{this.props.currentItem.name}</h2>
+                    <button className="close-btn" onClick={() => this.props.closeModal()}>&times;</button>
                 </div>
-                <div className="col-md-12 d-flex p-2">
-                    <br />
+                <div className="d-flex flex-column modal-form-content">
+                        <div className="modal-scroll-body">
 
-                    <div
-                        style={{
-                            border: "2px dashed #ccc",
-                            padding: "20px",
-                            textAlign: "center",
-                            borderRadius: "10px",
-                            backgroundColor: "#f0f8ff",
-                            height: '300px',
-                            width: '200px',
-                            backgroundImage: this.props.currentItem.picture ? `url(/storage/${this.props.currentItem.picture})` : '',
-                            backgroundSize: 'cover',
-                            position: 'relative'
-                        }}
-                    ></div>
-                </div>
-                <div className="mt-4">
-                    <h6 className="fw-bold text-muted mb-3">
-                        🌍 Translations
-                    </h6>
-
-                    {Object.entries(this.props.currentItem.translations || {}).map(
-                        ([lang, translation]: [string, any]) => (
                             <div
-                                key={lang}
-                                data-lang={lang}
-                                className="card mb-2 border-0 bg-light"
-                            >
-                                <div className="card-body py-2">
+                                style={{
+                                    border: "2px dashed #ccc",
+                                    padding: "20px",
+                                    textAlign: "center",
+                                    borderRadius: "10px",
+                                    backgroundColor: "#f0f8ff",
+                                    height: '300px',
+                                    width: '200px',
+                                    backgroundImage: this.props.currentItem.picture ? `url(/storage/${this.props.currentItem.picture})` : '',
+                                    backgroundSize: 'cover',
+                                    position: 'relative'
+                                }}
+                            ></div>
+                            <div className="mt-4">
+                            <h6 className="fw-bold text-muted mb-3">
+                                🌍 Translations
+                            </h6>
 
-                                    <div className="d-flex align-items-center mb-2">
-                                        <span className="fs-5 me-2">
-                                            {this.getFlag(translation)}
-                                        </span>
+                            {Object.entries(this.props.currentItem.translations || {}).map(
+                                ([lang, translation]: [string, any]) => (
+                                    <div
+                                        key={lang}
+                                        data-lang={lang}
+                                        className="card mb-2 border-0 bg-light"
+                                    >
+                                        <div className="card-body py-2">
 
-                                        <span className="badge bg-primary">
-                                            {lang.toUpperCase()}
-                                        </span>
-                                    </div>
+                                            <div className="d-flex align-items-center mb-2">
+                                                <span className="fs-5 me-2">
+                                                    {this.getFlag(translation)}
+                                                </span>
 
-                                    <div>
-                                        <strong>Name:</strong>
-                                        <div>{translation.name || '-'}</div>
-                                    </div>
+                                                <span className="badge bg-primary">
+                                                    {lang.toUpperCase()}
+                                                </span>
+                                            </div>
 
-                                    <div className="mt-2">
-                                        <strong>Description:</strong>
-                                        <div className="text-muted">
-                                            {translation.description || '-'}
+                                            <div>
+                                                <strong>Name:</strong>
+                                                <div>{translation.name || '-'}</div>
+                                            </div>
+
+                                            <div className="mt-2">
+                                                <strong>Description:</strong>
+                                                <div className="text-muted">
+                                                    {translation.description || '-'}
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
-
-                                </div>
+                                )
+                            )}
                             </div>
-                        )
-                    )}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        )
+            )
     }
 }
 
