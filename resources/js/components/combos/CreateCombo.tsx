@@ -286,10 +286,10 @@ class CreateCombo extends React.Component<IProps, IState>
         // TODO: make item selected or unselected
 
         const targetItem = this.state.menuItems.find(item => item.id === menu_id);
-                if (!targetItem) return;
+        if (!targetItem) return;
 
         // TODO: make deletion if already exists
-        const alreadyExists = this.state.comboSelections.some(selected => selected.menuItem.id)
+        const alreadyExists = this.state.comboSelections.some(selected => selected.menuItem.id == menu_id)
         if(alreadyExists) {
             alert('Already exists');
             return;
@@ -308,7 +308,7 @@ class CreateCombo extends React.Component<IProps, IState>
             menuItem: targetItem,
             selectedPortion: defaultPortion
         }
-        debugger;
+        // debugger;
 
         this.setState({
             comboSelections: [...this.state.comboSelections, newSelection], 
@@ -370,6 +370,10 @@ class CreateCombo extends React.Component<IProps, IState>
             : [...currentDays, day];             // Add day if not selected
           
           this.formikRef.current!.setFieldValue('times', nextDays);
+    }
+
+    isMenuItemSelected = (item: TMenu) => {
+        return this.state.comboSelections.some(selected => selected.menuItem.id === item.id);
     }
     
 
@@ -437,7 +441,7 @@ class CreateCombo extends React.Component<IProps, IState>
                                                                 this.addMenuItemToCombo(item.id)
                                                             }
                                                             className={`d-flex align-items-center p-2 mb-2 rounded cursor-pointer ${
-                                                                this.state.currentSelectedMenuItem?.id === item.id
+                                                                this.isMenuItemSelected(item)
                                                                     ? 'border border-primary bg-primary-subtle'
                                                                     : 'border'
                                                             }`}
