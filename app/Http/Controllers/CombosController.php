@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Repositories\CombosRepository;
 use App\Http\Requests\CombosEditRequest;
+use App\Http\Requests\CombosCreateRequest;
 use App\Http\Responses\CreateResponse;
 use App\Http\Responses\EditResponse;
 use App\Interfaces\CombosRepositoryInterface;
 use App\Models\Combo;
-use CombosCreateRequest;
+use App\Models\Price;
+use App\Models\Company;
 use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -37,9 +39,12 @@ class CombosController extends Controller
 
     public function insert(CombosCreateRequest $r): CreateResponse
     {
+        $company = Company::find($r->input('company_id'));
+        $priceId = Price::insertGetId(['name' => 'Combo Price', 'price' => $r->price, 'currency_id' => $company->currency->id]);
+        // dd($priceId);
+        $r->merge(['price_id' => $priceId]);
         $data = $r->only((new Combo())->getFillable());
-
-        // dd($data);
+        // dd($r->all());
         $success = $this->combosRepository->store($data);
         if($success) {
             $item = Combo::with([
@@ -49,8 +54,11 @@ class CombosController extends Controller
                 'items.menu.translations', 
                 'items.menu.translations.language', 
                 'items.menu.translations.language.countries', 
-                'items.portions'
+                'items.portions',
+                'items.portions.prices',
             ])->where('id', $success->id)->first();
+            $r->merge(['combo_id' => $item->id]);
+            $itemsInserted = $this->combosRepository->storeItems($r);
             return new CreateResponse(true,  [ 'item' => $item ]);
         }
         else return new CreateResponse(false, 'Could not create Combo!');

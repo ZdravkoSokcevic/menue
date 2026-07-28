@@ -13,7 +13,7 @@ class Price extends BaseModel
         'name',
         'price',
         'currency_id',
-        // // 1 - for menus, 2 - for extras
+        // // 1 - for menus, 2 - for extras, 3 - for combos
         // 'type'
     ];
 

@@ -8,6 +8,7 @@ export interface IComboItem
     portion_id: string;
     quantity: string;
     menu?: TMenu;
+    portion?: IPortionPrice;
 }
 
 export type TComboItems = Array<IComboItem>;
@@ -17,7 +18,7 @@ export interface ICombo
     id: string;
     name: string;
     price_id: string;
-    price?: string;
+    price?: string | IPrice;
     active: boolean;
     active_times: string;
     time_from: string;
@@ -26,7 +27,7 @@ export interface ICombo
     end_at: string;
     items?: TComboItems;
     new?: boolean;
-    
+    portion?: IPortionPrice;
 }
 
 export type TCombos = Array<ICombo>;

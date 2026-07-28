@@ -22,6 +22,7 @@ import { IOrder } from "@/types/Order";
 import ViewOrder from "./order/ViewOrder";
 import { IDiscount } from "@/types/Discount";
 import { ICombo } from "@/types/Combo";
+import ViewCombo from "./combos/ViewCombo";
 
 interface IProps {
     isOpen?: boolean;
@@ -78,7 +79,7 @@ class View extends React.Component<IProps & WithRouterProps, IState>
                         {this.props.type == 'preference' && <ViewPreference currentItem={this.props.currentItem as IPreference} closeModal={this.props.closeModal as Function}/>}
                         {this.props.type == 'order' && <ViewOrder currentItem={this.props.currentItem as IOrder} />}
                         {/* {this.props.type == 'discount' && <ViewDiscount currentItem={this.props.currentItem as IDiscount} closeModal={this.props.closeModal as Function} />} */}
-                        {/* {this.props.type == 'discount' && <ViewCombo currentItem={this.props.currentItem as ICombo} closeModal={this.props.closeModal as Function} />} */}
+                        {this.props.type == 'combo' && <ViewCombo currentItem={this.props.currentItem as ICombo} closeModal={this.props.closeModal as Function} />}
                     </div>
                 </ModalOrPage>
             </>

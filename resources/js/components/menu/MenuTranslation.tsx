@@ -118,6 +118,7 @@ class MenuTranslation extends React.Component<IProps, IState> {
             // let tld = country.tld;
             let code = country.language?.code;
             if (!code) {
+                debugger;
                 console.log('LANG NOT exists');
             } else {
                 if (country.mandatory)

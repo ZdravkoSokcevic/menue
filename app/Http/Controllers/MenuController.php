@@ -58,6 +58,8 @@ class MenuController extends Controller
         }
 
         $company = Company::find($r->input('company_id'));
+
+        // dd($company->currency);
         
         $success = $this->menuRepository->store($data);
             if($success) {

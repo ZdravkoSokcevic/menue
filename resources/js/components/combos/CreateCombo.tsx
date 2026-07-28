@@ -18,7 +18,8 @@ import DiscountsAPI from "@/api/DiscountsAPI";
 import { DayOfWeek, DISCOUNT_TYPE, IDiscount, IDiscountResponseItem } from "@/types/Discount";
 import { IPrice } from "@/types/Prices";
 import AppHelper from "@/helpers/AppHelper";
-import { IComboSelection, TArrayOfComboSelection, TArrayOfComboSimpleSelections } from "@/types/Combo";
+import { ICombo, IComboSelection, TArrayOfComboSelection, TArrayOfComboSimpleSelections } from "@/types/Combo";
+import CombosAPI from "@/api/CombosAPI";
 
 interface IProps {
     // can be page or modal
@@ -47,8 +48,8 @@ interface IState {
 
 interface IInitialValues {
     comboSelections: TArrayOfComboSimpleSelections;
-    value: string | number;
-    type?: DISCOUNT_TYPE;
+    price: string | number;
+    quantity: string | number;
     active_times: number;
     times: Array<DayOfWeek>;
     time_from?: string | undefined;
@@ -70,8 +71,8 @@ const dayValues = [
 
 const initialValues: IInitialValues = {
     comboSelections: [],
-    value: '',
-    type: DISCOUNT_TYPE.FIXED,
+    price: '',
+    quantity: '',
     active_times: 0,
     times: [],
     time_from: '',
@@ -118,10 +119,18 @@ class CreateCombo extends React.Component<IProps, IState>
                         portion_id: Yup.string().required('Portion selection is required!')
                     })
                 )
-                .min(2, 'A combo must contain at least 2 distinct items!')
+                .test(
+                    'combo quantity',
+                    'A combo must contain at least 2 distinct items!',
+                    val => {
+                    if(val)
+                        return val?.length > 1;
+                    else return false;
+                })
+                // .min(2, 'A combo must contain at least 2 distinct items!')
                 .required('Combo items are required'),
-            value: Yup.string()
-                .required('Value is required')
+            price: Yup.string()
+                .required('Price is required')
                 .when('type', {
                     is: 'percent',
                     then: (schema) => schema.min(0).max(100)
@@ -130,7 +139,15 @@ class CreateCombo extends React.Component<IProps, IState>
                     is: 'fixed',
                     then: (schema) => schema.min(0).max(10000),
                 }),
-            type: Yup.mixed<DISCOUNT_TYPE>().oneOf(Object.values(DISCOUNT_TYPE)),
+            quantity: Yup.number()
+                .transform((value, originalValue) => {
+                // If empty string or null, let it pass to .required() or return undefined
+                if (String(originalValue).trim() === '') return undefined;
+                return Number(originalValue);
+                })
+                .typeError('Must be a valid number') // Message shown if casting fails (e.g. "abc")
+                .min(1, 'Quantity must be at least 1') // Runs perfectly after transformation
+                .required('Quantity is required'),
             active_times: Yup.number().required('Times are required'),
             // for every day - value daily
             // for weekly, ex- mo,tu,fr
@@ -309,12 +326,22 @@ class CreateCombo extends React.Component<IProps, IState>
             selectedPortion: defaultPortion
         }
         // debugger;
+        const updatedComboSelections = [...this.state.comboSelections, newSelection];
+        const comboFieldSelections: TArrayOfComboSimpleSelections = [];
+        updatedComboSelections.forEach(comboSelection => {
+            comboFieldSelections.push({
+                menu_id: comboSelection.menuItem.id,
+                portion_id: comboSelection.selectedPortion.id as string
+            });
+        })
+        this.formikRef!.current?.setFieldValue('comboSelections', comboFieldSelections);
 
         this.setState({
-            comboSelections: [...this.state.comboSelections, newSelection], 
+            comboSelections: updatedComboSelections, 
             currentSelectedMenuItem: targetItem,
             key: Math.random()
         });
+
     }
 
     // 2. UPDATE THE PORTION FOR A SPECIFIC ITEM IN THE COMBO
@@ -551,44 +578,49 @@ class CreateCombo extends React.Component<IProps, IState>
 
                                             <div className="row g-2">
 
-                                                {/* DISCOUNT VALUE */}
+                                                {/* PRICE */}
                                                 <div className="col-md-6">
                                                     <label className="form-label">
-                                                        Discount Value
+                                                        Price
                                                     </label>
 
                                                     <Field
                                                         type="number"
-                                                        name="value"
+                                                        name="price"
                                                         className="form-control"
                                                         placeholder="Enter value"
                                                     />
-                                                    {errors.value  ? (
-                                                        <div><small id="valueHelp" className="form-text text-danger">{errors.value}</small><br /></div>
+                                                    {errors.price  ? (
+                                                        <div><small id="priceHelp" className="form-text text-danger">{errors.price}</small><br /></div>
                                                     ) : null}
                                                 </div>
 
-                                                {/* DISCOUNT TYPE */}
+                                            </div>
+                                        </div>
+
+                                        {/* QUANTITY SECTION */}
+                                        <div className="mt-3 pt-3">
+
+                                            <h6 className="text-primary fw-bold mb-3 h4">
+                                                Quantity
+                                            </h6>
+
+                                            <div className="row g-2">
+
+                                                {/* QUANTITY */}
                                                 <div className="col-md-6">
                                                     <label className="form-label">
-                                                        Discount Type
+                                                        Quantity
                                                     </label>
 
                                                     <Field
-                                                        as="select"
-                                                        name="type"
-                                                        className="form-select"
-                                                    >
-                                                        <option value="percent" selected>
-                                                            Percent (%)
-                                                        </option>
-
-                                                        <option value="fixed">
-                                                            Fixed Price
-                                                        </option>
-                                                    </Field>
-                                                    {errors.type  ? (
-                                                        <div><small id="typeHelp" className="form-text text-danger">{errors.type}</small><br /></div>
+                                                        type="number"
+                                                        name="quantity"
+                                                        className="form-control"
+                                                        placeholder="Enter value"
+                                                    />
+                                                    {errors.price  ? (
+                                                        <div><small id="quantityHelp" className="form-text text-danger">{errors.quantity}</small><br /></div>
                                                     ) : null}
                                                 </div>
 
@@ -830,20 +862,20 @@ class CreateCombo extends React.Component<IProps, IState>
         }
         
         let data: unknown = {
-            menu_id: event.menu_id,
-            portion_id: event.portion_id,
-            value: event.value,
-            type: event.type,
+            items: event.comboSelections,
+            price: event.price,
             active_times: event.active_times,
             times: eventStr,
             time_from: event.time_from,
             time_to: event.time_to,
             start_at: event.start_at,
             end_at: event.end_at,
-            is_active: event.is_active
+            is_active: event.is_active,
+            quantity: event.quantity,
+            company_id: Store.getState().app.defaultCompany.id
         }
         Store.dispatch(enableLoading({}));
-        const response = await DiscountsAPI.createDiscount(data as IDiscount);
+        const response = await CombosAPI.createCombo(data as ICombo);
         setTimeout(() => {
             Store.dispatch(disableLoading({}));
         })

@@ -3,6 +3,7 @@ namespace App\Http\Repositories;
 
 use App\Interfaces\CombosRepositoryInterface;
 use App\Models\Combo;
+use App\Models\ComboItem;
 use Illuminate\Http\Request;
 
 class CombosRepository implements CombosRepositoryInterface
@@ -18,13 +19,15 @@ class CombosRepository implements CombosRepositoryInterface
         // allow admin and demo users to see every company list
         $isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
         $q = Combo::with([
+            'price',
             'items',
             'items.menu', 
             'items.menu.portions', 
             'items.menu.translations', 
             'items.menu.translations.language', 
             'items.menu.translations.language.countries', 
-            'items.portions'
+            'items.portion',
+            'items.portion.prices',
         ]);
         // TODO: if user is not superadmin, if the role is company_admin, agent, or user,
         // filter company_id
@@ -43,10 +46,28 @@ class CombosRepository implements CombosRepositoryInterface
     }
     public function store(Array $data)
     {
+        $data['name'] = 'Combo';
         $this->combo->fill($data);
         $this->combo->save();
         return $this->combo;
     }
+
+    public function storeItems(Request $r)
+    {
+        $itemsData = [];
+        foreach($r->input('items') as $item) 
+        {
+            $itemsData[] = [
+                'combo_id'  => $r->input('combo_id'),
+                'menu_id'   => $item['menu_id'],
+                'portion_id'=> $item['portion_id'],
+                'quantity'  => $r->input('quantity')
+            ];
+        }
+
+        $success = ComboItem::insert($itemsData);
+    }
+
     public function edit($id, Array $data): Combo | bool
     {
         $row = $this->combo->find($id);

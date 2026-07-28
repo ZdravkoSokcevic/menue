@@ -10,9 +10,10 @@ import View from "@/components/View";
 import { TComponentProps } from "@/types/TComponentProps";
 import Edit from "@/components/Edit";
 import Delete from "@/components/Delete";
-import { ICombo, TCombos } from "@/types/Combo";
+import { ICombo, IComboItem, TCombos } from "@/types/Combo";
 import CreateCombo from "@/components/combos/CreateCombo";
 import CombosAPI from "@/api/CombosAPI";
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 interface IProps {};
 interface IState {
@@ -38,8 +39,21 @@ class Combos extends React.Component<IProps, IState> {
     }
 
     componentDidMount(): void {
-        this.fetchMenuItems();
+        this.fetchComboItems();
     }
+
+    getItemName(item: ICombo) {
+        let str = '';
+        if(item.items)
+        {
+            item.items.map((comboItem: IComboItem, index) => {
+                str += ' ' + comboItem.menu?.name;
+                if(index < item.items!.length -1)
+                    str += ' +';
+            })
+        }
+        return str;
+    } 
 
     render(): ReactNode {
         return (
@@ -59,38 +73,55 @@ class Combos extends React.Component<IProps, IState> {
 
                             {/* MAIN CONTAINER ITEMS */}
                             {this.state.comboItems.map((comboItem: ICombo) => {
-                                let picPath: String = (comboItem.items) ? comboItem.items[0].menu?.picture as String : '';
-                                const picFullPath = (picPath) ? "url('/storage/" + picPath.replaceAll('\'', '') + "')" : '';
+                                // let picPath: String = (comboItem.items) ? comboItem.items[0].menu?.picture as String : '';
+                                // const picFullPath = (picPath) ? "url('/storage/" + picPath.replaceAll('\'', '') + "')" : '';
                                 return <div 
                                             className={'m-2 placeholder-4-3 col-3 rounded-dotted-div combo-item-container position-relative item-container position-relative overflow-hidden'}
-                                            style={{backgroundImage: picFullPath ? picFullPath : ''}}
+                                            // style={{backgroundImage: picFullPath ? picFullPath : ''}}
                                             key={comboItem.id}
                                         >
-                                            {/* Dark gradient */}
-                                            <div className="card-overlay"></div>
-                                            {/* INDICATES WEATHER ITEM IS NEW */}
-                                            {/* Ribbon */}
-                                            {comboItem.new && (
-                                                <div className="ribbon ribbon-primary new">
-                                                    NEW
+                                            <div className="card-media-box">
+                                                {/* Dark gradient */}
+                                                <div className="card-overlay"></div>
+                                                {/* {JSON.stringify(comboItem.items![0].menu)} */}
+                                                {/* IMAGES */}
+                                                <div className="image-grid">
+                                                    {comboItem.items?.map((item: IComboItem) => (
+                                                        <div key={item.menu?.id} className="photo-card">
+                                                        <img 
+                                                            src={'/storage/'+item.menu?.picture as string} 
+                                                            alt={item.menu?.name} 
+                                                            className="single-photo"
+                                                            loading="lazy" // Optimizes performance
+                                                        />
+                                                        </div>
+                                                    ))}
                                                 </div>
-                                            )}
-                                            {/* <span className="name">{item.menu?.name}</span>  */}
 
-                                            {/* Hover actions */}
-                                            <div className="item-info allergen-info">
-                                                <div className="card-actions-wrapper">
-                                                    {/* <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)} className="text-primary"/> */}
-                                                    <IoEye onClick={() => this.onViewClicked(comboItem)} className="text-info"/>
-                                                    <HiMiniPencilSquare onClick={() => this.onEditClicked(comboItem)} className="text-warning"/>
-                                                    <MdDelete onClick={() => this.onDeleteClicked(comboItem)} className="text-danger" />
+                                                {/* INDICATES WEATHER ITEM IS NEW */}
+                                                {/* Ribbon */}
+                                                {comboItem.new && (
+                                                    <div className="ribbon ribbon-primary new">
+                                                        NEW
+                                                    </div>
+                                                )}
+                                                {/* <span className="name">{item.menu?.name}</span>  */}
+
+                                                {/* Hover actions */}
+                                                <div className="item-info allergen-info">
+                                                    <div className="card-actions-wrapper">
+                                                        {/* <MdOutlineTranslate onClick={() => this.onTranslationClicked(item)} className="text-primary"/> */}
+                                                        <IoEye onClick={() => this.onViewClicked(comboItem)} className="text-info"/>
+                                                        <HiMiniPencilSquare onClick={() => this.onEditClicked(comboItem)} className="text-warning"/>
+                                                        <MdDelete onClick={() => this.onDeleteClicked(comboItem)} className="text-danger" />
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             {/* Title */}
                                             <div className="card-title-wrapper">
                                                 <span className="card-title">
-                                                    {(comboItem.items && comboItem.items[0]) ? comboItem.items[0].menu?.name : "No name"}
+                                                    {this.getItemName(comboItem)}
                                                 </span>
                                             </div>
 
@@ -156,7 +187,7 @@ class Combos extends React.Component<IProps, IState> {
         )
     }
 
-    fetchMenuItems = async() => {
+    fetchComboItems = async() => {
         const items = await CombosAPI.getItems();
         // debugger;
         if(items) {

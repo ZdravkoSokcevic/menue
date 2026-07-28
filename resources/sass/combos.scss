@@ -1,0 +1,47 @@
+.page.combo-page {
+
+    /* The parent container holding all images */
+    .combo-item-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px; /* Spacing between photos */
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      
+      /* Individual wrapper for each photo */
+      .photo-card {
+        overflow: hidden;
+        border-radius: 6px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      
+      /* Forces image to scale perfectly within its card */
+      .single-photo {
+        width: 100%;
+        height: 200px;
+        object-fit: cover; /* Crops image cleanly without distortion */
+        display: block;
+        transition: transform 0.2s ease-in-out;
+      }
+      
+      /* Optional hover zoom effect */
+      .single-photo:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    .image-grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        grid-template-rows:1fr 1fr;
+        gap:4px;
+        height:180px;
+    }
+
+    .image-grid img{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+    }
+}

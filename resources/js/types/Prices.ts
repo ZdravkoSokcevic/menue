@@ -4,6 +4,7 @@ export interface IPortionPrice {
     portion_size: number;
     portion_unit?: string;
     price: number;
+    prices: TPrices;
 }
 
 export interface IPrice {

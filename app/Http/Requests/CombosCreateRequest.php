@@ -1,4 +1,5 @@
 <?php
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -34,7 +35,7 @@ class CombosCreateRequest extends FormRequest
             // TODO: add validation
             'items.*.menu_id' => 'required|exists:menus,id',
             'items.*.portion_id' => 'required|exists:portions,id',
-            'value' => [
+            'price' => [
                 Rule::when($r->type == 'percent', 'min:0', 'max:100'),
                 Rule::when($r->type == 'fixed', 'min:0', 'max:100000'),
             ],
