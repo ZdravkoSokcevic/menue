@@ -48,17 +48,29 @@ class CombosController extends Controller
         $success = $this->combosRepository->store($data);
         if($success) {
             $item = Combo::with([
+                'price',
                 'items',
                 'items.menu', 
                 'items.menu.portions', 
                 'items.menu.translations', 
                 'items.menu.translations.language', 
                 'items.menu.translations.language.countries', 
-                'items.portions',
-                'items.portions.prices',
+                'items.portion',
+                'items.portion.prices',
             ])->where('id', $success->id)->first();
             $r->merge(['combo_id' => $item->id]);
             $itemsInserted = $this->combosRepository->storeItems($r);
+            $comboItem = Combo::with([
+                'price',
+                'items',
+                'items.menu', 
+                'items.menu.portions', 
+                'items.menu.translations', 
+                'items.menu.translations.language', 
+                'items.menu.translations.language.countries', 
+                'items.portion',
+                'items.portion.prices',
+            ])->where('id', $item->id)->first();
             return new CreateResponse(true,  [ 'item' => $item ]);
         }
         else return new CreateResponse(false, 'Could not create Combo!');
@@ -75,13 +87,15 @@ class CombosController extends Controller
             $discount = $this->combosRepository->edit($id, $data);
             if($discount) {
                 $d = Combo::with([
+                    'price',
                     'items',
                     'items.menu', 
                     'items.menu.portions', 
                     'items.menu.translations', 
                     'items.menu.translations.language', 
                     'items.menu.translations.language.countries', 
-                    'items.portions'
+                    'items.portion',
+                    'items.portion.prices',
                 ])->where('id', $discount->id)->first();
                 return new EditResponse(true, ['item' => $d]);
             }

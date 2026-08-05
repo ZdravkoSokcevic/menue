@@ -569,6 +569,38 @@ class CreateCombo extends React.Component<IProps, IState>
                                             </div>
                                         </div>
 
+                                        <div className="row g-3">
+                                            <div className="d-flex flex-wrap gap-2 my-3">
+                                                {this.state.comboSelections.map((selection) => {
+                                                    const key = `${selection.menuItem.id}-${selection.selectedPortion.id}`;
+                                                    const itemName = selection.menuItem.name;
+                                                    const portionName = selection.selectedPortion.name;
+
+                                                    return (
+                                                    <div
+                                                        key={key}
+                                                        className="d-inline-flex align-items-center bg-light border rounded-pill px-3 py-1 shadow-sm"
+                                                    >
+                                                        {/* Item Name */}
+                                                        <span className="fw-medium text-dark me-2">{itemName}</span>
+
+                                                        {/* Portion Badge */}
+                                                        <span className="badge bg-success me-2">{portionName}</span>
+
+                                                        {/* Close Button (Bootstrap Close Button) */}
+                                                        <button
+                                                        type="button"
+                                                        className="btn-close ms-1"
+                                                        style={{ fontSize: '0.65rem' }}
+                                                        aria-label="Remove"
+                                                        onClick={() => this.removeComboItem(selection.menuItem.id)}
+                                                        />
+                                                    </div>
+                                                    );
+                                                })}
+                                                </div>
+                                        </div>
+
                                         {/* DISCOUNT SECTION */}
                                         <div className="mt-3 pt-3">
 

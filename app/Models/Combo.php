@@ -18,6 +18,7 @@ class Combo extends Model
         'time_to',
         'start_at',
         'end_at',
+        'quantity'
     ];
 
     public $timestamps = true;

@@ -26,6 +26,8 @@ return new class extends Migration
             $table->time('time_from')->nullable();
             $table->time('time_to')->nullable();
 
+            $table->integer('quantity')->default(0);
+
             // TODO: active dates
             $table->date('start_at')->nullable();
             $table->date('end_at')->nullable();

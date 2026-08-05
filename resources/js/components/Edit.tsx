@@ -23,6 +23,8 @@ import { IPreference } from "@/types/Preference";
 import EditPreference from "./preferences/EditPreference";
 import EditDiscount from "./ciscount/EditDiscount";
 import { IDiscount } from "@/types/Discount";
+import EditCombo from './combos/EditCombo';
+import { ICombo } from "@types/Combo";
 
 interface IProps {
     isOpen?: boolean;
@@ -116,6 +118,12 @@ class Edit extends React.Component<IProps & WithRouterProps, IState>
                     {this.props.type == 'discount' && <EditDiscount 
                         type="modal"
                         currentItem={this.props.currentItem as IDiscount}
+                        closeModal={this.closeModal}
+                        editCurrentItem={this.props.editCurrentItem as Function}
+                    />}
+                    {this.props.type == 'combo' && <EditCombo 
+                        type="modal"
+                        currentItem={this.props.currentItem as ICombo}
                         closeModal={this.closeModal}
                         editCurrentItem={this.props.editCurrentItem as Function}
                     />}
