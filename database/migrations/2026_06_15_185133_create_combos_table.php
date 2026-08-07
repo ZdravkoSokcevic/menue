@@ -23,6 +23,7 @@ return new class extends Migration
             // 2) weekly at specific times
             // 3) null for all the time
             $table->string('active_times')->nullable();
+            $table->string('times')->nullable();
             $table->time('time_from')->nullable();
             $table->time('time_to')->nullable();
 

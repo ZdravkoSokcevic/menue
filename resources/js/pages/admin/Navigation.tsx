@@ -103,6 +103,17 @@ class Navigation extends React.Component<IProps, IState>
             : false;
     }
 
+    isAllowedToRenderUsers = (): boolean => {
+        let {defaultCompany} = this.props;
+        const userSettings = this.props.userSettings;
+        return userSettings && 
+            userSettings.isLoggedIn && 
+            userSettings.user.role == 'admin' && 
+            Store.getState().app.defaultCompany?.id != '' 
+            ? true
+            : false;
+    }
+
     // TODO: rewiew allergen permissions
     isAllowedToRenderAllergens = (): boolean => {
         let {defaultCompany} = this.props;
@@ -207,7 +218,7 @@ class Navigation extends React.Component<IProps, IState>
     }
 
     isAllowedToRenderCombos = (): boolean => {
-        return false;
+        // return false;
         let {defaultCompany} = this.props;
         const userSettings = this.props.userSettings;
         // console.log('#### MENU PERMISSION FUNCTION::USER SETTINGS ####')
@@ -284,6 +295,15 @@ class Navigation extends React.Component<IProps, IState>
                         viewTransition
                     >
                         <GrRestaurant /> Companies
+                    </Link>}
+
+                    {/* USERS */}
+                    {this.isAllowedToRenderUsers() && <Link 
+                        to="/users"
+                        className={this.props.location?.pathname === '/users' ? 'nav-link active': 'nav-link' }  
+                        viewTransition
+                    >
+                        <GrRestaurant /> Users
                     </Link>}
 
                     {/* CATEGORIES */}

@@ -14,6 +14,7 @@ class Combo extends Model
         // for manual activation
         'active',
         'active_times',
+        'times',
         'time_from',
         'time_to',
         'start_at',

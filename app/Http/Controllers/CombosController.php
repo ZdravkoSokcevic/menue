@@ -79,13 +79,14 @@ class CombosController extends Controller
     public function edit($id, CombosEditRequest $r): EditResponse
     {
         $data = $r->only((new Combo())->getFillable());
-        $discount = Combo::find($id);
-        if(!$discount)
-            return new EditResponse(success: false, custom_message: 'Discount not found!');
+        $combo = Combo::find($id);
+        if(!$combo)
+            return new EditResponse(success: false, custom_message: 'Combo not found!');
         else {
 
-            $discount = $this->combosRepository->edit($id, $data);
-            if($discount) {
+            $combo = $this->combosRepository->edit($id, $data);
+            if($combo) {
+                $this->combosRepository->editItems($id, $r);
                 $d = Combo::with([
                     'price',
                     'items',
@@ -96,10 +97,10 @@ class CombosController extends Controller
                     'items.menu.translations.language.countries', 
                     'items.portion',
                     'items.portion.prices',
-                ])->where('id', $discount->id)->first();
+                ])->where('id', $combo->id)->first();
                 return new EditResponse(true, ['item' => $d]);
             }
-            else return new EditResponse(false, 'Could not edit discount!');
+            else return new EditResponse(false, 'Could not edit combo!');
         }
     }
 

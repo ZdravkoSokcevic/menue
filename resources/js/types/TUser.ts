@@ -17,4 +17,10 @@ export interface TUserSettings {
     isLoggedIn: false
 }
 
+export type TUsers = Array<TUser>;
+
+export interface UserResponseItem {
+    item: TUser;
+}
+
 export default TUser;

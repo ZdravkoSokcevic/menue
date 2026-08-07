@@ -1,6 +1,16 @@
 import { TMenu } from "./Menu";
 import { IPortionPrice, IPrice } from "./Prices";
 
+export enum DayOfWeek {
+    MONDAY = 'Monday',
+    TUESDAY = 'Tuesday',
+    WEDNESDAY = 'Wednesday',
+    THURSDAY = 'Thursday',
+    FRIDAY = 'Friday',
+    SATURDAY = 'Saturday',
+    SUNDAY = 'Sunday'
+}
+
 export interface IComboItem 
 {
     combo_id: string;
@@ -19,8 +29,10 @@ export interface ICombo
     name: string;
     price_id: string;
     price?: string | IPrice;
+    quantity?: string | number;
     active: boolean;
     active_times: string;
+    times: Array<DayOfWeek>;
     time_from: string;
     time_to: string;
     start_at: string;

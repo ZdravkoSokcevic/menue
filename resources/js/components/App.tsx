@@ -38,6 +38,7 @@ import Extras from '@/pages/admin/Extras';
 import Preferences from '@/pages/admin/Preferences';
 import Order from '@/pages/admin/Order';
 import Combos from '@/pages/admin/Combos';
+import Users from '@/pages/admin/Users';
 
 const pageVariants = {
     initial: { opacity: 0, x: "-100vw" },
@@ -161,6 +162,10 @@ const App: React.FC = () => {
 
                     <Route path="/companies" element = {
                         <ProtectedRoute children={<Companies />} />
+                    } />
+
+                    <Route path="/users" element = {
+                        <ProtectedRoute children={<Users />} />
                     } />
 
                     <Route path='/tables' element = {

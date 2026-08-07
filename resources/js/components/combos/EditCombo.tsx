@@ -16,9 +16,9 @@ import { TMenu, TMenuItems } from "@/types/Menu";
 import { IOption, TSelectSearchOptions } from "@/types/App";
 import DiscountsAPI from "@/api/DiscountsAPI";
 import { DayOfWeek, DISCOUNT_TYPE, IDiscount, IDiscountResponseItem } from "@/types/Discount";
-import { IPrice } from "@/types/Prices";
+import { IPortionPrice, IPrice } from "@/types/Prices";
 import AppHelper from "@/helpers/AppHelper";
-import { ICombo, IComboSelection, TArrayOfComboSelection, TArrayOfComboSimpleSelections } from "@/types/Combo";
+import { ICombo, IComboItem, IComboSelection, ICombosResponseItem, TArrayOfComboSelection, TArrayOfComboSimpleSelections, TComboItems, TCombos } from "@/types/Combo";
 import CombosAPI from "@/api/CombosAPI";
 
 interface IProps {
@@ -26,7 +26,7 @@ interface IProps {
     type: 'modal', // can be modal or page
     isOpen?: boolean;
     closeModal: Function;
-    EditDiscountItem: Function;
+    editCurrentItem: Function;
     currentItem: ICombo;
 };
 interface IState {
@@ -51,7 +51,7 @@ interface IInitialValues {
     comboSelections: TArrayOfComboSimpleSelections;
     price: string | number;
     quantity: string | number;
-    active_times: number;
+    active_times: number | string; 
     times: Array<DayOfWeek>;
     time_from?: string | undefined;
     time_to?: string | undefined;
@@ -192,11 +192,11 @@ class EditCombo extends React.Component<IProps, IState>
     componentDidMount(): void {
         this.loadMenuItems();
         const initialComboItems: TArrayOfComboSelection = [];
-        const currentComboItems: TCombos = this.props.currentItem.items;
+        const currentComboItems: TComboItems = this.props.currentItem.items as TComboItems;
         currentComboItems.map((item: IComboItem) => {
             initialComboItems.push({
-                menuItem: item.menu,
-                selectedPortion: item.portion
+                menuItem: item.menu as TMenu,
+                selectedPortion: item.portion as IPortionPrice
             });
         });
         this.setState({ comboSelections: initialComboItems });
@@ -317,9 +317,28 @@ class EditCombo extends React.Component<IProps, IState>
 
     // 3. REMOVE AN ITEM FROM THE COMBO
     removeComboItem = (menuItemId: string | number) => {
-        this.setState(prevState => ({
-            comboSelections: prevState.comboSelections.filter(sel => sel.menuItem.id !== menuItemId)
-        }));
+        // debugger;
+        let items: TArrayOfComboSelection = [];
+        this.state.comboSelections.map((comboSelection) => {
+            if(comboSelection.menuItem.id != menuItemId)
+                items.push(comboSelection);
+        })
+        this.setState({ comboSelections: items });
+
+        const comboFieldSelections: TArrayOfComboSimpleSelections = [];
+        const updatedComboSelections = [...this.state.comboSelections];
+        updatedComboSelections.forEach(comboSelection => {
+            if(comboSelection.menuItem.id != menuItemId)
+                comboFieldSelections.push({
+                    menu_id: comboSelection.menuItem.id,
+                    portion_id: comboSelection.selectedPortion.id as string
+                });
+        })
+        // debugger;
+        this.formikRef!.current?.setFieldValue('comboSelections', comboFieldSelections);
+        // this.setState(prevState => ({
+        //     comboSelections: prevState.comboSelections.filter(sel => sel.menuItem.id !== menuItemId)
+        // }));
     }
 
     addOrRemoveDayOfWeek = (day: DayOfWeek) => {
@@ -343,20 +362,48 @@ class EditCombo extends React.Component<IProps, IState>
         let currentInitialValues = initialValues;
         console.log(currentItem);
 
-
+        const currentItemsSimple: TArrayOfComboSimpleSelections = [];
+        currentItem?.items!.map((item: IComboItem) => {
+            currentItemsSimple.push({
+                menu_id: item.menu!.id,
+                portion_id: item.portion!.id as string
+            });
+        })
 
         currentInitialValues = {
             is_active: currentItem.active ? currentItem.active : false,
-            price: currentItem.price.price ? currentItem.price.price : 0,
+            // @ts-expect-error
+            price: currentItem.price!.price ? currentItem.price.price : 0,
+            comboSelections: currentItemsSimple,
+            times: [],
             quantity: currentItem.quantity ? currentItem.quantity : 0,
             start_at: currentItem.start_at ? currentItem.start_at : '',
             end_at: currentItem.end_at ? currentItem.end_at : '',
             time_from: currentItem.time_from ? currentItem.time_from : '',
             time_to: currentItem.time_to ? currentItem.time_to : '',
-            active_times:  currentItem.active_times ? currentItem.active_times : '0',
+            active_times:  currentItem.active_times ? currentItem.active_times as string : '0',
         }
-        
-        // console.log(currentInitialValues);
+
+        // times adapter
+        if(currentItem.times) {
+            let eventStr = ''
+            const timesArrayStr: unknown = currentItem.times;
+            const timesArray = (timesArrayStr as string).split(',');
+            let eventTimes: DayOfWeek[] = [];
+            timesArray.forEach((time: string) => {
+                switch(time) {
+                    case 'mo': eventTimes.push(DayOfWeek.MONDAY);break;
+                    case 'tu': eventTimes.push(DayOfWeek.TUESDAY);break;
+                    case 'we': eventTimes.push(DayOfWeek.WEDNESDAY);break;
+                    case 'th': eventTimes.push(DayOfWeek.THURSDAY);break;
+                    case 'fr': eventTimes.push(DayOfWeek.FRIDAY);break;
+                    case 'sa': eventTimes.push(DayOfWeek.SATURDAY);break;
+                    case 'su': eventTimes.push(DayOfWeek.SUNDAY);break;
+                }
+            })
+
+            currentInitialValues.times = eventTimes;
+        }
 
         return (
             <div className="form-page">
@@ -839,6 +886,7 @@ class EditCombo extends React.Component<IProps, IState>
         
         let data: unknown = {
             id: this.props.currentItem.id,
+            combo_id: this.props.currentItem.id,
             items: event.comboSelections,
             price: event.price,
             active_times: event.active_times,
@@ -859,8 +907,8 @@ class EditCombo extends React.Component<IProps, IState>
         if(response && response.success == true) {
             // update category items
             this.closeModal();
-            const data: IDiscountResponseItem = response.data as IDiscountResponseItem;
-            this.props.addNewDiscountItem(data.item);
+            const data: ICombosResponseItem = response.data as ICombosResponseItem;
+            this.props.editCurrentItem(data.item);
         }
         else {
             alert('Unexpected error occured');

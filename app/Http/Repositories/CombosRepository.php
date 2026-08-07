@@ -76,6 +76,13 @@ class CombosRepository implements CombosRepositoryInterface
             return $row->fresh();
         return false;
     }
+
+    public function editItems($id, $r)
+    {
+        $deleted = ComboItem::where('combo_id', $r->input('combo_id'))->delete();
+        $this->storeItems($r);
+    }
+
     public function delete($id): bool | null
     {
         return $this->combo->find($id)->delete();
