@@ -26,7 +26,7 @@ class CompaniesTableSeeder extends Seeder
             'username'      => 'administrator',
             'email'         => 'admin@menue.com',
             'password'      => Hash::make('test1234'),
-            'role'          => 'admin',
+            'role'          => 'superadmin',
             // because he isn't part of any company,
             // he's just admin
             'company_id'    => null

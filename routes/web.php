@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\WebsiteController;
 use App\Livewire\OrdersPage;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,6 +34,8 @@ Route::get('/cart', CartPage::class);
 Route::view('/order/{slug}', OrdersPage::class);
 
 Route::get('/languages', [LanguageController::class, 'getFrontendLanguages']);
+
+Route::get('/webpage', [WebsiteController::class, 'home'])->name('webpage');
 
 
 Route::view('/{url?}', 'app')

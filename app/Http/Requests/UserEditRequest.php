@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Company;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class UserEditRequest extends FormRequest
 {
@@ -11,6 +15,34 @@ class UserEditRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        $user = auth('sanctum')->user();
+        if($user->isAdmin())
+            return true;
+        else if($user->isCompanyAdmin()) {
+            // detect which role he's trying to create
+            // Company admin can only create users in their own company
+            $role = request()->input('role');
+            if($role == User::ADMIN_ROLE || $role == User::COMPANY_ADMIN_ROLE) {
+                return false;
+            }
+            if(request()->input('company_id') != $user->company_id)
+                return false;
+
+            return true;
+
+        }else if($user->isAgent()) {
+            // detect which company he is trying to join user
+            $company = Company::where('creator_id', $user->id)->toArray();
+            if(
+                request()->has('company_id') && 
+                in_array(request()->input('company_id'), $company) &&
+                request('role') == 'user' 
+            ) {
+                return true;
+            }
+            return false;
+        }
+
         return false;
     }
 
@@ -22,7 +54,15 @@ class UserEditRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'string',
+            'first_name' => 'string|max:60',
+            'last_name' => 'string|max:60',
+            'username' => 'string|min:3|max:60|unique:users,username',
+            'email' => 'string|email|max:255|unique:users,email',
+            // superadmin, admin, agent, user, demo
+            'role' => Rule::in(['superadmin', 'admin', 'agent', 'user', 'demo']),
+            'company_id' => 'exists:companies,id',
+            'password' => Password::min(8)->letters()->numbers()->symbols(),
         ];
     }
 }

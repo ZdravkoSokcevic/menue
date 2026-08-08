@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserEditRequest;
 use App\Http\Requests\UserLoginRequest;
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -44,10 +45,27 @@ class UsersController extends Controller
 
     public function all()
     {
-        if(Auth::user()->role != 'admin')
-            return Response('Not found', 404);
+        $user = auth('sanctum')->user();
+        // TODO: superadmin can obtain all users
+        // company_admin only users that belongs to the his company
+        // agent can see users only that belong to his companies
+        // dd($user);
+        $users = User::where('id', '!=' , $user->id);
 
-        return User::all();
+        if($user->isAdmin())
+            return $users->get();
+        else if($user->isCompanyAdmin()) {
+            return $users->where('company_id', $user->company_id)->get();
+            // return $users->where();
+        }
+        else if($user->isAgent()) {
+            $companies = Company::where('creator_id', $user->id)->get();
+            return $users->whereIn('company_id', $companies)->get();
+        }else {
+            // normal user
+            return new Response('Not found', 404);
+        }
+
     }
 
     public function create(UserCreateRequest $r): JsonResponse

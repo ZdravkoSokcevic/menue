@@ -15,6 +15,11 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens;
 
+    public const ADMIN_ROLE = 'superadmin';
+    public const COMPANY_ADMIN_ROLE = 'admin';
+    public const AGENT_ROLE = 'agent';
+    public const USER_ROLE = 'user'; 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -56,20 +61,20 @@ class User extends Authenticatable
     }
 
     public function isAdmin() {
-        return $this->role === 'admin';
+        return $this->role === 'superadmin';
     }
 
     public function isAdminOrDemo() {
-        return $this->role === 'admin' ||
+        return $this->role === 'superadmin' ||
             $this->role === 'demo';
     }
 
     public function isNotAdmin() {
-        return $this->role !== 'admin';
+        return $this->role !== 'superadmin';
     }
 
     public function isNotAdminOrDemo() {
-        return $this->role !== 'admin' &&
+        return $this->role !== 'superadmin' &&
             $this->role !== 'demo';
     }
 
@@ -78,7 +83,7 @@ class User extends Authenticatable
     }
 
     public function isCompanyAdmin(): bool {
-        return $this->role === 'company_admin';
+        return $this->role === 'admin';
     }
 
     public function isDemo(): bool {

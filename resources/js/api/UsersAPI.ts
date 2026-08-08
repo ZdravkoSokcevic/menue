@@ -32,7 +32,7 @@ class UsersAPI extends Api
     {
         let users: TUsers = [];
         try {
-            let usersRes = await this.get('/api/users/all', {}, {});
+            let usersRes = await this.get('/api/users', {}, {});
             if(typeof usersRes !== undefined && usersRes.data.length) {
                 usersRes.data.forEach((company:any)=> users.push(company));
             }
