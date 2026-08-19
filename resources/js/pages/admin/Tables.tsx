@@ -29,6 +29,8 @@ import CreateCompanyTable from "@/components/tables/CreateCompanyTable";
 import TablesAPI from "@/api/TablesAPI";
 import Delete from "@/components/Delete";
 import { MdDelete } from "react-icons/md";
+import { ADMIN_ROLE } from "@/types/Roles";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     animationRefreshKey?: number
@@ -133,7 +135,7 @@ class Tables extends React.Component<IProps, IState>
                                         <TableCell><b>Id</b></TableCell>
                                         <TableCell><b>Name</b></TableCell>
                                         <TableCell><b>Company</b></TableCell>
-                                        {(this.state.user?.role == 'admin') && <TableCell><b>Controls</b></TableCell>}
+                                        {(this.state.user?.role == ADMIN_ROLE) && <TableCell><b>Controls</b></TableCell>}
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -192,7 +194,7 @@ class Tables extends React.Component<IProps, IState>
                 <TableCell>{table.name}</TableCell>
                 <TableCell>{table.company_id}</TableCell>
                 <TableCell>
-                    {this.state.user?.role == 'admin' && (
+                    {this.state.user?.role == ADMIN_ROLE && (
                         <>
                             <a 
                                 role="button"
@@ -277,11 +279,12 @@ class Tables extends React.Component<IProps, IState>
                 const newItems: TTables = this.state.tables.filter((item: ICompanyTable, index: number) => item.id != currentItem.id);
                 this.setState({ tables: newItems });
                 this.closeDeleteCompanyTableModal();
+                showToast.success('Table deleted successfully');
             }else {
-                alert('Cannot delete table!');
+                showToast.error('There\'s problem deleting table. Try again later');
             }
         }else {
-            alert('Cannot delete table');
+            showToast.error('There\'s problem deleting table. Try again later');
         }
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TableEditRequest extends FormRequest
@@ -14,7 +15,8 @@ class TableEditRequest extends FormRequest
         $param = $this->route()->parameters('id');
         // $params = 
         $user = auth('sanctum')->user();
-        return $user->role === 'admin' || $user->role === 'company_admin'
+        return User::ADMIN_ROLE ||
+            $user->role === User::COMPANY_ADMIN_ROLE
             ? true
             : false;
     }

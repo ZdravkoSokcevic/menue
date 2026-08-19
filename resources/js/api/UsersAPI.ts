@@ -2,6 +2,7 @@ import Api from "./api";
 import { AxiosResponse } from "axios";
 import { Store } from "@/reducers/Store";
 import TUser, { TUsers, UserResponseItem } from "@/types/TUser";
+import { ADMIN_ROLE } from "@/types/Roles";
 
 class UsersAPI extends Api
 {
@@ -47,7 +48,7 @@ class UsersAPI extends Api
     static async deleteUser(id: string)
     {
         const user = Store.getState().user.user;
-        if(!user || !(user.id) || user.role != 'admin')
+        if(!user || !(user.id) || user.role != ADMIN_ROLE)
             return Promise.resolve({ success: false, data: {}, reason: 'Not found' });
         try {
             const res = await this.get(`/api/users/delete/${id}`, {}, {});

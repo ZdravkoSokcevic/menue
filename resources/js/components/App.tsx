@@ -227,7 +227,26 @@ const App: React.FC = () => {
                 </motion.div>
                 {/* </AnimatePresence> */}
                 </div>
-                <ToastContainer />
+                <ToastContainer 
+                    className={'toast-container'}
+                    position='top-right'
+                    autoClose={false}
+                    hideProgressBar={false}
+                    newestOnTop
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme='bootstrap'
+                    toastClassName={(context) =>
+                        `toast show align-items-center text-white bg-${
+                        context?.type === 'success' ? 'success' :
+                        context?.type === 'error' ? 'danger' :
+                        context?.type === 'warning' ? 'warning' : 'primary'
+                        } border-0`
+                    }
+                />
                 <DotLoader loading={Store.getState().app.isLoading} className="main-loader"/>
             </div>
         </React.Fragment>

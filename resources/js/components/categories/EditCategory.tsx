@@ -14,6 +14,7 @@ import { Store } from "@/reducers/Store";
 import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import { AxiosResponse } from "axios";
 import { ICategoriesResponseItem } from "@/types/Categories";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -323,9 +324,10 @@ class EditCategory extends React.Component<IProps, IState>
             const responseData: ICategoriesResponseItem = res.data as ICategoriesResponseItem;
             this.props.editCurrentItem(responseData.item);
             this.closeModal();
+            showToast.success('Category saved successfully');
         }
         else {
-            alert('Unexpected error occured!');
+            showToast.error('There\' problem updating category. Try again later');
             // this.closeModal();
         }
     }

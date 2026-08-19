@@ -18,6 +18,7 @@ import { Store } from "@/reducers/Store";
 import { IAllergen, TAllergens } from "@/types/Allergen";
 import AllergensAPI from "@/api/AllergensAPI";
 import Translations from "@/components/Translations";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {};
 interface IState {
@@ -199,11 +200,12 @@ class Allergens extends React.Component<IProps, IState> {
                 const newItems: Array<IAllergen> = this.state.allergens.filter((item: IAllergen, index: number) => item.id != currentItem.id);
                 this.setState({ allergens: newItems });
                 this.closeDeleteAllergenModal();
+                showToast.success('Allergen deleted successfully');
             }else {
-                alert('Cannot delete allergen!');
+                showToast.error('There\'s problem deleting allergen. Try again later');
             }
         }else {
-            alert('Cannot delete allergen');
+            showToast.error('There\'s problem deleting allergen. Try again later');
         }
     }
 

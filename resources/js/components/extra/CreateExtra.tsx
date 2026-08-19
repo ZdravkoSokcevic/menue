@@ -13,6 +13,7 @@ import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import ExtrasAPI from "@/api/ExtrasAPI";
 import { IExtra } from "@/types/Extra";
 import { IResponseItem } from "@/types/Api";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -190,9 +191,10 @@ class CreateExtra extends React.Component<IProps, IState>
             this.closeModal();
             const data: IResponseItem = response.data as IResponseItem;
             this.props.addNewExtraItem(data.item);
+            showToast.success('Extra created succesfully');
         }
         else {
-            alert('Unexpected error occured');
+            showToast.error('There\'s problem creating extra. Try again later');
         }
     }
 }

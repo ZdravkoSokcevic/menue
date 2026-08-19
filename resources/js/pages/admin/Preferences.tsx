@@ -18,6 +18,8 @@ import CreatePreference from "@/components/preferences/CreatePreference";
 import PreferencesAPI from "@/api/PreferencesAPI";
 import { GoPlus } from "react-icons/go";
 import Translations from "@/components/Translations";
+import { ADMIN_ROLE } from "@/types/Roles";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {};
 interface IState {
@@ -82,7 +84,7 @@ class Preferences extends React.Component<IProps, IState> {
                                         <TableCell><b>Id</b></TableCell>
                                         <TableCell><b>Name</b></TableCell>
                                         <TableCell><b>Description</b></TableCell>
-                                        {(this.state.user?.role == 'admin') && <TableCell><b>Controls</b></TableCell>}
+                                        {(this.state.user?.role == ADMIN_ROLE) && <TableCell><b>Controls</b></TableCell>}
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -94,7 +96,7 @@ class Preferences extends React.Component<IProps, IState> {
                                                 <TableCell>{preference.name}</TableCell>
                                                 <TableCell>{preference.description}</TableCell>
                                                 <TableCell>
-                                                    {this.state.user?.role == 'admin' && (
+                                                    {this.state.user?.role == ADMIN_ROLE && (
                                                         <>
                                                             <a 
                                                                 role="button"
@@ -214,11 +216,12 @@ class Preferences extends React.Component<IProps, IState> {
                 const newItems: Array<IPreference> = this.state.preferences.filter((item: IPreference, index: number) => item.id != currentItem.id);
                 this.setState({ preferences: newItems });
                 this.closeDeletePreferencesModal();
+                showToast.success('Preference deleted successfully');
             }else {
-                alert('Cannot delete Preference!');
+                showToast.error('There\'s problem deleting preference. Try again later');
             }
         }else {
-            alert('Cannot delete preference');
+            showToast.error('There\'s problem deleting preference. Try again later');
         }
     }
 

@@ -20,6 +20,7 @@ import { IPrice } from "@/types/Prices";
 import AppHelper from "@/helpers/AppHelper";
 import { ICombo, IComboSelection, TArrayOfComboSelection, TArrayOfComboSimpleSelections } from "@/types/Combo";
 import CombosAPI from "@/api/CombosAPI";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -916,9 +917,10 @@ class CreateCombo extends React.Component<IProps, IState>
             this.closeModal();
             const data: IDiscountResponseItem = response.data as IDiscountResponseItem;
             this.props.addNewDiscountItem(data.item);
+            showToast.success('Combo created successfully');
         }
         else {
-            alert('Unexpected error occured');
+            showToast.error('There\'s problem creating combo. Try again later');
         }
     }
 

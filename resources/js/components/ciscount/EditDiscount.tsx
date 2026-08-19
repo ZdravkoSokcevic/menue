@@ -18,6 +18,7 @@ import DiscountsAPI from "@/api/DiscountsAPI";
 import { DayOfWeek, DISCOUNT_TYPE, IDiscount, IDiscountResponseItem } from "@/types/Discount";
 import { IPrice } from "@/types/Prices";
 import AppHelper from "@/helpers/AppHelper";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -832,9 +833,10 @@ class EditDiscount extends React.Component<IProps, IState>
             this.closeModal();
             const data: IDiscountResponseItem = response.data as IDiscountResponseItem;
             this.props.editCurrentItem(data.item);
+            showToast.success('Discount saved successfully');
         }
         else {
-            alert('Unexpected error occured');
+            showToast.error('There\'s problem updating discount. Try again later');
         }
     }
 

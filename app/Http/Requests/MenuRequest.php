@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MenuRequest extends FormRequest
@@ -14,7 +15,7 @@ class MenuRequest extends FormRequest
         $req = request();
         $company_id = $req->input('company_id');
         $user = $req->user();
-        if($user->role === 'admin')
+        if($user->role === User::ADMIN_ROLE)
             return true;
         else if($user->role === 'company_admin' && !is_null($company_id)) {
             // validate that company is owned by company_admin

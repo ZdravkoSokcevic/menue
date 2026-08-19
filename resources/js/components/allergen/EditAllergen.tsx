@@ -14,6 +14,7 @@ import { AxiosResponse } from "axios";
 import { IAllergen } from "@/types/Allergen";
 import AllergensAPI from "@/api/AllergensAPI";
 import { IResponseItem } from "@/types/Api";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -309,9 +310,10 @@ class EditAllergen extends React.Component<IProps, IState>
             const responseData: IResponseItem = res.data as IResponseItem;
             this.props.editCurrentItem(responseData.item);
             this.closeModal();
+            showToast.success('Allergen saved successfuly');
         }
         else {
-            alert('Unexpected error occured!');
+            showToast.error('There\'s problem editing allergen. Try again later');
             // this.closeModal();
         }
     }

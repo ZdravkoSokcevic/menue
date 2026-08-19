@@ -21,7 +21,9 @@ import FormikSearchSelect from "../FormikSelectSearch";
 import { IOption } from "@/types/App";
 
 import "../../../sass/add_company.scss"
+import "../../../sass/modal.scss"
 import { ILanguage, TLanguages } from "@/types/TLanguages";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -317,17 +319,19 @@ class CreateCompany extends React.Component<IProps, IState>
             <Modal 
                 isOpen={this.props.isOpen as boolean} 
                 onRequestClose={() => this.closeModal()}
-                overlayClassName="fixed inset-0 bg-black bg-opacity-50 w-100 full-w-h"
-                className="form-modal bg-white rounded-xl shadow-2xl max-w-md w-full p-6 outline-none"
+                overlayClassName="modal-backdrop-blur"
+                className="form-modal"
                 // className={"form-modal p-5"}
                 style={{}}
-                contentLabel="Example"
+                contentLabel="Create company"
             >
-                <div className="form-page">
+                {/* <div className="form-page"> */}
 
 
-                    <h2>Create company</h2>
-                    <button className="close-btn" onClick={() => this.closeModal()}>x</button>
+                    <div className="modal-header">
+                        <h2>Create company</h2>
+                        <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
+                    </div>
 
                     <Formik 
                         initialValues={initialValues}
@@ -338,310 +342,322 @@ class CreateCompany extends React.Component<IProps, IState>
 
                     {({ errors, touched, setFieldValue, isSubmitting, isValid, dirty }) => (
 
-                        <Form encType="multipart/form-data">
-                        <div className="container-fluid">
-                            <div className="row">
-                                <div className="col-md-12 company-section-right ps-5 mt-5 mb-2">
-                                    <h3>Company info</h3>
-                                </div>
-                                {/* LEFT SIDE */}
-                                <div className="col-md-6 border-end p-5 company-section-left">
-                                    <div className="form-group">
-                                        <label>Choose logo</label>
-                                        <div
-                                        onDrop={this.handleDrop}
-                                        onDragOver={this.handleDragOver}
-                                        onDragEnter={this.handleDragEnter}
-                                        onDragLeave={this.handleDragLeave}
-                                        onClick={this.handleAreaClick}
-                                        style={{
-                                            border: "2px dashed #ccc",
-                                            padding: "20px",
-                                            textAlign: "center",
-                                            borderRadius: "10px",
-                                            backgroundColor: this.state.isDragging ? "#f0f8ff" : "#fff",
-                                            height: '150px',
-                                            width: '150px',
-                                            backgroundImage: this.state.logo ? `url(${this.state.logo.src})` : '',
-                                            backgroundSize: 'cover',
-                                            position: 'relative'
-                                        }}
-                                        >
-                                            <p>Drag file here</p>
-
-                                            <input
-                                                type="file"
-                                                ref={this.fileInputRef}
-                                                onChange={(event: any) => this.handleFileChange(event as ChangeEventHandler<HTMLInputElement>)}
-                                                // Hide the actual input element, but keep it accessible to screen readers using opacity: 0
-                                                style={{ opacity: 0, height: 0, width: 0, position: 'absolute' }}
-                                            />
+                        <Form encType="multipart/form-data" className="modal-form-content">
+                            <div className="modal-scroll-body">
+                                <div className="container-fluid">
+                                    <div className="row g-4">
+                                        <div className="col-md-12 company-section-right ps-5 mt-5 mb-2">
+                                            <h3>Company info</h3>
                                         </div>
-                                        {errors.logo && touched.logo ? (
-                                            <><small id="pictureHelp" className="form-text text-danger">{errors.logo as ReactNode}</small><br /></>
-                                        ) : null}
-                                    </div>
+                                        {/* LEFT SIDE */}
+                                        <div className="col-md-6 border-end p-5 company-section-left">
+                                            <div className="form-group">
+                                                <label>Choose logo</label>
+                                                <div
+                                                onDrop={this.handleDrop}
+                                                onDragOver={this.handleDragOver}
+                                                onDragEnter={this.handleDragEnter}
+                                                onDragLeave={this.handleDragLeave}
+                                                onClick={this.handleAreaClick}
+                                                style={{
+                                                    border: "2px dashed #ccc",
+                                                    padding: "20px",
+                                                    textAlign: "center",
+                                                    borderRadius: "10px",
+                                                    backgroundColor: this.state.isDragging ? "#f0f8ff" : "#fff",
+                                                    height: '150px',
+                                                    width: '150px',
+                                                    backgroundImage: this.state.logo ? `url(${this.state.logo.src})` : '',
+                                                    backgroundSize: 'cover',
+                                                    position: 'relative'
+                                                }}
+                                                >
+                                                    <p>Drag file here</p>
 
-                                    {/* COMPANY NAME */}
-                                    <div className="form-group">
-                                        <label>Company name</label>
-                                        <Field 
-                                            name="name" 
-                                            className="form-control" 
-                                            id="name" 
-                                            aria-describedby="nameHelp" 
-                                            placeholder="Name"
-                                        />
-                                        {errors.name && touched.name ? (
-                                            <><small id="nameHelp" className="form-text text-danger">{errors.name}</small><br /></>
-                                        ) : null}
-                                        <small id="nameHelp" className="form-text text-muted">Name of the company.</small>
-                                    </div>
+                                                    <input
+                                                        type="file"
+                                                        ref={this.fileInputRef}
+                                                        onChange={(event: any) => this.handleFileChange(event as ChangeEventHandler<HTMLInputElement>)}
+                                                        // Hide the actual input element, but keep it accessible to screen readers using opacity: 0
+                                                        style={{ opacity: 0, height: 0, width: 0, position: 'absolute' }}
+                                                    />
+                                                </div>
+                                                {errors.logo && touched.logo ? (
+                                                    <><small id="pictureHelp" className="form-text text-danger">{errors.logo as ReactNode}</small><br /></>
+                                                ) : null}
+                                            </div>
 
-                                    {/* EMAIL */}
-                                    <div className="form-group">
-                                        <label>Email</label>
-                                        <Field 
-                                            name="email" 
-                                            className="form-control" 
-                                            id="email" 
-                                            aria-describedby="emailHelp" 
-                                            placeholder="Enter email"
-                                            type="email"
-                                            ref={this.emailRef}
-                                        />
-                                        {errors.email && touched.email ? (
-                                            <><small id="emailHelp" className="form-text text-danger">{errors.email}</small><br /></>
-                                        ) : null}
-                                        <small id="emailHelp" className="form-text text-muted"><b>Note:</b> company email will be used for admin login.</small>
-                                    </div>
+                                            {/* COMPANY NAME */}
+                                            <div className="form-group">
+                                                <label>Company name</label>
+                                                <Field 
+                                                    name="name" 
+                                                    className="form-control" 
+                                                    id="name" 
+                                                    aria-describedby="nameHelp" 
+                                                    placeholder="Name"
+                                                />
+                                                {errors.name && touched.name ? (
+                                                    <><small id="nameHelp" className="form-text text-danger">{errors.name}</small><br /></>
+                                                ) : null}
+                                                <small id="nameHelp" className="form-text text-muted">Name of the company.</small>
+                                            </div>
 
-                                    {/* PHONE */}
-                                    <div className="form-group">
-                                        <label>Phone</label>
-                                        <Field 
-                                            name="phone" 
-                                            className="form-control" 
-                                            id="phone" 
-                                            aria-describedby="phoneHelp" 
-                                            placeholder="+1 xxx xxxx"
-                                        />
-                                        {errors.phone && touched.phone ? (
-                                            <><small id="phoneHelp" className="form-text text-danger">{errors.phone}</small><br /></>
-                                        ) : null}
-                                        {/* <small id="phoneHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
-                                    </div>
+                                            {/* EMAIL */}
+                                            <div className="form-group">
+                                                <label>Email</label>
+                                                <Field 
+                                                    name="email" 
+                                                    className="form-control" 
+                                                    id="email" 
+                                                    aria-describedby="emailHelp" 
+                                                    placeholder="Enter email"
+                                                    type="email"
+                                                    ref={this.emailRef}
+                                                />
+                                                {errors.email && touched.email ? (
+                                                    <><small id="emailHelp" className="form-text text-danger">{errors.email}</small><br /></>
+                                                ) : null}
+                                                <small id="emailHelp" className="form-text text-muted"><b>Note:</b> company email will be used for admin login.</small>
+                                            </div>
 
-                                    {/* WEBSITE */}
-                                    <div className="form-group">
-                                        <label>Website</label>
-                                        <Field 
-                                            name="website" 
-                                            className="form-control" 
-                                            id="website" 
-                                            aria-describedby="websiteHelp" 
-                                            placeholder="https://"
-                                        />
-                                        {errors.email && touched.email ? (
-                                            <><small id="websiteHelp" className="form-text text-danger">{errors.website}</small><br /></>
-                                        ) : null}
-                                        {/* <small id="phoneHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
-                                    </div>
+                                            {/* PHONE */}
+                                            <div className="form-group">
+                                                <label>Phone</label>
+                                                <Field 
+                                                    name="phone" 
+                                                    className="form-control" 
+                                                    id="phone" 
+                                                    aria-describedby="phoneHelp" 
+                                                    placeholder="+1 xxx xxxx"
+                                                />
+                                                {errors.phone && touched.phone ? (
+                                                    <><small id="phoneHelp" className="form-text text-danger">{errors.phone}</small><br /></>
+                                                ) : null}
+                                                {/* <small id="phoneHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
+                                            </div>
 
-                                    {/* LICENSE */}
-                                    <div className="form-group">
-                                        <label>License</label>
-                                        <FormikSearchSelect 
-                                            options={this.state.licenseOptions}
-                                            name="license"
-                                            id="license"
-                                            aria-describedby="licenseHelp"
-                                            ref={this.licenseRef}
-                                            onChange={this.onLicenseChange}
-                                            isSearchable={false}
-                                        />
-                                    </div>
-                                    
-                                </div>
+                                            {/* WEBSITE */}
+                                            <div className="form-group">
+                                                <label>Website</label>
+                                                <Field 
+                                                    name="website" 
+                                                    className="form-control" 
+                                                    id="website" 
+                                                    aria-describedby="websiteHelp" 
+                                                    placeholder="https://"
+                                                />
+                                                {errors.email && touched.email ? (
+                                                    <><small id="websiteHelp" className="form-text text-danger">{errors.website}</small><br /></>
+                                                ) : null}
+                                                {/* <small id="phoneHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
+                                            </div>
 
-                                {/* RIGHT SIDE */}
-                                <div className="col-md-6 p-5 company-section-right">
-                                    
+                                            {/* LICENSE */}
+                                            <div className="form-group">
+                                                <label>License</label>
+                                                <FormikSearchSelect 
+                                                    options={this.state.licenseOptions}
+                                                    name="license"
+                                                    id="license"
+                                                    aria-describedby="licenseHelp"
+                                                    ref={this.licenseRef}
+                                                    onChange={this.onLicenseChange}
+                                                    isSearchable={false}
+                                                />
+                                            </div>
+                                            
+                                        </div>
+
+                                        {/* RIGHT SIDE */}
+                                        <div className="col-md-6 p-5 company-section-right">
+                                            
 
 
-                                    {/* COUNTRY */}
-                                    <div className="form-group">
-                                        <label>Country</label>
-                                        <FormikSearchSelect 
-                                            options={(this.state.countryOptions as unknown) as IOption[]}
-                                            name="country"
-                                            id="country"
-                                            aria-describedby="countryHelp"
-                                            ref={this.countryRef}
-                                            onChange={this.onCountryChange}
-                                        />
-                                    </div>
+                                            {/* COUNTRY */}
+                                            <div className="form-group">
+                                                <label>Country</label>
+                                                <FormikSearchSelect 
+                                                    options={(this.state.countryOptions as unknown) as IOption[]}
+                                                    name="country"
+                                                    id="country"
+                                                    aria-describedby="countryHelp"
+                                                    ref={this.countryRef}
+                                                    onChange={this.onCountryChange}
+                                                />
+                                            </div>
 
-                                    {/* CURRENCY */}
-                                    <div className="form-group">
-                                        <label>Currency</label>
-                                        <FormikSearchSelect 
-                                            options={this.state.currencyOptions}
-                                            name="currency"
-                                            id="currency"
-                                            aria-describedby="countryHelp"
-                                            ref={this.currencyRef}
-                                            onChange={this.onCurrencyChange}
-                                        />
-                                    </div>
+                                            {/* CURRENCY */}
+                                            <div className="form-group">
+                                                <label>Currency</label>
+                                                <FormikSearchSelect 
+                                                    options={this.state.currencyOptions}
+                                                    name="currency"
+                                                    id="currency"
+                                                    aria-describedby="countryHelp"
+                                                    ref={this.currencyRef}
+                                                    onChange={this.onCurrencyChange}
+                                                />
+                                            </div>
 
-                                    {/* LANGUAGE */}
-                                    <div className="form-group">
-                                        <label>Language</label>
-                                        <FormikSearchSelect 
-                                            options={this.state.languageOptions}
-                                            name="language"
-                                            id="language"
-                                            aria-describedby="licenseHelp"
-                                            ref={this.languageRef}
-                                            onChange={this.onLanguageChange}
-                                            isSearchable={false}
-                                        />
-                                    </div>
+                                            {/* LANGUAGE */}
+                                            <div className="form-group">
+                                                <label>Language</label>
+                                                <FormikSearchSelect 
+                                                    options={this.state.languageOptions}
+                                                    name="language"
+                                                    id="language"
+                                                    aria-describedby="licenseHelp"
+                                                    ref={this.languageRef}
+                                                    onChange={this.onLanguageChange}
+                                                    isSearchable={false}
+                                                />
+                                            </div>
 
-                                    {/* STREET */}
-                                    <div className="form-group">
-                                        <label>Street</label>
-                                        <Field 
-                                            type="text" 
-                                            className="form-control" 
-                                            name="street" 
-                                            aria-describedby="streetHelp" 
-                                            rows={6} 
-                                            placeholder="Enter a street" 
-                                        />
-                                        {errors.street && touched.street ? (
-                                            <><small id="streetHelp" className="form-text text-danger">{errors.street}</small><br /></>
-                                        ) : null}
-                                        <small id="streetHelp" className="form-text text-muted">Location of restaurant.</small>
-                                    </div>
-                                    
-                                    {/* DESCRIPTION */}
-                                    <div className="form-group">
-                                        <label>Description</label>
-                                        <Field 
-                                            type="text" 
-                                            className="form-control" 
-                                            name="description" 
-                                            aria-describedby="descriptionHelp" 
-                                            rows={6} 
-                                            placeholder="Enter a description" 
-                                            as={'textarea'}
-                                        />
-                                        {errors.description && touched.description ? (
-                                            <><small id="descriptionHelp" className="form-text text-danger">{errors.description}</small><br /></>
-                                        ) : null}
-                                        <small id="descriptionHelp" className="form-text text-muted">About company.</small>
-                                    </div>
+                                            {/* STREET */}
+                                            <div className="form-group">
+                                                <label>Street</label>
+                                                <Field 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    name="street" 
+                                                    aria-describedby="streetHelp" 
+                                                    rows={6} 
+                                                    placeholder="Enter a street" 
+                                                />
+                                                {errors.street && touched.street ? (
+                                                    <><small id="streetHelp" className="form-text text-danger">{errors.street}</small><br /></>
+                                                ) : null}
+                                                <small id="streetHelp" className="form-text text-muted">Location of restaurant.</small>
+                                            </div>
+                                            
+                                            {/* DESCRIPTION */}
+                                            <div className="form-group">
+                                                <label>Description</label>
+                                                <Field 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    name="description" 
+                                                    aria-describedby="descriptionHelp" 
+                                                    rows={6} 
+                                                    placeholder="Enter a description" 
+                                                    as={'textarea'}
+                                                />
+                                                {errors.description && touched.description ? (
+                                                    <><small id="descriptionHelp" className="form-text text-danger">{errors.description}</small><br /></>
+                                                ) : null}
+                                                <small id="descriptionHelp" className="form-text text-muted">About company.</small>
+                                            </div>
 
-                                    {/* {'Is submitting: ' + isSubmitting}<br />
-                                    {'Is valid: ' + isValid} <br />
-                                    {'Is dirty: ' + dirty} <br />
-                                    { 'Errors: ' + JSON.stringify(errors) } */}
-                                </div>
+                                            {/* {'Is submitting: ' + isSubmitting}<br />
+                                            {'Is valid: ' + isValid} <br />
+                                            {'Is dirty: ' + dirty} <br />
+                                            { 'Errors: ' + JSON.stringify(errors) } */}
+                                        </div>
 
-                                {/* USER SECTION */}
-                                <div className="col-md-12 p-5 company-section-right mt-2 border-top">
-                                    <h3>Admin info</h3>
-                                </div>
-                                <div className="col-md-6 ps-5 pt-2 pe-5 pb-2 company-section-left border-end">
+                                        {/* USER SECTION */}
+                                        <div className="col-md-12 p-5 company-section-right mt-2 border-top">
+                                            <h3>Admin info</h3>
+                                        </div>
+                                        <div className="col-md-6 ps-5 pt-2 pe-5 pb-2 company-section-left border-end">
 
-                                    {/* FIRST NAME */}
-                                    <div className="form-group">
-                                        <label>First name</label>
-                                        <Field 
-                                            name="first_name" 
-                                            className="form-control" 
-                                            id="first_name" 
-                                            aria-describedby="firstNameHelp" 
-                                            placeholder="Enter first name"
-                                        />
-                                        {errors.first_name && touched.first_name ? (
-                                            <><small id="firstNameHelp" className="form-text text-danger">{errors.first_name}</small><br /></>
-                                        ) : null}
-                                        {/* <small id="phoneHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
-                                    </div>
+                                            {/* FIRST NAME */}
+                                            <div className="form-group">
+                                                <label>First name</label>
+                                                <Field 
+                                                    name="first_name" 
+                                                    className="form-control" 
+                                                    id="first_name" 
+                                                    aria-describedby="firstNameHelp" 
+                                                    placeholder="Enter first name"
+                                                />
+                                                {errors.first_name && touched.first_name ? (
+                                                    <><small id="firstNameHelp" className="form-text text-danger">{errors.first_name}</small><br /></>
+                                                ) : null}
+                                                {/* <small id="phoneHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
+                                            </div>
 
-                                    {/* LAST NAME */}
-                                    <div className="form-group">
-                                        <label>Last name</label>
-                                        <Field 
-                                            name="last_name" 
-                                            className="form-control" 
-                                            id="last_name" 
-                                            aria-describedby="lastNameHelp" 
-                                            placeholder="Enter last name"
-                                        />
-                                        {errors.last_name && touched.last_name ? (
-                                            <><small id="lastNameHelp" className="form-text text-danger">{errors.last_name}</small><br /></>
-                                        ) : null}
-                                        {/* <small id="phoneHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
-                                    </div>
-                                </div>
+                                            {/* LAST NAME */}
+                                            <div className="form-group">
+                                                <label>Last name</label>
+                                                <Field 
+                                                    name="last_name" 
+                                                    className="form-control" 
+                                                    id="last_name" 
+                                                    aria-describedby="lastNameHelp" 
+                                                    placeholder="Enter last name"
+                                                />
+                                                {errors.last_name && touched.last_name ? (
+                                                    <><small id="lastNameHelp" className="form-text text-danger">{errors.last_name}</small><br /></>
+                                                ) : null}
+                                                {/* <small id="phoneHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
+                                            </div>
+                                        </div>
 
-                                <div className="col-md-6 ps-5 pt-2 pe-5 pb-2 company-section-left border-end">
-                                    {/* USERNAME */}
-                                    <div className="form-group">
-                                        <label>Username</label>
-                                        <Field 
-                                            name="username" 
-                                            className="form-control" 
-                                            id="username" 
-                                            aria-describedby="usernameHelp" 
-                                            placeholder="Enter username"
-                                        />
-                                        <small id="usernameHelp" className="form-text text-muted"><b style={{fontWeight: 800}}>_admin</b> will be concatenated to username!</small>
-                                        {errors.username && touched.username ? (
-                                            <><small id="usernameHelp" className="form-text text-danger">{errors.username}</small><br /></>
-                                        ) : null}
-                                    </div>
+                                        <div className="col-md-6 ps-5 pt-2 pe-5 pb-2 company-section-left border-end">
+                                            {/* USERNAME */}
+                                            <div className="form-group">
+                                                <label>Username</label>
+                                                <Field 
+                                                    name="username" 
+                                                    className="form-control" 
+                                                    id="username" 
+                                                    aria-describedby="usernameHelp" 
+                                                    placeholder="Enter username"
+                                                />
+                                                <small id="usernameHelp" className="form-text text-muted"><b style={{fontWeight: 800}}>_admin</b> will be concatenated to username!</small>
+                                                {errors.username && touched.username ? (
+                                                    <><small id="usernameHelp" className="form-text text-danger">{errors.username}</small><br /></>
+                                                ) : null}
+                                            </div>
 
-                                    {/* EMAIL */}
-                                    <div className="form-group">
-                                        <label>Email</label>
-                                        <Field 
-                                            name="email" 
-                                            className="form-control" 
-                                            id="email" 
-                                            aria-describedby="emailHelp" 
-                                            placeholder="Enter username"
-                                            ref={this.emailRef}
-                                        />
-                                        {errors.email && touched.email ? (
-                                            <><small id="emailHelp" className="form-text text-danger">{errors.email}</small><br /></>
-                                        ) : null}
-                                        {/* <small id="phoneHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
-                                    </div>
+                                            {/* EMAIL */}
+                                            <div className="form-group">
+                                                <label>Email</label>
+                                                <Field 
+                                                    name="email" 
+                                                    className="form-control" 
+                                                    id="email" 
+                                                    aria-describedby="emailHelp" 
+                                                    placeholder="Enter username"
+                                                    ref={this.emailRef}
+                                                />
+                                                {errors.email && touched.email ? (
+                                                    <><small id="emailHelp" className="form-text text-danger">{errors.email}</small><br /></>
+                                                ) : null}
+                                                {/* <small id="phoneHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
+                                            </div>
 
-                                    {'Is submitting: ' + isSubmitting}<br />
-                                    {'Is valid: ' + isValid} <br />
-                                    {'Is dirty: ' + dirty} <br />
-                                    { 'Errors: ' + JSON.stringify(errors) }
-                                    <div className="controls">
-                                        <button 
-                                            type="submit" 
-                                            className="submit" 
-                                            disabled={isSubmitting || !isValid || !dirty}>
-                                            <FaSave />
-                                        </button>
+                                            {/* {'Is submitting: ' + isSubmitting}<br />
+                                            {'Is valid: ' + isValid} <br />
+                                            {'Is dirty: ' + dirty} <br />
+                                            { 'Errors: ' + JSON.stringify(errors) } */}
+                                            {/* <div className="controls">
+                                                <button 
+                                                    type="submit" 
+                                                    className="submit" 
+                                                    disabled={isSubmitting || !isValid || !dirty}>
+                                                    <FaSave />
+                                                </button>
+                                            </div> */}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+                            {/* FIXED STICKY FOOTER */}
+                            <div className="modal-actions-footer">
+                                <button 
+                                    className="submit btn btn-primary btn-submit-save" 
+                                    disabled={isSubmitting || !isValid || !dirty}
+                                >
+                                    <FaSave />
+                                </button>
+                            </div>
                     </Form>
                     )}
                     </Formik>
-                </div>
+                {/* </div> */}
             </Modal>   
         )
     }
@@ -720,9 +736,10 @@ class CreateCompany extends React.Component<IProps, IState>
             this.closeModal();
             const data: CompanyResponseItem = response.data as CompanyResponseItem;
             this.props.addNewCompanyItem(data.item);
+            showToast.success('Company created successfully');
         }
         else {
-            alert('Unexpected error occured');
+            showToast.error('There\'s problem creating company. Try again later')
         }
     }
 }

@@ -79,6 +79,31 @@ div.loading > *:not(.main-loader) {
     background: linear-gradient(135deg, #ffffff, #f8f9fa);
 }
 
+.toast-container {
+    .toast {
+        padding: 20px;
+    }
+}
+/* Fix inner padding and layout alignment */
+.Toastify__toast-body {
+  padding: 12px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important; /* Space between icon and text */
+}
+
+/* Ensure text doesn't overflow or clip */
+.Toastify__toast-body > div:last-child {
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* Fix close button vertical position */
+.Toastify__close-button {
+  align-self: flex-start !important;
+  margin-top: 4px;
+}
+
 // .card-soft {
 //     transition: all 0.2s ease;
 // }

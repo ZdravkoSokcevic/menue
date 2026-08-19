@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use JsonException;
 
@@ -14,8 +15,8 @@ class IngridientsEditRequest extends FormRequest
     {
         $user = auth('sanctum')->user();
         return !is_null($user) && (
-            $user->role === 'admin' || 
-            $user->role === 'agent'
+            $user->role === User::ADMIN_ROLE ||
+            $user->role === User::AGENT_ROLE
         );
     }
 

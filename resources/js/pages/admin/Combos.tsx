@@ -14,6 +14,7 @@ import { ICombo, IComboItem, TCombos } from "@/types/Combo";
 import CreateCombo from "@/components/combos/CreateCombo";
 import CombosAPI from "@/api/CombosAPI";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {};
 interface IState {
@@ -233,11 +234,12 @@ class Combos extends React.Component<IProps, IState> {
                 const newItems: TCombos = this.state.comboItems.filter((item: ICombo, index: number) => item.id != currentItem.id);
                 this.setState({ comboItems: newItems });
                 this.closeDeleteComboModal();
+                showToast.success('Combo deleted successfully');
             }else {
-                alert('Cannot delete combo!');
+                showToast.error('There\'s problem deleting combo. Try again later');
             }
         }else {
-            alert('Cannot delete combo');
+            showToast.error('There\'s problem deleting combo. Try again later');
         }
     }
 

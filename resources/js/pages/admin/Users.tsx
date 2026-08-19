@@ -11,6 +11,9 @@ import { MdDelete } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { GrView } from "react-icons/gr";
 import { Store } from "@/reducers/Store";
+import { ADMIN_ROLE } from "@/types/Roles";
+import { showToast } from "@/helpers/Toast";
+import CreateUser from "@/components/users/CreateUser";
 
 interface IProps {};
 interface IState {
@@ -48,6 +51,7 @@ class Users extends React.Component<IProps, IState>
 
     render(): React.ReactNode {
         return (
+            <>
             <div className="tables-page page" >
                 {/* <Navigation /> */}
 
@@ -71,7 +75,7 @@ class Users extends React.Component<IProps, IState>
                                         <TableCell><b>Id</b></TableCell>
                                         <TableCell><b>Name</b></TableCell>
                                         <TableCell><b>Company</b></TableCell>
-                                        {/* {(this.state.user?.role == 'admin') && <TableCell><b>Controls</b></TableCell>} */}
+                                        {/* {(this.state.user?.role == ADMIN_ROLE) && <TableCell><b>Controls</b></TableCell>} */}
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -84,12 +88,13 @@ class Users extends React.Component<IProps, IState>
                         </TableContainer>
                     </div>
                 </div>
-                {/* <CreateCompanyTable
+            </div>
+                <CreateUser
                     isOpen={this.state.isCreateUserModalOpened} 
                     type="modal" 
                     closeCreateUserModal={this.closeCreateUserModal}
                     addNewUserItem={this.addNewUserItem} 
-                /> */}
+                />
                 <View
                     type="user"
                     currentItem={this.state.currentItem as TComponentProps}
@@ -109,7 +114,7 @@ class Users extends React.Component<IProps, IState>
                     isOpen={this.state.isDeleteUserModalOpened}
                     text={this.state.deleteItemText}
                 />
-            </div>
+                </>
         )
     }
 
@@ -120,7 +125,7 @@ class Users extends React.Component<IProps, IState>
                 <TableCell>{user.first_name}</TableCell>
                 <TableCell>{user.last_name}</TableCell>
                 <TableCell>
-                    {Store.getState().user.user.role == 'admin' && (
+                    {Store.getState().user.user.role == ADMIN_ROLE && (
                         <>
                             <a 
                                 role="button"
@@ -177,11 +182,12 @@ class Users extends React.Component<IProps, IState>
                 const newItems: TUsers = this.state.users.filter((user: TUser, index: number) => user.id != currentItem.id);
                 this.setState({ users: newItems });
                 this.closeDeleteUserModal();
+                showToast.success('User deleted successfully');
             }else {
-                alert('Cannot delete user!');
+                showToast.error('There\'s problem deleting user. Try again later');
             }
         }else {
-            alert('Cannot delete user');
+            showToast.error('There\'s problem deleting user. Try again later');
         }
     }
 

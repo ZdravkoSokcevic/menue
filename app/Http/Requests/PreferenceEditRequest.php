@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PreferenceEditRequest extends FormRequest
@@ -13,7 +14,7 @@ class PreferenceEditRequest extends FormRequest
     {
         // only admin can edit preference
         $user = auth('sanctum')->user();
-        return $user && $user->role === 'admin';
+        return $user && $user->role === User::ADMIN_ROLE;
     }
 
     public function prepareForValidation(): void

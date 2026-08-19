@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AllergenTranslationsUpsertRequest extends FormRequest
@@ -14,8 +15,8 @@ class AllergenTranslationsUpsertRequest extends FormRequest
         $user = auth('sanctum')->user();
         return $user && 
         (
-            $user->role === 'admin' ||
-            $user->role === 'company_admin'
+            $user->role === User::ADMIN_ROLE ||
+            $user->role === User::COMPANY_ADMIN_ROLE
         );
     }
 

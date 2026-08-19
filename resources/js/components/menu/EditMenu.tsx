@@ -1,6 +1,6 @@
 import React, { BaseSyntheticEvent, ChangeEventHandler } from "react";
 import Modal from "react-modal";
-import { Formik, Form, Field, FormikProps, FieldArray, ErrorMessage } from 'formik';
+import { Formik, Form, Field, FormikProps, FieldArray, ErrorMessage, FormikErrors } from 'formik';
 import * as Yup from "yup";
 
 import { FaSave } from "react-icons/fa";
@@ -26,6 +26,7 @@ import { IIngridient, TIngridients, TMenuIngridients } from "@/types/Ingridient"
 import { IPreference, TMenuPreferences, TPreferences } from "@/types/Preference";
 import { GoPlus } from "react-icons/go";
 import { IPrice } from "@/types/Prices";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -345,6 +346,9 @@ class EditMenu extends React.Component<IProps, IState>
         const ingridients: TIngridients = this.props.currentItem.ingridients as TIngridients;
         const extras: TExtras = this.props.currentItem.extras as TExtras;
         const preferences: TPreferences = this.props.currentItem.preferences as TPreferences;
+        const portItem = this.props.currentItem;
+        // debugger;
+        // @ts-expect-error
         const prices: TPrices = this.props.currentItem.portions as TPrices;
         const item = this.props.currentItem;
         console.log(prices);
@@ -545,6 +549,7 @@ class EditMenu extends React.Component<IProps, IState>
                                                     aria-describedby="descriptionHelp" 
                                                     rows={6} 
                                                     placeholder="Enter a description" 
+                                                    as={'textarea'}
                                                 />
                                                 {errors.description && touched.description ? (
                                                     <><small id="descriptionHelp" className="form-text text-danger">{this.formikRef.current?.errors.description}</small><br /></>
@@ -773,9 +778,25 @@ class EditMenu extends React.Component<IProps, IState>
                                                                                 </div>
                                                                             </div>
                                                                             <button className="btn btn-danger mt-2" type="button" onClick={() => arrayHelpers.remove(index)}> - </button>
-                                                                            {errors.prices && <ErrorMessage name={`prices.${index}.name`} component={"div"} />}
-                                                                            {errors.prices && <ErrorMessage name={`prices.${index}.price`} component={"div"} />}
-                                                                            {errors.prices && <ErrorMessage name={`prices.${index}.currency`} component={"div"} />}
+                                                                            {errors.prices?.at(index) && 
+                                                                                <div className="form-group col-md-12 ps-0 pe-0 d-none">
+                                                                                    {(errors.prices.at(index) as FormikErrors<IPortionPrice>).name?.length &&
+                                                                                        <>
+                                                                                            <small id={`errors${index}Help`} className="form-text text-danger">{(errors.prices.at(index) as FormikErrors<IPortionPrice>).name}</small><br />
+                                                                                        </>
+                                                                                    }
+                                                                                    {(errors.prices.at(index) as FormikErrors<IPortionPrice>).portion_size?.length &&
+                                                                                        <>
+                                                                                            <small id={`errors${index}Help`} className="form-text text-danger">{(errors.prices.at(index) as FormikErrors<IPortionPrice>).portion_size}</small><br />
+                                                                                        </>    
+                                                                                    }
+                                                                                    {
+                                                                                        <>
+                                                                                            <small id={`errors${index}Help`} className="form-text text-danger">{(errors.prices.at(index) as FormikErrors<IPortionPrice>).price}</small><br />
+                                                                                        </>
+                                                                                    }
+                                                                                </div>
+                                                                            }
                                                                         </>
 
 
@@ -862,9 +883,11 @@ class EditMenu extends React.Component<IProps, IState>
             const responseData: MenuCreateResponseItem = res.data as MenuCreateResponseItem;
             this.props.editCurrentItem(responseData.item);
             this.closeModal();
+            showToast.success('Menu updated successfully');
         }
         else {
             alert('Unexpected error occured!');
+            showToast.error('There\'s problem updating menu. Try again later');
             // this.closeModal();
         }
     }

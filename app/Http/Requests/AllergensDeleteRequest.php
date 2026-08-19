@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AllergensDeleteRequest extends FormRequest
@@ -13,7 +14,7 @@ class AllergensDeleteRequest extends FormRequest
     {
         $user = auth('sanctum')->user();
         return !is_null($user) &&
-            $user->role === 'admin';
+            $user->role === User::ADMIN_ROLE;
     }
 
     public function prepareForValidation()

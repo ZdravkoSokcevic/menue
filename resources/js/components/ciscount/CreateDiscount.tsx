@@ -18,6 +18,7 @@ import DiscountsAPI from "@/api/DiscountsAPI";
 import { DayOfWeek, DISCOUNT_TYPE, IDiscount, IDiscountResponseItem } from "@/types/Discount";
 import { IPrice } from "@/types/Prices";
 import AppHelper from "@/helpers/AppHelper";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -797,9 +798,10 @@ class CreateDiscount extends React.Component<IProps, IState>
             this.closeModal();
             const data: IDiscountResponseItem = response.data as IDiscountResponseItem;
             this.props.addNewDiscountItem(data.item);
+            showToast.success('Discount created successfully');
         }
         else {
-            alert('Unexpected error occured');
+            showToast.error('There\'s problem creating discount. Try again later');
         }
     }
 

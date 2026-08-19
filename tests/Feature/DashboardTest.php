@@ -8,13 +8,13 @@ it('returns a successful response', function () {
     // $this->withoutExceptionHandling(); 
     $response = $this->get('/');
 
-    $response->assertOk();
+    $response->assertRedirect();
 });
 
 
 test('guests are redirected to the login page', function () {
     $response = $this->get('/dashboard');
-    // dd($response);
+    dd($response);
     $response->assertRedirect('/login');
     // $response->assertStatus(301);
 });

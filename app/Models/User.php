@@ -86,6 +86,10 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function isUser(): bool {
+        return $this->role === 'user';
+    }
+
     public function isDemo(): bool {
         return $this->role === 'demo';
     }
@@ -103,5 +107,10 @@ class User extends Authenticatable
     public function companies(): HasMany
     {
         return $this->hasMany(Company::class, 'creator_id', 'id');
+    }
+
+    public static function getFillableFields()
+    {
+        return (new static)->getFillable();
     }
 }

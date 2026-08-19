@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import Navigation from "../admin/Navigation";
 import TUser from "@/types/TUser";
 import { IoArrowRedoCircle } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
@@ -26,6 +25,7 @@ import { TComponentProps } from "@/types/TComponentProps";
 import Edit from "@/components/Edit";
 import Delete from "@/components/Delete";
 import { MdDelete } from "react-icons/md";
+import { ADMIN_ROLE } from "@/types/Roles";
 
 interface IProps {
     animationRefreshKey?: number
@@ -129,7 +129,7 @@ class Companies extends React.Component<IProps, IState>
                                         <TableCell><b>Email</b></TableCell>
                                         <TableCell><b>Description</b></TableCell>
                                         <TableCell><b>Phone</b></TableCell>
-                                        {(this.state.user?.role == 'admin') && <TableCell><b>Controls</b></TableCell>}
+                                        {(this.state.user?.role == ADMIN_ROLE) && <TableCell><b>Controls</b></TableCell>}
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -190,7 +190,7 @@ class Companies extends React.Component<IProps, IState>
                 <TableCell className="col-sm-5">{company.description}</TableCell>
                 <TableCell>{company.phone}</TableCell>
                 <TableCell>
-                    {this.state.user?.role == 'admin' && (
+                    {this.state.user?.role == ADMIN_ROLE && (
                         <>
                             <a 
                                 role="button"

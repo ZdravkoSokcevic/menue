@@ -12,6 +12,7 @@ import CategoriesAPI from "@/api/CategoriesAPI";
 import { Store } from "@/reducers/Store";
 import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import { ICategoriesResponseItem, ICategory } from "@/types/Categories";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -303,9 +304,10 @@ class CreateCategory extends React.Component<IProps, IState>
             this.closeModal();
             const data: ICategoriesResponseItem = response.data as ICategoriesResponseItem;
             this.props.addNewCategoryItem(data.item);
+            showToast.success('Category created successfully');
         }
         else {
-            alert('Unexpected error occured');
+            showToast.error('There\'s problem creating category. Try again later');
         }
     }
 }

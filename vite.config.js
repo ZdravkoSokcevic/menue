@@ -68,11 +68,11 @@ export default defineConfig({
             ignored: ['!**/*.js', '!**/*.ts'],
         },
         // host: 'localhost',
-        host: true, // Tells Vite to listen on all local network addresses
+        // host: true, // Tells Vite to listen on all local network addresses
         // // strictPort: true,
-        port: 8080,
+        // port: 8080,
         hmr: {
-            host: 'localhost',
+            // host: 'localhost',
             // port: 8080
         }
     },

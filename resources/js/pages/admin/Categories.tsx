@@ -18,6 +18,7 @@ import Delete from "@/components/Delete";
 import CreateCategory from "@/components/categories/CreateCategory";
 import { Store } from "@/reducers/Store";
 import Translations from "@/components/Translations";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {};
 interface IState {
@@ -203,11 +204,12 @@ class Categories extends React.Component<IProps, IState> {
                 const newItems: Array<ICategory> = this.state.categories.filter((item: ICategory, index: number) => item.id != currentItem.id);
                 this.setState({ categories: newItems });
                 this.closeDeleteCategoryModal();
+                showToast.success('Category deleted successfully');
             }else {
-                alert('Cannot delete category!');
+                showToast.error('There\'s problem deleting category. Try again later');
             }
         }else {
-            alert('Cannot delete category');
+            showToast.error('There\'s problem deleting category. Try again later');
         }
     }
 

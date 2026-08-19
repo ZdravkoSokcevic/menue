@@ -20,6 +20,7 @@ import { IIngridient, TIngridients } from "@/types/Ingridient";
 import CreateIngridient from "@/components/ingridient/CreateIngridient";
 import IngridientsAPI from "@/api/IngridientsAPI";
 import Translations from "@/components/Translations";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {};
 interface IState {
@@ -203,11 +204,12 @@ class Ingridients extends React.Component<IProps, IState> {
                 const newItems: Array<IIngridient> = this.state.ingridients.filter((item: IIngridient, index: number) => item.id != currentItem.id);
                 this.setState({ ingridients: newItems });
                 this.closeDeleteIngridientModal();
+                showToast.success('Ingridient deleted successfully');
             }else {
-                alert('Cannot delete allergen!');
+                showToast.error('There\'s problem deleting ingridient. Try again later');
             }
         }else {
-            alert('Cannot delete allergen');
+            showToast.error('There\'s problem deleting ingridient. Try again later');
         }
     }
 

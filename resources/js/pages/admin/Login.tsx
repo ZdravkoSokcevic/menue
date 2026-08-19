@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
 import SimpleReactValidator from 'simple-react-validator';
-import '../../../css/components/Login.css'; // Add this file for styles
+import '../../../sass/login.scss'; // Add this file for styles
 import LoginAPI from '../../api/Login';
 import { useNavigate } from 'react-router-dom';
 import TUser from '@/types/TUser';
+import { ADMIN_ROLE } from '@/types/Roles';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -57,11 +58,13 @@ const Login = () => {
                     // store access token
                     localStorage.setItem('accessToken', success.access_token)
                     localStorage.setItem('user', JSON.stringify(success.user));
-                    if(u.role == 'admin')
+                    if(u.role == ADMIN_ROLE)
                         navigate('/admin');
                     else navigate('/home');
                     setKey(Math.random());
 
+                }else {
+                    alert(success);
                 }
             }catch(e) {
                 console.error(e);

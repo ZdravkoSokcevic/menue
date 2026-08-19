@@ -24,7 +24,9 @@ import EditPreference from "./preferences/EditPreference";
 import EditDiscount from "./ciscount/EditDiscount";
 import { IDiscount } from "@/types/Discount";
 import EditCombo from './combos/EditCombo';
-import { ICombo } from "@types/Combo";
+import { ICombo } from "@/types/Combo";
+import EditUser from "./users/EditUser";
+import TUser from "@/types/TUser";
 
 interface IProps {
     isOpen?: boolean;
@@ -126,6 +128,12 @@ class Edit extends React.Component<IProps & WithRouterProps, IState>
                         currentItem={this.props.currentItem as ICombo}
                         closeModal={this.closeModal}
                         editCurrentItem={this.props.editCurrentItem as Function}
+                    />}
+                    {this.props.type == 'user' && <EditUser 
+                        type="modal"
+                        currentUser={this.props.currentItem as TUser}
+                        closeCreateUserModal={this.closeModal}
+                        editCurrentUser={this.props.editCurrentItem as Function}
                     />}
                 </ModalOrPage>
             </>

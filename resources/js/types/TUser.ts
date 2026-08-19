@@ -1,3 +1,4 @@
+import { TCompany } from "./TCompanies";
 
 interface TUser {
     id: string;
@@ -9,6 +10,8 @@ interface TUser {
     role?: string;
     email?: string;
     password?: string;
+    company?: TCompany;
+    accepted_orders_count?: number;
 }
 
 export interface TUserSettings {

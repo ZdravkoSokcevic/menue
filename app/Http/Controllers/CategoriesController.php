@@ -27,13 +27,13 @@ class CategoriesController extends Controller
 
     /**
      * /
-     * @return Collection
+     * @return mixed
      *  Needs to be changed to return tables only for company
      */
-    public function get(Request $r)
+    public function get(Request $r): mixed
     {
         if(Gate::denies('view-categories',  $r)) {
-            return response(null,403);
+            return Response::json(null, 403);
         }
         return $this->categoriesRepository->all($r);
     }

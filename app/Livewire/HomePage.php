@@ -22,7 +22,7 @@ class HomePage extends Component
         $is_local = (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE) !== false);
         // $reader = new DBReader("IPQualityScore-Reputation-IPV4-Database.ipqs");
         // $ip_record = $reader->Fetch($ip);
-        if(!request()->filled('code'))
+        if(!$code)
             return redirect()->route('webpage');
         $record = Code::with('table')->where('code', $code)->first();
         if(!$record)

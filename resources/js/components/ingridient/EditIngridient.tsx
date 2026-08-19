@@ -15,6 +15,7 @@ import { IIngridient } from "@/types/Ingridient";
 import { IOption } from "@/types/App";
 import Select, { GroupBase, MultiValue } from "react-select"
 import IngridientsAPI from "@/api/IngridientsAPI";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -299,9 +300,10 @@ class EditIngridient extends React.Component<IProps, IState>
             const responseData: IResponseItem = res.data as IResponseItem;
             this.props.editCurrentItem(responseData.item);
             this.closeModal();
+            showToast.success('Ingridient saved successfully');
         }
         else {
-            alert('Unexpected error occured!');
+            showToast.error('There\'s problem updating ingridient. Try again later');
             // this.closeModal();
         }
     }

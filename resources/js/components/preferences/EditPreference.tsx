@@ -11,6 +11,7 @@ import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import { IPreference } from "@/types/Preference";
 import { IResponseItem } from "@/types/Api";
 import PreferencesAPI from "@/api/PreferencesAPI";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -188,9 +189,10 @@ class EditPreference extends React.Component<IProps, IState>
             const responseData: IResponseItem = res.data as IResponseItem;
             this.props.editCurrentItem(responseData.item);
             this.closeModal();
+            showToast.success('Preference saved successfully');
         }
         else {
-            alert('Unexpected error occured!');
+            showToast.error('There\'s problem updating preference. Try again later');
         }
     }
 }

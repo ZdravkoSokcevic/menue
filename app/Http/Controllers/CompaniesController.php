@@ -5,6 +5,7 @@ use App\Http\Requests\CompanyCreateRequest;
 use App\Http\Repositories\CompanyRepository;
 use App\Http\Requests\CompanyEditRequest;
 use App\Http\Responses\EditResponse;
+use App\Interfaces\CompanyRepositoryInterface;
 use App\Models\Company;
 
 use App\Models\User;
@@ -17,7 +18,7 @@ use Log;
 
 class CompaniesController extends Controller
 {
-    private CompanyRepository $companyRepository;
+    private CompanyRepositoryInterface $companyRepository;
     private MediaService $mediaService;
     public function __construct(CompanyRepository $cs, MediaService $ms)
     {

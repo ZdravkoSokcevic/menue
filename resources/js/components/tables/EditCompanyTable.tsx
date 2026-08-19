@@ -17,6 +17,7 @@ import { ICategoriesResponseItem } from "@/types/Categories";
 import { IResponseItem } from "@/types/Api";
 import { ICompanyTable } from "@/types/TCompanyTables";
 import TablesAPI from "@/api/TablesAPI";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -245,9 +246,10 @@ class EditCompanyTable extends React.Component<IProps, IState>
             const responseData: IResponseItem<ICompanyTable> = res.data as IResponseItem<ICompanyTable>;
             this.props.editCurrentItem(responseData.item);
             this.closeModal();
+            showToast.success('Table saved successfully');
         }
         else {
-            alert('Unexpected error occured!');
+            showToast.error('There\'s problem updating table. Try again later');
             // this.closeModal();
         }
     }

@@ -58,8 +58,8 @@ class UserCreateRequest extends FormRequest
             'name' => 'string',
             'first_name' => 'required|string|max:60',
             'last_name' => 'required|string|max:60',
-            'username' => 'required|string|min:3|max:60|unique:users,username',
             'email' => 'required|string|email|max:255|unique:users,email',
+            'username' => 'required|string|min:3|max:60|unique:users,username',
             // superadmin, admin, agent, user, demo
             'role' => Rule::in(['superadmin', 'admin', 'agent', 'user', 'demo']),
             'company_id' => 'required|exists:companies,id',

@@ -1,6 +1,6 @@
 import React, { BaseSyntheticEvent, ChangeEventHandler } from "react";
 import Modal from "react-modal";
-import { Formik, Form, Field, FormikProps, FieldArray } from 'formik';
+import { Formik, Form, Field, FormikProps, FieldArray, FormikErrors, ErrorMessage } from 'formik';
 import * as Yup from "yup";
 
 import { FaPlus, FaSave } from "react-icons/fa";
@@ -26,7 +26,8 @@ import { IPreference, TPreferences } from "@/types/Preference";
 import CreatePreference from "../preferences/CreatePreference";
 import PreferencesAPI from "@/api/PreferencesAPI";
 import ExtrasAPI from "@/api/ExtrasAPI";
-import { TPrices } from "@/types/Prices";
+import { IPortionPrice, TPrices } from "@/types/Prices";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -140,8 +141,8 @@ const menuValidationSchema = Yup.object().shape({
         .of(
             Yup.object().shape({
                 name: Yup.string().min(4, 'Name too short!').required('Portion name is required'),
-                portion_size: Yup.number().min(0, 'Min price is 0').max(10000, 'Max price is 10000').required('Portion size is required!'),
-                price: Yup.number().min(0, 'Min price is 0').max(10000, 'Max price is 10000').required('Price is required!')
+                portion_size: Yup.number().typeError('Portion size must be a number').min(0, 'Min price is 0').max(10000, 'Max price is 10000').required('Portion size is required!'),
+                price: Yup.number().typeError('Price must be a number').min(0, 'Min price is 0').max(10000, 'Max price is 10000').required('Price is required!')
             })
         ),
     preferences: Yup.array()
@@ -478,7 +479,8 @@ class CreateMenu extends React.Component<IProps, IState>
                                                     name="description" 
                                                     aria-describedby="descriptionHelp" 
                                                     rows={6} 
-                                                    placeholder="Enter a description" 
+                                                    placeholder="Enter a description"
+                                                    as={'textarea'} 
                                                 />
                                                 {errors.description && touched.description ? (
                                                     <><small id="descriptionHelp" className="form-text text-danger">{errors.description}</small><br /></>
@@ -649,25 +651,6 @@ class CreateMenu extends React.Component<IProps, IState>
                                                     </div>
                                                 );
                                             })}
-
-                                            {/* SHOW / HIDE ENTRIES / ERRORS */}
-                                            <div className="d-none">
-                                                {'Is submitting: ' + isSubmitting}<br />
-                                                {'Is valid: ' + isValid} <br />
-                                                {'Is dirty: ' + dirty} <br />
-                                                <br />
-                                                <span>Errors: </span>
-                                                <small>{JSON.stringify(errors)}</small>
-                                                <br />
-                                                <span>Values:</span><br />
-                                                {Object.entries(values).map(function(value, key) {
-                                                    // eslint-disable-next-line
-                                                    return (<>
-                                                        <small>Key: {key}</small><br />
-                                                        <small>Value: {JSON.stringify(value)}</small><br />
-                                                    </>)
-                                                })}
-                                            </div>
                                         </div>
 
                                         {/* BOTTOM FULL WIDTH */}
@@ -719,7 +702,27 @@ class CreateMenu extends React.Component<IProps, IState>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
+                                                                            
                                                                             <button className="btn btn-danger mt-2" type="button" onClick={() => arrayHelpers.remove(index)}> - </button>
+                                                                            {errors.prices?.at(index) && 
+                                                                                <div className="form-group col-md-12 ps-0 pe-0 d-none">
+                                                                                    {(errors.prices.at(index) as FormikErrors<IPortionPrice>).name?.length &&
+                                                                                        <>
+                                                                                            <small id={`errors${index}Help`} className="form-text text-danger">{(errors.prices.at(index) as FormikErrors<IPortionPrice>).name}</small><br />
+                                                                                        </>
+                                                                                    }
+                                                                                    {(errors.prices.at(index) as FormikErrors<IPortionPrice>).portion_size?.length &&
+                                                                                        <>
+                                                                                            <small id={`errors${index}Help`} className="form-text text-danger">{(errors.prices.at(index) as FormikErrors<IPortionPrice>).portion_size}</small><br />
+                                                                                        </>    
+                                                                                    }
+                                                                                    {
+                                                                                        <>
+                                                                                            <small id={`errors${index}Help`} className="form-text text-danger">{(errors.prices.at(index) as FormikErrors<IPortionPrice>).price}</small><br />
+                                                                                        </>
+                                                                                    }
+                                                                                </div>
+                                                                            }
                                                                         </>
 
 
@@ -730,6 +733,8 @@ class CreateMenu extends React.Component<IProps, IState>
                                                                 <></>
 
                                                                 )}
+                                                                <div className="col-12 mt-4">
+
                                                                     <button 
                                                                         type="button"
                                                                         onClick={() => {
@@ -738,18 +743,38 @@ class CreateMenu extends React.Component<IProps, IState>
                                                                             // debugger;
                                                                             this.refreshFieldset()}}
                                                                             className="btn btn-outline-secondary w-100 py-2"
-                                                                        >
+                                                                            >
                                                                         <GoPlus />
                                                                     {/* show this when user has removed all friends from the list */}
 
-                                                                    Add a portion
+                                                                        Add a portion
 
-                                                                </button>
+                                                                    </button>
+                                                                </div>
                                                             </>
                                                         )}
                                                     />
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        {/* SHOW / HIDE ENTRIES / ERRORS */}
+                                        <div className="">
+                                            {'Is submitting: ' + isSubmitting}<br />
+                                            {'Is valid: ' + isValid} <br />
+                                            {'Is dirty: ' + dirty} <br />
+                                            <br />
+                                            <span>Errors: </span>
+                                            <small>{JSON.stringify(errors)}</small>
+                                            <br />
+                                            <span>Values:</span><br />
+                                            {Object.entries(values).map(function(value, key) {
+                                                // eslint-disable-next-line
+                                                return (<>
+                                                    <small>Key: {key}</small><br />
+                                                    <small>Value: {JSON.stringify(value)}</small><br />
+                                                </>)
+                                            })}
                                         </div>
                                     </div>
                                 </div>
@@ -819,9 +844,11 @@ class CreateMenu extends React.Component<IProps, IState>
             const it: TMenu = data.item;
             it.new = true;
             this.props.addNewMenuItem(it);
+            showToast.success('Menu created successfully');
         }
         else {
-            alert('Unexpected error occured');
+            // alert('Unexpected error occured');
+            showToast.error('There\'s problem creating menu. Try again later');
         }
     }
 

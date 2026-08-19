@@ -20,6 +20,7 @@ import { IPortionPrice, IPrice } from "@/types/Prices";
 import AppHelper from "@/helpers/AppHelper";
 import { ICombo, IComboItem, IComboSelection, ICombosResponseItem, TArrayOfComboSelection, TArrayOfComboSimpleSelections, TComboItems, TCombos } from "@/types/Combo";
 import CombosAPI from "@/api/CombosAPI";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -909,9 +910,10 @@ class EditCombo extends React.Component<IProps, IState>
             this.closeModal();
             const data: ICombosResponseItem = response.data as ICombosResponseItem;
             this.props.editCurrentItem(data.item);
+            showToast.success('Combo saved successfully');
         }
         else {
-            alert('Unexpected error occured');
+            showToast.error('There\'s problem updating combo. Try again later');
         }
     }
 

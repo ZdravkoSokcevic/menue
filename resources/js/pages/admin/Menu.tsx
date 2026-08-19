@@ -17,6 +17,7 @@ import Edit from "@/components/Edit";
 import Delete from "@/components/Delete";
 import MenuTranslation from "@/components/menu/MenuTranslation";
 import Translations from "@/components/Translations";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {};
 interface IState {
@@ -81,7 +82,7 @@ class Menu extends React.Component<IProps, IState> {
                                     <div className="item-info menu-info">
                                         <div className="card-actions">
                                             {item.description && (
-                                                <p className="hover-description">{item.description}</p>
+                                                <p className="hover-description text-truncate" style={{maxWidth: '250px'}}>{item.description}</p>
                                             )}
                                             {!item.portions?.length && <span className="badge bg-danger">
                                                 No price
@@ -212,11 +213,12 @@ class Menu extends React.Component<IProps, IState> {
                 const newItems: Array<TMenu> = this.state.menuItems.filter((item: TMenu, index: number) => item.id != currentItem.id);
                 this.setState({ menuItems: newItems });
                 this.closeDeleteMenuModal();
+                showToast.success('Menu deleted successfully');
             }else {
-                alert('Cannot delete menu!');
+                showToast.error('Cannot delete menu');
             }
         }else {
-            alert('Cannot delete menu');
+            showToast.error('Cannot delete menu');
         }
     }
 

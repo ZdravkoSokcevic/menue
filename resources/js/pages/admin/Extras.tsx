@@ -19,6 +19,8 @@ import CreateExtra from "@/components/extra/CreateExtra";
 import { FaRegSquarePlus } from "react-icons/fa6";
 import { GoPlus } from "react-icons/go";
 import Translations from "@/components/Translations";
+import { ADMIN_ROLE } from "@/types/Roles";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {};
 interface IState {
@@ -83,7 +85,7 @@ class Extras extends React.Component<IProps, IState> {
                                         <TableCell><b>Id</b></TableCell>
                                         <TableCell><b>Name</b></TableCell>
                                         <TableCell><b>Description</b></TableCell>
-                                        {(this.state.user?.role == 'admin') && <TableCell><b>Controls</b></TableCell>}
+                                        {(this.state.user?.role == ADMIN_ROLE) && <TableCell><b>Controls</b></TableCell>}
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -95,7 +97,7 @@ class Extras extends React.Component<IProps, IState> {
                                                 <TableCell>{extra.name}</TableCell>
                                                 <TableCell>{extra.description}</TableCell>
                                                 <TableCell>
-                                                    {this.state.user?.role == 'admin' && (
+                                                    {this.state.user?.role == ADMIN_ROLE && (
                                                         <>
                                                             <a 
                                                                 role="button"
@@ -215,11 +217,12 @@ class Extras extends React.Component<IProps, IState> {
                 const newItems: Array<IExtra> = this.state.extras.filter((item: IExtra, index: number) => item.id != currentItem.id);
                 this.setState({ extras: newItems });
                 this.closeDeleteExtrasModal();
+                showToast.success('Extra deleted successfully');
             }else {
-                alert('Cannot delete extra!');
+                showToast.error('There\'s problem deleting extra. Try again later');
             }
         }else {
-            alert('Cannot delete extra');
+            showToast.error('There\'s problem deleting extra. Try again later');
         }
     }
 

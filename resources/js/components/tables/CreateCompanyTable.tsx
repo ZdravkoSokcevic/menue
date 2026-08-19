@@ -15,6 +15,7 @@ import { ICategoriesResponseItem, ICategory } from "@/types/Categories";
 import TablesAPI from "@/api/TablesAPI";
 import { ICompanyTable } from "@/types/TCompanyTables";
 import { IResponseItem } from "@/types/Api";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -238,9 +239,10 @@ class CreateCompanyTable extends React.Component<IProps, IState>
             this.closeModal();
             const data: IResponseItem<ICompanyTable> = response.data as IResponseItem;
             this.props.addNewCategoryTableItem(data.item);
+            showToast.success('Table created successfully');
         }
         else {
-            alert('Unexpected error occured');
+            showToast.error('There\'s problem creating table. Try again later');
         }
     }
 }

@@ -12,6 +12,7 @@ import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import { IExtra } from "@/types/Extra";
 import { IResponseItem } from "@/types/Api";
 import ExtrasAPI from "@/api/ExtrasAPI";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -194,9 +195,10 @@ class EditExtra extends React.Component<IProps, IState>
             const responseData: IResponseItem = res.data as IResponseItem;
             this.props.editCurrentItem(responseData.item);
             this.closeModal();
+            showToast.success('Extra saved successfully');
         }
         else {
-            alert('Unexpected error occured!');
+            showToast.error('There\'s problem updating extra. Try again later');
         }
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -12,7 +13,7 @@ class CombosCreateRequest extends FormRequest
     public function authorize(): bool
     {
         $user = auth('sanctum')->user();
-        return $user && $user->role === 'admin';
+        return $user && $user->role === User::ADMIN_ROLE;
     }
 
     protected function prepareForValidation()

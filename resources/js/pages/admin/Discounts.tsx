@@ -20,6 +20,7 @@ import Translations from "@/components/Translations";
 import CreateDiscount from "@/components/ciscount/CreateDiscount";
 import { IDiscount, TDiscounts } from "@/types/Discount";
 import DiscountsAPI from "@/api/DiscountsAPI";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {};
 interface IState {
@@ -224,11 +225,12 @@ class Discounts extends React.Component<IProps, IState> {
                 const newItems: TDiscounts = this.state.discountItems.filter((item: IDiscount, index: number) => item.id != currentItem.id);
                 this.setState({ discountItems: newItems });
                 this.closeDeleteDiscountModal();
+                showToast.success('Discount deleted successfully');
             }else {
-                alert('Cannot delete discount!');
+                showToast.error('There\'s problem deleting discount. Try again later');
             }
         }else {
-            alert('Cannot delete discount');
+            showToast.error('There\'s problem deleting discount. Try again later');
         }
     }
 

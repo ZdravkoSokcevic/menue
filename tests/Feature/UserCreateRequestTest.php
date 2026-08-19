@@ -5,7 +5,7 @@ use App\Models\User;
 
 test('validation for valid data', function () {
     $request = new UserCreateRequest();
-    $loggedIn = User::where('role', 'admin')->first();
+    $loggedIn = User::where('role', User::ADMIN_ROLE)->first();
     dd($loggedIn);
     $data = [
         'name' => 'Test user',
@@ -28,7 +28,7 @@ test('validation for valid data', function () {
 
 test('authorization when company admin tries to create superadmin', function () {
     $request = new UserCreateRequest();
-    $loggedIn = User::where('role', 'admin')->first();
+    $loggedIn = User::where('role', User::ADMIN_ROLE)->first();
     $data = [
         'name' => 'Test user',
         'fist_name' => 'Test',

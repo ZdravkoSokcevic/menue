@@ -36,6 +36,8 @@ import { IOrder, OrderItem, TOrders } from "@/types/Order";
 import OrderAPI from "@/api/OrderAPI";
 import "react-time-ago/locale/en"
 import ReactTimeAgo from "react-time-ago"
+import { ADMIN_ROLE } from "@/types/Roles";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     animationRefreshKey?: number
@@ -205,7 +207,7 @@ class Companies extends React.Component<IProps, IState>
                                         <TableCell className="w-25"><b>Table</b></TableCell>
                                         <TableCell className="w-25"><b>Number of items:</b></TableCell>
                                         <TableCell className="w-20"><b>Ago:</b></TableCell>
-                                        {(this.state.user?.role == 'admin') && <TableCell className="text-end"><b>Controls</b></TableCell>}
+                                        {(this.state.user?.role == ADMIN_ROLE) && <TableCell className="text-end"><b>Controls</b></TableCell>}
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -247,7 +249,7 @@ class Companies extends React.Component<IProps, IState>
                     <TableCell>{this.getOrderItemsLength(order)}</TableCell>
                     <TableCell><ReactTimeAgo date={order.created_at} locale="en"/></TableCell>
                     <TableCell className="text-end">
-                        {this.state.user?.role == 'admin' && (
+                        {this.state.user?.role == ADMIN_ROLE && (
                             <>
                                 {(order.status == '0') ? 
                                     <button 
@@ -672,11 +674,12 @@ class Companies extends React.Component<IProps, IState>
                 const newItems: Array<IOrder> = this.state.orders.filter((item: IOrder, index: number) => item.id != currentItem.id);
                 this.setState({ orders: newItems });
                 this.closeDeleteOrderModal();
+                showToast.error('Order deleted successfully');
             }else {
-                alert('Cannot delete order!');
+                showToast.error('There\'s problem deleting order. Try again later');
             }
         }else {
-            alert('Cannot delete order');
+            showToast.error('There\'s problem deleting order. Try again later');
         }
     }
 

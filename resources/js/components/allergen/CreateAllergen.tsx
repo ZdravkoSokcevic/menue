@@ -13,6 +13,7 @@ import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import AllergensAPI from "@/api/AllergensAPI";
 import { IAllergen } from "@/types/Allergen";
 import { IResponseItem } from "@/types/Api";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -291,9 +292,10 @@ class CreateAllergen extends React.Component<IProps, IState>
             this.closeModal();
             const data: IResponseItem = response.data as IResponseItem;
             this.props.addNewAllergenItem(data.item);
+            showToast.success('Allergen created successfully');
         }
         else {
-            alert('Unexpected error occured');
+            showToast.error('There\'s problem creating allergen. Try again later');
         }
     }
 }

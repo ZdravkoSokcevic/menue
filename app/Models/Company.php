@@ -63,7 +63,7 @@ class Company extends BaseModel
 
     public function admin(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'creator_id', 'id')->where('users.role', 'admin');
+        return $this->belongsTo(User::class, 'creator_id', 'id')->where('users.role', User::ADMIN_ROLE);
     }
 
     public function menu(): HasMany
@@ -104,7 +104,7 @@ class Company extends BaseModel
         $user->first_name = $first_name;
         $user->last_name = $last_name;
         $user->username = strtolower($this->name . '_' . 'admin');
-        $user->role = 'admin';
+        $user->role = User::ADMIN_ROLE;
         $user->company_id = $this->id;
         try {
             $user->save();

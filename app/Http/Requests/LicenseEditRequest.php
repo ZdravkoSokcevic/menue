@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LicenseEditRequest extends FormRequest
@@ -12,7 +13,7 @@ class LicenseEditRequest extends FormRequest
     public function authorize(): bool
     {
         $user = auth('sanctum')->user();
-        return $user && $user->role === 'admin';
+        return $user && $user->role === User::ADMIN_ROLE;
     }
 
     public function prepareForValidation(): void

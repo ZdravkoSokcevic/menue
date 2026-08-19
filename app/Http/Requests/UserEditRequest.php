@@ -57,8 +57,8 @@ class UserEditRequest extends FormRequest
             'name' => 'string',
             'first_name' => 'string|max:60',
             'last_name' => 'string|max:60',
-            'username' => 'string|min:3|max:60|unique:users,username',
-            'email' => 'string|email|max:255|unique:users,email',
+            'username' => 'string|min:3|max:60',
+            'email' => 'string|email|max:255',
             // superadmin, admin, agent, user, demo
             'role' => Rule::in(['superadmin', 'admin', 'agent', 'user', 'demo']),
             'company_id' => 'exists:companies,id',

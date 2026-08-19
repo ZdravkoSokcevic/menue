@@ -11,6 +11,7 @@ import { disableLoading, enableLoading } from "@/reducers/appSlice";
 import { IResponseItem } from "@/types/Api";
 import PreferencesAPI from "@/api/PreferencesAPI";
 import { IPreference } from "@/types/Preference";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -181,9 +182,10 @@ class CreatePreference extends React.Component<IProps, IState>
             this.closeModal();
             const data: IResponseItem = response.data as IResponseItem;
             this.props.addNewPreferenceItem(data.item);
+            showToast.error('Preference created successfully');
         }
         else {
-            alert('Unexpected error occured');
+            showToast.error('There\'s problem creating preference. Try again later');
         }
     }
 }

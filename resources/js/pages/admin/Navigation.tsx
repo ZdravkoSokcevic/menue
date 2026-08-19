@@ -20,6 +20,7 @@ import { GrRestaurant } from "react-icons/gr";
 import { LiaAllergiesSolid } from "react-icons/lia";
 import { LuCookingPot } from "react-icons/lu";
 import { FaRegSquarePlus } from 'react-icons/fa6';
+import { ADMIN_ROLE } from '@/types/Roles';
 
 
 interface IProps {
@@ -76,7 +77,7 @@ class Navigation extends React.Component<IProps, IState>
 
     // UNSAFE_componentWillReceiveProps() {
     //     let cond = {
-    //         full: this.props.userSettings && this.props.userSettings.user && this.props.userSettings.user.role == 'admin' && this.props.defaultCompany.id != '',
+    //         full: this.props.userSettings && this.props.userSettings.user && this.props.userSettings.user.role == ADMIN_ROLE && this.props.defaultCompany.id != '',
     //         userSett: this.props.userSettings,
     //         defaultCompany: this.props.defaultCompany
     //     }
@@ -95,10 +96,11 @@ class Navigation extends React.Component<IProps, IState>
     isAllowedToRenderCompanies = (): boolean => {
         let {defaultCompany} = this.props;
         const userSettings = this.props.userSettings;
+        // debugger;
         return userSettings && 
             userSettings.isLoggedIn && 
-            userSettings.user.role == 'admin' && 
-            Store.getState().app.defaultCompany?.id == '' 
+            userSettings.user.role == ADMIN_ROLE && 
+            defaultCompany?.id == '' 
             ? true
             : false;
     }
@@ -108,7 +110,7 @@ class Navigation extends React.Component<IProps, IState>
         const userSettings = this.props.userSettings;
         return userSettings && 
             userSettings.isLoggedIn && 
-            userSettings.user.role == 'admin' && 
+            userSettings.user.role == ADMIN_ROLE && 
             Store.getState().app.defaultCompany?.id != '' 
             ? true
             : false;
@@ -120,7 +122,7 @@ class Navigation extends React.Component<IProps, IState>
         const userSettings = this.props.userSettings;
         return userSettings && 
             userSettings.isLoggedIn && 
-            userSettings.user.role == 'admin' && 
+            userSettings.user.role == ADMIN_ROLE && 
             Store.getState().app.defaultCompany?.id == '' 
             ? true
             : false;
@@ -132,7 +134,7 @@ class Navigation extends React.Component<IProps, IState>
         const userSettings = this.props.userSettings;
         return userSettings && 
             userSettings.isLoggedIn && 
-            userSettings.user.role == 'admin' && 
+            userSettings.user.role == ADMIN_ROLE && 
             Store.getState().app.defaultCompany?.id == '' 
             ? true
             : false;
@@ -144,7 +146,7 @@ class Navigation extends React.Component<IProps, IState>
         const userSettings = this.props.userSettings;
         return userSettings && 
             userSettings.isLoggedIn && 
-            userSettings.user.role == 'admin' && 
+            userSettings.user.role == ADMIN_ROLE && 
             Store.getState().app.defaultCompany?.id == '' 
             ? true
             : false;
@@ -155,7 +157,7 @@ class Navigation extends React.Component<IProps, IState>
         const userSettings = this.props.userSettings;
         return userSettings && 
             userSettings.isLoggedIn && 
-            userSettings.user.role == 'admin' && 
+            userSettings.user.role == ADMIN_ROLE && 
             Store.getState().app.defaultCompany?.id == '' 
             ? true
             : false; 

@@ -18,6 +18,7 @@ import IngridientsAPI from "@/api/IngridientsAPI";
 import FormikSearchSelect from "../FormikSelectSearch";
 import Select, { ActionMeta, MultiValue, SingleValue } from 'react-select'
 import { IOption } from "@/types/App";
+import { showToast } from "@/helpers/Toast";
 
 interface IProps {
     // can be page or modal
@@ -258,9 +259,10 @@ class CreateIngridient extends React.Component<IProps, IState>
             this.closeModal();
             const data: IResponseItem = response.data as IResponseItem;
             this.props.addNewIngridientItem(data.item);
+            showToast.success('Ingridient created successfully');
         }
         else {
-            alert('Unexpected error occured');
+            showToast.error('There\'s problem creating ingridient. Try again later');
         }
     }
 }

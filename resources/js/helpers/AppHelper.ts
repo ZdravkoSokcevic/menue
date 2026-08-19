@@ -4,6 +4,7 @@ import Storage from "./Storage";
 import TUser from "@/types/TUser";
 import Api from "@/api/api";
 import { ImageDownloadResponse } from "@/types/Media";
+import { ADMIN_ROLE } from "@/types/Roles";
 
 class AppHelper
 {
@@ -13,7 +14,7 @@ class AppHelper
         const user: TUser = userSettings.user;
         const isLoggedIn: boolean = userSettings.isLoggedIn;
         return isLoggedIn &&
-            user.role === 'admin'
+            user.role === ADMIN_ROLE
     }
 
     static async downloadImage(imageSrc: string): Promise<ImageDownloadResponse>

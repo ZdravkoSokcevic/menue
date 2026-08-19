@@ -3,6 +3,7 @@ import Api from "./api";
 import Storage from "@/helpers/Storage";
 import { AxiosResponse } from "axios";
 import { Store } from "@/reducers/Store";
+import { ADMIN_ROLE } from "@/types/Roles";
 
 class CompaniesAPI extends Api
 {
@@ -48,7 +49,7 @@ class CompaniesAPI extends Api
     static async deleteCompany(id: string)
     {
         const user = Store.getState().user.user;
-        if(!user || !(user.id) || user.role != 'admin')
+        if(!user || !(user.id) || user.role != ADMIN_ROLE)
             return Promise.resolve({ success: false, data: {}, reason: 'Not found' });
         try {
             const res = await this.get(`/api/companies/delete/${id}`, {}, {});
