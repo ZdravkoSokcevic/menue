@@ -4,6 +4,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WebsiteController;
 use App\Livewire\OrdersPage;
+use App\Livewire\WebsitePage;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Livewire\HomePage;
@@ -18,33 +19,39 @@ Route::get('test', function () {
 
 
 
-Route::get('/', HomePage::class)->name('homepage');
+Route::get('/', WebsitePage::class)->name('homepage');
 
-Route::get('/details', DetailsPage::class);
-Route::get('/details/{id}/{code}', DetailsPage::class);
+$baseDomain = parse_url(config('app.url'), PHP_URL_HOST);
+// dd($baseDomain);
 
-// not working with livewire
-// Route::get('/shorts/{code}', '\App\Http\Controllers\HomeController@index');
-Route::get('/shorts/{code}', HomePage::class);
-Route::get('/cart/{code}', CartPage::class);
-Route::get('/cart', CartPage::class);
+// API ROUTES
+Route::domain('app.' . $baseDomain)->group(function() {
+    Route::get('/details', DetailsPage::class);
+    Route::get('/details/{id}/{code}', DetailsPage::class);
+    
+    // not working with livewire
+    // Route::get('/shorts/{code}', '\App\Http\Controllers\HomeController@index');
+    Route::get('/shorts/{code}', HomePage::class);
+    Route::get('/cart/{code}', CartPage::class);
+    Route::get('/cart', CartPage::class);
+    
+    // Route::get('/order/create', [OrderController::class, 'create']);
+    
+    Route::view('/order/{slug}', OrdersPage::class);
+    
+    Route::get('/languages', [LanguageController::class, 'getFrontendLanguages']);
+    
+    Route::get('/webpage', [WebsiteController::class, 'home'])->name('webpage');
+    
+    Route::view('/{url?}', 'app')
+        ->where('url', '^(?!api|shorts|details).*$');
+        // ->except([ 'storage' ]);
+    
+    Route::get('dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->middleware(['auth', 'verified'])->name('dashboard');
+});
 
-// Route::get('/order/create', [OrderController::class, 'create']);
-
-Route::view('/order/{slug}', OrdersPage::class);
-
-Route::get('/languages', [LanguageController::class, 'getFrontendLanguages']);
-
-Route::get('/webpage', [WebsiteController::class, 'home'])->name('webpage');
-
-
-Route::view('/{url?}', 'app')
-    ->where('url', '^(?!api|shorts|details).*$');
-    // ->except([ 'storage' ]);
-
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 
 // require __DIR__.'/settings.php';

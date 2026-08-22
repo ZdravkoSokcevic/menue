@@ -1,7 +1,7 @@
 <div>
     @push('scripts')
         @vite([
-            'resources/sass/homepage/cart.scss'
+            'resources/sass/frontapp/cart.scss'
         ])
         <script>
             window.LaravelData = {

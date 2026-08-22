@@ -11,14 +11,17 @@ export default defineConfig({
             // buildDirectory: 'public/js',
             input: [
                 'resources/sass/app.scss',
-                'resources/sass/homepage/tailwind.css',
-                'resources/sass/homepage/app.scss',
-                'resources/sass/homepage/home.scss',
-                'resources/sass/homepage/details.scss',
-                'resources/sass/homepage/cart.scss',
+                // FRONTAPP ROUTES
+                'resources/sass/frontapp/tailwind.css',
+                'resources/sass/frontapp/app.scss',
+                'resources/sass/frontapp/home.scss',
+                'resources/sass/frontapp/details.scss',
+                'resources/sass/frontapp/cart.scss',
                 'resources/sass/menu.scss',
                 'resources/sass/discounts.scss',
                 'resources/sass/menu_translation.scss',
+                // WEBSITE STYLES
+                'resources/sass/website/app.scss',
                 'resources/js/app.js', // React admin entry
                 'resources/js/svelte/App.js', // Svelte entry
                 'resources/js/libs/alpine.js',
@@ -67,12 +70,13 @@ export default defineConfig({
             // Ignore everything EXCEPT .js and .ts files
             ignored: ['!**/*.js', '!**/*.ts'],
         },
-        // host: 'localhost',
+        cors: true,
+        host: 'menue.com',
         // host: true, // Tells Vite to listen on all local network addresses
         // // strictPort: true,
         // port: 8080,
         hmr: {
-            // host: 'localhost',
+            host: 'menue.com',
             // port: 8080
         }
     },

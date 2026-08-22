@@ -16,12 +16,15 @@ class HomePage extends Component
 
     public $code;
 
-    public function mount($code, Request $r)
+    public function mount($code)
     {
+        $r = request();
         $ip = $r->ip();
         $is_local = (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE) !== false);
         // $reader = new DBReader("IPQualityScore-Reputation-IPV4-Database.ipqs");
         // $ip_record = $reader->Fetch($ip);
+        // $code = $r->input('code');
+        // dd($code);
         if(!$code)
             return redirect()->route('webpage');
         $record = Code::with('table')->where('code', $code)->first();
@@ -92,8 +95,8 @@ class HomePage extends Component
         if($this->menuItems)
             $data['menuItems'] = $this->menuItems;
         $data['page'] = 'home';
-        return view('livewire.home-page')
-            ->layout('layouts.app', $data)
+        return view('livewire.frontapp')
+            ->layout('layouts.frontapp', $data)
             ->with($data);
     }
 };

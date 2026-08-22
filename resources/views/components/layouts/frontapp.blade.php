@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menue</title>
     @vite([
-        'resources/sass/homepage/tailwind.css',
-        'resources/sass/homepage/app.scss'
+        'resources/sass/frontapp/tailwind.css',
+        'resources/sass/frontapp/app.scss'
     ])
     @yield('styles')
     @stack('scripts')

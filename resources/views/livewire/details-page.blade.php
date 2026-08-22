@@ -1,7 +1,7 @@
 <div>
     @push('scripts')
         @vite([
-            'resources/sass/homepage/details.scss'
+            'resources/sass/frontapp/details.scss'
         ])
         <script>
             window.LaravelData = {
