@@ -11,7 +11,9 @@ use App\Interfaces\OrderRepositoryInterface;
 use App\Models\Code;
 use App\Models\MenuExtra;
 use App\Models\Order;
+use Gate;
 use Illuminate\Database\Eloquent\Collection;
+use Request;
 use Response;
 use Str;
 
@@ -24,8 +26,11 @@ class OrderController extends Controller
         $this->orderRepository = $orI;
     }
 
-    public function get(): Collection
+    public function get(Request $r): mixed
     {
+        if(Gate::denies('view-orders',  $r)) {
+            return Response::json(null, 403);
+        }
         return $this->orderRepository->all();
     }
 

@@ -15,7 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('is_vegan');
+            $table->bigInteger('company_id')->unsigned()->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('ingridients', function (Blueprint $table) {
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies');
         });
     }
 

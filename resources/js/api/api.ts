@@ -46,9 +46,15 @@ AxiosApiInstance.interceptors.response.use((response: AxiosResponse<any, any>) =
         // ('/login');
         window.location.href = "/login";
     }else if(error.response && error.response.status === 422) {
-        const errors: {errors: []} = error.response.data as {errors: []};
-        // debugger;
-        toast(error.response.statusText, { type: 'error' });
+        const errors: {errors: Record<string, string[]>} = error.response.data as {errors: Record<string, string[]>};
+        const Err: Record<string, string[]> = errors.errors;
+        Object.entries(Err).forEach(([field, messages]) => {
+            // Loop through the array of messages for this specific field
+            messages.forEach((message: string) => {
+                toast.error(`${message}`);
+            });
+        });
+        // toast(error.response.statusText, { type: 'error' });
     }else if(error.response && error.response.status === 404) {
         toast(error.response.statusText, { type: 'error' });
     }

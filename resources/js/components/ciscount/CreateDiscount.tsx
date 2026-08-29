@@ -757,7 +757,6 @@ class CreateDiscount extends React.Component<IProps, IState>
         // (event as Event).preventDefault();
         // let form = event.target;
         let d = event;
-        debugger;
         let eventStr = ''
         if(event.times) {
             let eventTimes: Array<string> = [];

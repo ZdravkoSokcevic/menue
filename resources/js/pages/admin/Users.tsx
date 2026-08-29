@@ -74,6 +74,7 @@ class Users extends React.Component<IProps, IState>
                                     <TableRow>
                                         <TableCell><b>Id</b></TableCell>
                                         <TableCell><b>Name</b></TableCell>
+                                        <TableCell><b>Email</b></TableCell>
                                         <TableCell><b>Company</b></TableCell>
                                         {/* {(this.state.user?.role == ADMIN_ROLE) && <TableCell><b>Controls</b></TableCell>} */}
                                     </TableRow>
@@ -124,6 +125,7 @@ class Users extends React.Component<IProps, IState>
                 <TableCell>{user.id}</TableCell>
                 <TableCell>{user.first_name}</TableCell>
                 <TableCell>{user.last_name}</TableCell>
+                <TableCell>{user.email}</TableCell>
                 <TableCell>
                     {Store.getState().user.user.role == ADMIN_ROLE && (
                         <>

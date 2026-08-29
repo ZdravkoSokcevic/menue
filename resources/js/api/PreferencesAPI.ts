@@ -8,8 +8,12 @@ class PreferencesAPI extends Api
 {
     static async createPreference(data: IPreference) 
     {
+        let reqData: any = data;
+        let company = Store.getState().app.defaultCompany;
+        if(company)
+            reqData['company_id'] = company.id;
         try {
-            let success: AxiosResponse<IResponseItem> = await this.post('/api/preferences/create', data, {}, true);
+            let success: AxiosResponse<IResponseItem> = await this.post('/api/preferences/create', reqData, {}, true);
             if(success)
                 return Promise.resolve({ success:true, data: success.data });
         }catch(err) {
@@ -19,8 +23,12 @@ class PreferencesAPI extends Api
 
     static async editPreference(data: IPreference) 
     {
+        let reqData: any = data;
+        let company = Store.getState().app.defaultCompany;
+        if(company)
+            reqData['company_id'] = company.id;
         try {
-            const success: AxiosResponse<IResponseItem> = await this.post(`/api/preferences/edit/${data.id}`, data, {}, true);
+            const success: AxiosResponse<IResponseItem> = await this.post(`/api/preferences/edit/${data.id}`, reqData, {}, true);
             if(success)
                 return Promise.resolve({ success:true, data: success.data });
         }catch(err) {

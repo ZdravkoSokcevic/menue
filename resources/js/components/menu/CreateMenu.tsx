@@ -584,13 +584,14 @@ class CreateMenu extends React.Component<IProps, IState>
                                             }
 
                                             {/* EXTRAS */}
+                                            <div className="row border-top mt-3 pt-2 mb-2 align-items-center">
+                                                        <h5 className="col-12">Extras:</h5>
                                             {this.state.extraOpts.map((opt, ind: number) => {
                                                 const index = values.extras.findIndex(p => p.id === opt.id);
                                                 const isChecked = index !== -1;
 
                                                 return (
-                                                    <div key={opt.id} className="row border-top mt-3 pt-2 mb-2 align-items-center">
-                                                        <h5 className="col-12">Extras:</h5>
+                                                    <div key={opt.id} className="row mt-3 pt-2 pb-2 align-items-center">
                                                         {/* CHECKBOX */}
                                                         <div className="col-md-6 form-group">
                                                             <div className="form-check">
@@ -651,11 +652,12 @@ class CreateMenu extends React.Component<IProps, IState>
                                                     </div>
                                                 );
                                             })}
+                                            </div>
                                         </div>
 
                                         {/* BOTTOM FULL WIDTH */}
                                         {/* PORTIONS / PRICES */}
-                                        <div className="col-12 mt-4 pt-3 border-top">
+                                        <div className="col-12 mt-4 pt-3 pb-3 border-top">
                                             <div className="border-top container">
                                                 <div className="row">
 
@@ -759,7 +761,7 @@ class CreateMenu extends React.Component<IProps, IState>
                                         </div>
 
                                         {/* SHOW / HIDE ENTRIES / ERRORS */}
-                                        <div className="">
+                                        <div className="d-none">
                                             {'Is submitting: ' + isSubmitting}<br />
                                             {'Is valid: ' + isValid} <br />
                                             {'Is dirty: ' + dirty} <br />
@@ -823,7 +825,6 @@ class CreateMenu extends React.Component<IProps, IState>
             picture: this.state.imageFile,
             quantity: event.quantity,
             category_id: event.category,
-            company_id: Store.getState().app.defaultCompany?.id,
             prep_time: event.prep_time,
             extras: event.extras,
             preferences: event.preferences,

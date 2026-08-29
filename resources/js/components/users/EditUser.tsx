@@ -310,7 +310,6 @@ class EditUser extends React.Component<IProps, IState>
             username: event.username,
             email: event.email,
             role: event.role,
-            company_id: Store.getState().app.defaultCompany.id,
             id: this.props.currentUser.id
         }
 

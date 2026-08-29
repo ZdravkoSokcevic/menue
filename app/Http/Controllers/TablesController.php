@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Repositories\TableRepository;
 use Illuminate\Http\Response;
+use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,7 +32,7 @@ class TablesController extends Controller
         
     }
 
-    public function get(Request $r): Collection | Response
+    public function get(Request $r): Collection | Response | ResponseFactory
     {
         if(Gate::denies('view-table',  $r)) {
             return response(null,403);

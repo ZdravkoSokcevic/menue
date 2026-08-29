@@ -74,8 +74,8 @@ class View extends React.Component<IProps & WithRouterProps, IState>
                     <div className="view-page">
                         {this.props.type == 'menu' && <ViewMenu currentItem={this.props.currentItem as TMenu} closeModal={this.props.closeModal as Function}/>}
                         {this.props.type == 'category' && <ViewCategory currentItem={this.props.currentItem as TMenu} closeModal={this.props.closeModal as Function}/>}
-                        {this.props.type == 'company' && <ViewCompany currentItem={this.props.currentItem as TCompany} />}
-                        {this.props.type == 'table' && <ViewCompanyTable currentItem={this.props.currentItem as ICompanyTable} />}
+                        {this.props.type == 'company' && <ViewCompany currentItem={this.props.currentItem as TCompany} closeModal={this.props.closeModal as Function} />}
+                        {this.props.type == 'table' && <ViewCompanyTable currentItem={this.props.currentItem as ICompanyTable} closeModal={this.props.closeModal as Function} />}
                         {this.props.type == 'allergen' && <ViewAllergen currentItem={this.props.currentItem as IAllergen} closeModal={this.props.closeModal as Function } />}
                         {this.props.type == 'extra' && <ViewExtra currentItem={this.props.currentItem as IExtra} closeModal={this.props.closeModal as Function}/>}
                         {this.props.type == 'preference' && <ViewPreference currentItem={this.props.currentItem as IPreference} closeModal={this.props.closeModal as Function}/>}

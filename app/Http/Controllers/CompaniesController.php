@@ -10,11 +10,13 @@ use App\Models\Company;
 
 use App\Models\User;
 use App\Services\MediaService;
+use Gate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Responses\CreateResponse;
 use Illuminate\Support\Facades\Auth;
 use Log;
+use Response;
 
 class CompaniesController extends Controller
 {
@@ -30,7 +32,10 @@ class CompaniesController extends Controller
         return '<html><body>There you go</body></html>';
     }
 
-    public function all() {
+    public function all(Request $r) {
+        if(Gate::denies('view-companies',  $r)) {
+            return Response::json(null, 403);
+        }
         return $this->companyRepository->all();
     }
 

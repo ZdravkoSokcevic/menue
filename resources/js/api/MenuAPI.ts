@@ -10,8 +10,12 @@ class MenuAPI extends Api
 {
     static async createMenu(data: TMenu) 
     {
+        let reqData: any = data;
+        let company = Store.getState().app.defaultCompany;
+        if(company)
+            reqData['company_id'] = company.id;
         try {
-            let success: AxiosResponse<MenuCreateResponseItem> = await this.post('/api/menu/create', data, {}, true);
+            let success: AxiosResponse<MenuCreateResponseItem> = await this.post('/api/menu/create', reqData, {}, true);
             if(success)
                 return Promise.resolve({ success:true, data: success.data });
         }catch(err) {
@@ -34,8 +38,13 @@ class MenuAPI extends Api
             })
         }
         data['prices'] = prices;
+
+        let reqData: any = data;
+        let company = Store.getState().app.defaultCompany;
+        if(company)
+            reqData['company_id'] = company.id;
         try {
-            const success: AxiosResponse<MenuCreateResponseItem> = await this.post(`/api/menu/edit/${data.id}`, data, {}, true);
+            const success: AxiosResponse<MenuCreateResponseItem> = await this.post(`/api/menu/edit/${data.id}`, reqData, {}, true);
             if(success)
                 return Promise.resolve({ success:true, data: success.data });
         }catch(err) {

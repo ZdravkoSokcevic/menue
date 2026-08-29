@@ -8,6 +8,7 @@ use App\Http\Requests\ExtraEditRequest;
 use App\Http\Responses\CreateResponse;
 use App\Http\Responses\EditResponse;
 use App\Interfaces\ExtrasRepositoryInterface;
+use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use App\Models\Extra;
@@ -24,8 +25,11 @@ class ExtrasController extends Controller
         $this->extrasRepository = $er;
     }
 
-    public function all(Request $r): Collection
+    public function all(Request $r): mixed
     {
+        if(Gate::denies('view-extras',  $r)) {
+            return Response::json(null, 403);
+        }
         return $this->extrasRepository->all();
     }
 

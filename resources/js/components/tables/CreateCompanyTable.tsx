@@ -226,8 +226,7 @@ class CreateCompanyTable extends React.Component<IProps, IState>
         let form = event.target;
         let data: unknown = {
             name: event.name,
-            picture: this.state.imageFile,
-            company_id: Store.getState().app.defaultCompany.id
+            picture: this.state.imageFile
         }
         Store.dispatch(enableLoading({}));
         const response = await TablesAPI.createCompanyTable(data as ICompanyTable);

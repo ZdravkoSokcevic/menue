@@ -44,6 +44,58 @@ class AppServiceProvider extends ServiceProvider
             return false;  
         });
 
+        // VIEW ORDERS GATE
+        Gate::define('view-orders', function(User $user, Request $r) {
+            if($user->isAdminOrDemo())
+                return true;
+            else if($r->filled('company_id'))
+                return true;
+
+            return false;  
+        });
+
+        // VIEW TABLES GATE
+        Gate::define('view-allergens', function(User $user, Request $r) {
+            if($user->isAdminOrDemo())
+                return true;
+            else if($r->filled('company_id'))
+                return true;
+
+            return false;  
+        });
+
+        // VIEW INGRIDIENTS GATE
+        Gate::define('view-ingridients', function(User $user, Request $r) {
+            if($user->isAdminOrDemo())
+                return true;
+            else if($r->filled('company_id'))
+                return true;
+
+            return false;  
+        });
+
+        // VIEW EXTRAS GATE
+        Gate::define('view-extras', function(User $user, Request $r) {
+            if($user->isAdminOrDemo())
+                return true;
+            else if($r->filled('company_id'))
+                return true;
+
+            return false;  
+        });
+
+        // VIEW PREFERENCES GATE
+        Gate::define('view-preferences', function(User $user, Request $r) {
+            if($user->isAdminOrDemo())
+                return true;
+            else if($r->filled('company_id'))
+                return true;
+
+            return false;  
+        });
+
+
+
         Gate::define('view-discounts', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
                 return true;

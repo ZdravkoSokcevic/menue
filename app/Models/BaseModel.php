@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Builders\BaseEloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseModel extends Model
@@ -9,6 +10,15 @@ abstract class BaseModel extends Model
     public static function getFillableFields()
     {
         return (new static)->fillable;
+    }
+
+    /**
+     * Override the default Eloquent builder.
+     * All models extending MyBaseModel will inherit this builder.
+     */
+    public function newEloquentBuilder($query): BaseEloquentBuilder
+    {
+        return new BaseEloquentBuilder($query);
     }
 
     public static function transformTranslations($data)

@@ -179,7 +179,7 @@ class CreateExtra extends React.Component<IProps, IState>
         let form = event.target;
         let data: unknown = {
             name: event.name,
-            description: event.description,
+            description: event.description
         }
         Store.dispatch(enableLoading({}));
         const response = await ExtrasAPI.createExtra(data as IExtra);

@@ -42,7 +42,7 @@ const categoryValidationSchema = Yup.object().shape({
         .max(50, 'Too long!')
         .required('Required'),
     description: Yup.string()
-        .min(20, 'Description is too short')
+        .min(15, 'Description is too short')
         .max(255, 'Description is too long')
         .required('Required'),
     // price: Yup.number()

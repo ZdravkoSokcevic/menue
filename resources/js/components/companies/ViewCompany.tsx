@@ -2,7 +2,8 @@ import { TMenu } from "@/types/Menu";
 import { TCompany } from "@/types/TCompanies";
 import React from "react";
 interface IProps {
-    currentItem: TCompany
+    currentItem: TCompany;
+    closeModal: Function;
 }
 interface IState {}
 

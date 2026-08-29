@@ -16,15 +16,13 @@ class AllergensRepository implements AllergensRepositoryInterface
     }
     public function all(Request $r)
     {
+        $user = $r->user();
         // allow admin and demo users to see allergens
-        $isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
+        $isAdmin = $user->isAdmin();
         $q = Allergen::with('translations', 'translations.language');
-        if($isNotAdmin)
-            return Collection::make([]);
-        else {
-            $data = $q->get();
-            return collect($data->toArray());
-        }
+        // company_id must be provided if not admin
+        $data = $q->filterCompanyIfNeeded();
+        return $data->get();
     }
     public function store(Array $data): Allergen | null
     {

@@ -316,8 +316,7 @@ class CreateUser extends React.Component<IProps, IState>
             username: event.username,
             password: event.password,
             email: event.email,
-            role: event.role,
-            company_id: Store.getState().app.defaultCompany.id
+            role: event.role
         }
         Store.dispatch(enableLoading({}));
         const response = await UsersAPI.createUser(data);

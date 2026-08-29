@@ -6,7 +6,8 @@ import React from "react";
 import { FaLink } from "react-icons/fa6";
 import {saveAs} from 'file-saver';
 interface IProps {
-    currentItem: ICompanyTable
+    currentItem: ICompanyTable;
+    closeModal: Function;
 }
 interface IState {
     isAdminLoggedIn: boolean;
@@ -34,7 +35,7 @@ class ViewCompanyTable extends React.Component<IProps, IState>
     }
 
     closeModal() {
-
+        this.props.closeModal()
     }
 
     render(): React.ReactNode {

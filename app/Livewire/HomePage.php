@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Code;
+use App\Models\Discount;
 use Illuminate\Http\Request;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -68,6 +69,23 @@ class HomePage extends Component
         // eg(scan another qr code)
         // if($license->type == 'basic' && !$is_local)
         //     return response(403);
+
+        // Discounts
+        $menuIds = $company->menu()->pluck('id')->toArray();
+        // TODO: Match active times and active days
+        $discounts = Discount::with([
+            'portion',
+            'portion.prices',
+            'menu.category', 
+            'menu.extras', 
+            'menu.extras.prices', 
+            'menu.preferences', 
+            'menu.ingridients', 
+            'menu.portions.prices',
+            'menu.translations',
+            'menu.translations.language'
+        ])->whereIn('menu_id', $menuIds)->get()->toArray();
+        dd($discounts);
         $dataForLayout = [
             'company' => $company,
             'menuItems' => $menu,

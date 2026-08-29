@@ -308,8 +308,7 @@ class EditCategory extends React.Component<IProps, IState>
 
         let data: ICategory = {
             id: this.props.currentItem.id,
-            name: event.name,
-            company_id: Store.getState().app.defaultCompany?.id
+            name: event.name
         }
         // debugger;
         if(event.picture != null && typeof event.picture != undefined && typeof (event.picture.name) == 'string')

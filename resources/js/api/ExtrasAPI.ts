@@ -8,8 +8,12 @@ class ExtrasAPI extends Api
 {
     static async createExtra(data: IExtra) 
     {
+        let reqData: any = data;
+        let company = Store.getState().app.defaultCompany;
+        if(company)
+            reqData['company_id'] = company.id;
         try {
-            let success: AxiosResponse<IResponseItem> = await this.post('/api/extras/create', data, {}, true);
+            let success: AxiosResponse<IResponseItem> = await this.post('/api/extras/create', reqData, {}, true);
             if(success)
                 return Promise.resolve({ success:true, data: success.data });
         }catch(err) {
@@ -19,8 +23,12 @@ class ExtrasAPI extends Api
 
     static async editExtra(data: IExtra) 
     {
+        let reqData: any = data;
+        let company = Store.getState().app.defaultCompany;
+        if(company)
+            reqData['company_id'] = company.id;
         try {
-            const success: AxiosResponse<IResponseItem> = await this.post(`/api/extras/edit/${data.id}`, data, {}, true);
+            const success: AxiosResponse<IResponseItem> = await this.post(`/api/extras/edit/${data.id}`, reqData, {}, true);
             if(success)
                 return Promise.resolve({ success:true, data: success.data });
         }catch(err) {

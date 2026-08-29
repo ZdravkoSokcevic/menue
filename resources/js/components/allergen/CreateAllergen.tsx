@@ -279,8 +279,7 @@ class CreateAllergen extends React.Component<IProps, IState>
         let form = event.target;
         let data: unknown = {
             name: event.name,
-            icon: this.state.imageFile,
-            // company_id: Store.getState().app.defaultCompany.id
+            icon: this.state.imageFile
         }
         Store.dispatch(enableLoading({}));
         const response = await AllergensAPI.createAllergen(data as IAllergen);

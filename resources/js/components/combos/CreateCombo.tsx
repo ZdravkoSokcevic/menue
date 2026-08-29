@@ -27,7 +27,7 @@ interface IProps {
     type: 'modal', // can be modal or page
     isOpen?: boolean;
     closeCreateDiscountModal: Function;
-    addNewDiscountItem: Function;
+    addNewComboItem: Function;
 };
 interface IState {
     isDragging: boolean;
@@ -904,8 +904,7 @@ class CreateCombo extends React.Component<IProps, IState>
             start_at: event.start_at,
             end_at: event.end_at,
             is_active: event.is_active,
-            quantity: event.quantity,
-            company_id: Store.getState().app.defaultCompany.id
+            quantity: event.quantity
         }
         Store.dispatch(enableLoading({}));
         const response = await CombosAPI.createCombo(data as ICombo);
@@ -916,7 +915,7 @@ class CreateCombo extends React.Component<IProps, IState>
             // update category items
             this.closeModal();
             const data: IDiscountResponseItem = response.data as IDiscountResponseItem;
-            this.props.addNewDiscountItem(data.item);
+            this.props.addNewComboItem(data.item);
             showToast.success('Combo created successfully');
         }
         else {

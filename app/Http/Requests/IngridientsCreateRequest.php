@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Company;
+use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use JsonException;
 
 class IngridientsCreateRequest extends FormRequest
@@ -13,8 +16,27 @@ class IngridientsCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $user = auth('sanctum')->user();
-        return !is_null($user);
+
+        $req = request();
+        $company_id = $req->input('company_id');
+        $user = $req->user();
+        // Admin can create without company_id
+        if($user->role === User::ADMIN_ROLE)
+            return true;
+        else if(!$req->filled('company_id'))
+            return false;
+        else if($user->role === User::AGENT_ROLE && !is_null($company_id)) {
+            // validate that company is owned by company_admin
+            $companies = Company::where('creator_id', $user->id)->pluck('id')->toArray();
+            if(!in_array($company_id, $companies))
+                return false;
+        }else if($user->role === User::COMPANY_ADMIN_ROLE || $user->role === User::USER_ROLE) {
+            if($company_id !== $user->company_id)
+                return false;
+        }
+        // every user can create request
+        // only logged in (handled in middeware)
+        return true;
     }
 
     public function prepareForValidation()
@@ -43,11 +65,20 @@ class IngridientsCreateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = request()->user();
         return [
             'name' => 'required|string|min:4|max:30',
             'is_vegan' => 'required|numeric|min:0|max:1',
             'allergens' => 'array',
-            'allergens.*' => 'exists:allergens,id'
+            'allergens.*' => 'exists:allergens,id',
+            'company_id'    => Rule::when($user->role !== User::ADMIN_ROLE, ['required', 'exists:companies,id'], ['nullable', 'exists:companies,id'])
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'company_id.required' => 'Not a valid company'
         ];
     }
 }

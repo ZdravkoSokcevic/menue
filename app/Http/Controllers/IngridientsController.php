@@ -10,6 +10,7 @@ use App\Http\Responses\EditResponse;
 use App\Interfaces\IngridientsRepositoryInterface;
 use App\Models\Ingridient;
 use App\Services\MediaService;
+use Gate;
 use Illuminate\Support\Collection;
 use \Illuminate\Http\Request;
 use App\Http\Repositories\IngridientsRepository;
@@ -28,6 +29,9 @@ class IngridientsController extends Controller
 
     public function all(Request $r)
     {
+        if(Gate::denies('view-ingridients',  $r)) {
+            return Response::json(null, 403);
+        }
         return $this->ingridientsRepository->all($r);
     }
 

@@ -16,9 +16,9 @@ class MenuRepository implements MenuRepositoryInterface
     }
     public function all(Request $r)
     {
-        $isAdmin = auth('sanctum')->user()->isAdmin();
+        $isAdmin = $r->user()->isAdmin();
         // allow admin and demo users to see every company list
-        $isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
+        $isNotAdmin = $r->user()->isNotAdminOrDemo();
         $q = Menu::with([
             'ingridients', 
             'extras', 

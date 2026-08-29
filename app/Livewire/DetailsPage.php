@@ -7,7 +7,7 @@ use App\Models\Menu;
 use Illuminate\Http\Request;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-#[Layout('layouts.app')]
+#[Layout('layouts.frontapp')]
 class DetailsPage extends Component
 {
     public $item;
@@ -54,7 +54,7 @@ class DetailsPage extends Component
             'page' => $this->page
         ];
         return view('livewire.details-page')
-            ->layout('layouts.app', $data)
+            ->layout('layouts.frontapp', $data)
             ->with($data);
     }
 }

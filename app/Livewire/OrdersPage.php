@@ -6,14 +6,14 @@ use App\Models\Menu;
 use Illuminate\Http\Request;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-#[Layout('layouts.app')]
+#[Layout('layouts.frontapp')]
 class OrdersPage extends Component
 {
     public function render(Request $r)
     {
         // dd('here');
         return view('livewire.orders-page')
-            ->layout('layouts.app', [
+            ->layout('layouts.frontapp', [
                 'page' => 'orders'
             ])
             ->with([]);

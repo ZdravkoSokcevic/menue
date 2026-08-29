@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Company;
+use App\Models\Extra;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,11 +15,44 @@ class ExtraTranslationsUpsertRequest extends FormRequest
     public function authorize(): bool
     {
         $user = auth('sanctum')->user();
-        return $user && 
-        (
-            $user->role === User::ADMIN_ROLE ||
-            $user->role === User::COMPANY_ADMIN_ROLE
-        );
+        
+        // 1. Admin can edit anything
+        if ($user->role === User::ADMIN_ROLE) {
+            return true;
+        }
+
+        // 3. Fetch the Extra being updated from the route parameter (e.g., /extras/{extra})
+        $extra = $this->route('id'); 
+        if (!$extra instanceof Extra) {
+            $extra = Extra::find($extra);
+        }
+
+        if (!$extra) {
+            return false;
+        }
+
+        $targetCompanyId = $extra->company_id;
+        if(!$targetCompanyId)
+            return false;
+
+        // 4. Role-Based Editing Constraints
+        if ($user->role === User::AGENT_ROLE) {
+            // Agent can only edit Extras attached to companies they created
+            $agentCompanyIds = Company::where('creator_id', $user->id)->pluck('id')->toArray();
+
+            // Must own both the extra's current company AND the target company
+            $ownsCurrentCompany = in_array($extra->company_id, $agentCompanyIds);
+            $ownsTargetCompany = in_array($targetCompanyId, $agentCompanyIds);
+
+            return $ownsCurrentCompany && $ownsTargetCompany;
+        }
+
+        if ($user->role === User::COMPANY_ADMIN_ROLE || $user->role === User::USER_ROLE) {
+            // Must belong to the extra's current company AND the target company
+            return $extra->company_id === $user->company_id && (int) $targetCompanyId === (int) $user->company_id;
+        }
+
+        return false;
     }
 
     public function prepareForValidation(): void

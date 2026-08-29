@@ -6,7 +6,7 @@ use App\Models\Menu;
 use Illuminate\Http\Request;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-#[Layout('layouts.app')]
+#[Layout('layouts.frontapp')]
 class CartPage extends Component
 {
     public $code;
@@ -26,7 +26,7 @@ class CartPage extends Component
         ];
         
         return view('livewire.cart-page')
-            ->layout('layouts.app')
+            ->layout('layouts.frontapp')
             ->with($data);
     }
 }

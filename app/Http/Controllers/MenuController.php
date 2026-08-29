@@ -106,8 +106,10 @@ class MenuController extends Controller
             if($r->filled('prices') && $r->input('prices')) {
                 $success->syncPortions($r);
             }
+            $item = Menu::with('portions', 'portions.prices')->where('id', $success->id)->first();
 
-            return new CreateResponse(true,   ['item'=> $success->with(['portions', 'portions.prices'])]);
+
+            return new CreateResponse(true,   ['item'=> $item]);
         }
         else return new CreateResponse(false, 'Could not create Menu!');
     }

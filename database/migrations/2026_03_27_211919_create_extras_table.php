@@ -16,7 +16,16 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('price')->nullable();
+            $table->bigInteger('company_id')->unsigned()->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('extras', function (Blueprint $table) {
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
         });
     }
 

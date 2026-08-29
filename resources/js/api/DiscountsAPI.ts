@@ -7,8 +7,12 @@ class DiscountsAPI extends Api
 {
     static async createDiscount(data: IDiscount) 
     {
+        let reqData: any = data;
+        let company = Store.getState().app.defaultCompany;
+        if(company)
+            reqData['company_id'] = company.id;
         try {
-            let success: AxiosResponse<IDiscountResponseItem> = await this.post('/api/discounts/create', data, {}, true);
+            let success: AxiosResponse<IDiscountResponseItem> = await this.post('/api/discounts/create', reqData, {}, true);
             if(success)
                 return Promise.resolve({ success:true, data: success.data });
         }catch(err) {
@@ -18,8 +22,12 @@ class DiscountsAPI extends Api
 
     static async editDiscount(data: IDiscount) 
     {
+        let reqData: any = data;
+        let company = Store.getState().app.defaultCompany;
+        if(company)
+            reqData['company_id'] = company.id;
         try {
-            const success: AxiosResponse<IDiscountResponseItem> = await this.post(`/api/discounts/edit/${data.id}`, data, {}, true);
+            const success: AxiosResponse<IDiscountResponseItem> = await this.post(`/api/discounts/edit/${data.id}`, reqData, {}, true);
             if(success)
                 return Promise.resolve({ success:true, data: success.data });
         }catch(err) {

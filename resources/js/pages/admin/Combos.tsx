@@ -162,7 +162,7 @@ class Combos extends React.Component<IProps, IState> {
                     isOpen={this.state.isCreateComboModalOpened} 
                     type="modal" 
                     closeCreateDiscountModal={this.closeCreateComboModal}
-                    addNewDiscountItem={this.addNewComboItem} 
+                    addNewComboItem={this.addNewComboItem} 
                 />
                 <View 
                     isOpen={this.state.isViewComboModalOpened} 

@@ -859,7 +859,6 @@ class EditMenu extends React.Component<IProps, IState>
             name: event.name,
             description: event.description,
             quantity: event.quantity,
-            company_id: Store.getState().app.defaultCompany?.id,
             category_id: event.category,
             prep_time: event.prep_time,
             extras: event.extras,

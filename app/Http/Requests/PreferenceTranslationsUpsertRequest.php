@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Company;
+use App\Models\Preference;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PreferenceTranslationsUpsertRequest extends FormRequest
@@ -12,7 +15,44 @@ class PreferenceTranslationsUpsertRequest extends FormRequest
     public function authorize(): bool
     {
         $user = auth('sanctum')->user();
-        return isset($user);
+        
+        // 1. Admin can edit anything
+        if ($user->role === User::ADMIN_ROLE) {
+            return true;
+        }
+
+        // 3. Fetch the Extra being updated from the route parameter (e.g., /preferences/{preference})
+        $preference = $this->route('id'); 
+        if (!$preference instanceof Preference) {
+            $preference = Preference::find($preference);
+        }
+
+        if (!$preference) {
+            return false;
+        }
+
+        $targetCompanyId = $preference->company_id;
+        if(!$targetCompanyId)
+            return false;
+
+        // 4. Role-Based Editing Constraints
+        if ($user->role === User::AGENT_ROLE) {
+            // Agent can only edit Extras attached to companies they created
+            $agentCompanyIds = Company::where('creator_id', $user->id)->pluck('id')->toArray();
+
+            // Must own both the preference's current company AND the target company
+            $ownsCurrentCompany = in_array($preference->company_id, $agentCompanyIds);
+            $ownsTargetCompany = in_array($targetCompanyId, $agentCompanyIds);
+
+            return $ownsCurrentCompany && $ownsTargetCompany;
+        }
+
+        if ($user->role === User::COMPANY_ADMIN_ROLE || $user->role === User::USER_ROLE) {
+            // Must belong to the preference's current company AND the target company
+            return $preference->company_id === $user->company_id && (int) $targetCompanyId === (int) $user->company_id;
+        }
+
+        return false;
     }
 
     public function prepareForValidation(): void

@@ -182,7 +182,7 @@ class CreatePreference extends React.Component<IProps, IState>
             this.closeModal();
             const data: IResponseItem = response.data as IResponseItem;
             this.props.addNewPreferenceItem(data.item);
-            showToast.error('Preference created successfully');
+            showToast.success('Preference created successfully');
         }
         else {
             showToast.error('There\'s problem creating preference. Try again later');

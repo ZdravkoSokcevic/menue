@@ -15,7 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('icon')->nullable();
+            $table->bigInteger('company_id')->unsigned()->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('allergens', function (Blueprint $table) {
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies');
         });
     }
 

@@ -653,7 +653,7 @@ class EditCompany extends React.Component<IProps, IState>
                                             </div>
 
                                             {/* EMAIL */}
-                                            <div className="form-group">
+                                            <div className="form-group mb-5">
                                                 <label>Email</label>
                                                 <Field 
                                                     name="email" 
@@ -669,18 +669,19 @@ class EditCompany extends React.Component<IProps, IState>
                                                 {/* <small id="phoneHelp" className="form-text text-muted">We'll never share your email with anyone else.</small> */}
                                             </div>
 
-                                            <div>
+                                            <div className="d-none">
                                                 {Object.keys(currentInitialValues).map((key) => (
                                                     <li>
                                                         <small>{`Key: ${key} Value: ${(currentInitialValues as any)[key]}`}</small>
                                                     </li>
                                                 ))}
                                             </div>
-
-                                            {'Is submitting: ' + isSubmitting}<br />
-                                            {'Is valid: ' + isValid} <br />
-                                            {'Is dirty: ' + dirty} <br />
-                                            { 'Errors: ' + JSON.stringify(errors) }
+                                            <div className="d-none">
+                                                {'Is submitting: ' + isSubmitting}<br />
+                                                {'Is valid: ' + isValid} <br />
+                                                {'Is dirty: ' + dirty} <br />
+                                                { 'Errors: ' + JSON.stringify(errors) }
+                                            </div>
                                             {/* <div className="controls">
                                                 <button 
                                                     type="submit" 

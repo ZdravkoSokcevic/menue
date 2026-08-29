@@ -6,6 +6,8 @@ use App\Http\Requests\PreferenceDeleteRequest;
 use App\Http\Requests\PreferenceEditRequest;
 use App\Http\Responses\CreateResponse;
 use App\Http\Responses\EditResponse;
+use Gate;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use App\Interfaces\PreferencesRepositoryInterface;
@@ -22,8 +24,11 @@ class PreferencesController extends Controller
         $this->preferencesRepository = $pr;
     }
 
-    public function all(Request $r): Collection
+    public function all(Request $r): JsonResponse
     {
+        if(Gate::denies('view-preferences',  $r)) {
+            return Response::json(null, 403);
+        }
         return $this->preferencesRepository->all();
     }
 

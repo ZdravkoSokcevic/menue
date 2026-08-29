@@ -61,7 +61,7 @@
     </div>
     <div class="mx-auto max-w-2xl">
     <div class="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
-        {#each filteredItems as item (item.id || item.name)}
+        {#each filteredItems as item,index (item.id || item.name)}
             <div
                 class="group flex flex-col w-full overflow-hidden md:max-w-[320px] rounded-2xl border border-gray-100 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
             >
@@ -74,8 +74,26 @@
                     
                     <div 
                         class="relative aspect-video w-full overflow-hidden bg-gray-200 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                        style="background-image: url('/storage/{item.picture}');"
+                        // style="background-image: url('/storage/{item.picture}');"
                     >
+                        <!-- Animated Skeleton Placeholder -->
+                        <div 
+                            class="absolute inset-0 animate-pulse bg-gray-300"
+                            id="skeleton-{item.id}"
+                        ></div>
+                            <!-- Native Lazy Loaded Image replacement for background-image -->
+                        <img 
+                            src="/storage/{item.picture}" 
+                            loading={index < 4 ? "eager" : "lazy"}
+                            fetchpriority={index < 4 ? "high" : "auto"}
+                            decoding="async"
+                            class="h-full w-full object-cover object-center opacity-0 transition-transform duration-500 group-hover:scale-110"
+                            onload={(e) => {
+                                e.currentTarget.classList.remove('opacity-0');
+                                const skeleton = document.getElementById(`skeleton-${item.id}`);
+                                if (skeleton) skeleton.style.display = 'none';
+                            }}
+                        />
                         <div class="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
                     </div>
                 </a>

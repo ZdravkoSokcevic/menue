@@ -52,7 +52,7 @@ class UsersController extends Controller
         return response()->json(['message' => 'Logged out successfully']);
     }
 
-    public function all()
+    public function all(Request $r)
     {
         $user = auth('sanctum')->user();
         // TODO: superadmin can obtain all users
@@ -60,7 +60,8 @@ class UsersController extends Controller
         // agent can see users only that belong to his companies
         // dd($user);
         $users = User::where('id', '!=' , $user->id);
-
+        if($r->filled('company_id'))
+            $users->where('company_id', $r->input('company_id'));
         if($user->isAdmin())
             return $users->get();
         else if($user->isCompanyAdmin()) {

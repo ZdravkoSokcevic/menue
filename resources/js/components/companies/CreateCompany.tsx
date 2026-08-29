@@ -612,7 +612,7 @@ class CreateCompany extends React.Component<IProps, IState>
                                             </div>
 
                                             {/* EMAIL */}
-                                            <div className="form-group">
+                                            <div className="form-group mb-5">
                                                 <label>Email</label>
                                                 <Field 
                                                     name="email" 

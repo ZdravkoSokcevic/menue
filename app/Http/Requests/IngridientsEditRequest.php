@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Company;
+use App\Models\Ingridient;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use JsonException;
 
 class IngridientsEditRequest extends FormRequest
@@ -14,10 +17,46 @@ class IngridientsEditRequest extends FormRequest
     public function authorize(): bool
     {
         $user = auth('sanctum')->user();
-        return !is_null($user) && (
-            $user->role === User::ADMIN_ROLE ||
-            $user->role === User::AGENT_ROLE
-        );
+        
+        // 1. Admin can edit anything
+        if ($user->role === User::ADMIN_ROLE) {
+            return true;
+        }
+
+        // 2. Non-admins must provide a company_id
+        $targetCompanyId = $this->input('company_id');
+        if (!$this->filled('company_id')) {
+            return false;
+        }
+
+        // 3. Fetch the Extra being updated from the route parameter (e.g., /ingridients/{ingridient})
+        $ingridient = $this->route('id'); 
+        if (!$ingridient instanceof Ingridient) {
+            $ingridient = Ingridient::find($ingridient);
+        }
+
+        if (!$ingridient) {
+            return false;
+        }
+
+        // 4. Role-Based Editing Constraints
+        if ($user->role === User::AGENT_ROLE) {
+            // Agent can only edit Extras attached to companies they created
+            $agentCompanyIds = Company::where('creator_id', $user->id)->pluck('id')->toArray();
+
+            // Must own both the extra's current company AND the target company
+            $ownsCurrentCompany = in_array($ingridient->company_id, $agentCompanyIds);
+            $ownsTargetCompany = in_array($targetCompanyId, $agentCompanyIds);
+
+            return $ownsCurrentCompany && $ownsTargetCompany;
+        }
+
+        if ($user->role === User::COMPANY_ADMIN_ROLE || $user->role === User::USER_ROLE) {
+            // Must belong to the extra's current company AND the target company
+            return $ingridient->company_id === $user->company_id && (int) $targetCompanyId === (int) $user->company_id;
+        }
+
+        return false;
     }
 
     public function prepareForValidation()
@@ -55,12 +94,25 @@ class IngridientsEditRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = $this->user();
         return [
             'id'    => 'required|exists:ingridients,id',
             'name' => 'string|min:4|max:30',
             'is_vegan' => 'numeric|min:0|max:1',
             'allergens' => 'array',
-            'allergens.*' => 'exists:allergens,id'
+            'allergens.*' => 'exists:allergens,id',
+            'company_id'  => Rule::when(
+                $user->role !== User::ADMIN_ROLE, 
+                ['required', 'exists:companies,id'], 
+                ['nullable', 'exists:companies,id']
+            ),
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'company_id.required' => 'Not a valid company',
         ];
     }
 }

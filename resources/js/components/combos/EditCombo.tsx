@@ -897,8 +897,7 @@ class EditCombo extends React.Component<IProps, IState>
             start_at: event.start_at,
             end_at: event.end_at,
             is_active: event.is_active,
-            quantity: event.quantity,
-            company_id: Store.getState().app.defaultCompany.id
+            quantity: event.quantity
         }
         Store.dispatch(enableLoading({}));
         const response = await CombosAPI.editCombo(data as ICombo);

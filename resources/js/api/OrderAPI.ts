@@ -3,10 +3,12 @@ import { AxiosResponse } from "axios";
 import { IResponseItem } from "@/types/Api";
 import { TExtras, IExtra } from "@/types/Extra";
 import { OrderItems, TOrders } from "@/types/Order";
+import { Store } from "@/reducers/Store";
 
 interface IGetItemsData {
     page?: number;
     status?: string;
+    company_id: string;
 }
 
 class OrderAPI extends Api
@@ -33,7 +35,8 @@ class OrderAPI extends Api
         let items: OrderItems = [];
 
         const data: IGetItemsData = {
-            page: wantedPage
+            page: wantedPage,
+            company_id: Store.getState().app.defaultCompany.id as string
         };
 
         if(correctStatus) {

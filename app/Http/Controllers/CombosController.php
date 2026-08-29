@@ -71,7 +71,7 @@ class CombosController extends Controller
                 'items.portion',
                 'items.portion.prices',
             ])->where('id', $item->id)->first();
-            return new CreateResponse(true,  [ 'item' => $item ]);
+            return new CreateResponse(true,  [ 'item' => $comboItem ]);
         }
         else return new CreateResponse(false, 'Could not create Combo!');
     }
