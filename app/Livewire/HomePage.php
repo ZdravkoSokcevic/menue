@@ -7,6 +7,7 @@ use App\Models\Discount;
 use Illuminate\Http\Request;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Carbon\Carbon;
 
 class HomePage extends Component
 {
@@ -84,8 +85,25 @@ class HomePage extends Component
             'menu.portions.prices',
             'menu.translations',
             'menu.translations.language'
-        ])->whereIn('menu_id', $menuIds)->get()->toArray();
-        dd($discounts);
+        ])->whereIn('menu_id', $menuIds);
+        // Match discount times
+        // and active dates
+        $today = Carbon::now()->startOfDay();
+        $now = Carbon::parse($today);
+        
+        $discounts->where(function ($q) use ($today) {
+            $q->where('start_at', '<=', $today);
+            $q->orWhereNull('start_at');
+        });
+        $discounts->where(function ($q) use ($today) {
+            $q->where('end_at', '>=', $today);
+            $q->orWhereNull('end_at');
+        });
+        // Match time in db
+
+        $discounts = $discounts->get();
+
+        // dd($discounts);
         $dataForLayout = [
             'company' => $company,
             'menuItems' => $menu,

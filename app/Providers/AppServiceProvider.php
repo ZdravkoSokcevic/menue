@@ -44,6 +44,10 @@ class AppServiceProvider extends ServiceProvider
             return false;  
         });
 
+        Gate::define('view-companies', function(User $user, Request $r) {
+                return true;
+        });
+
         // VIEW ORDERS GATE
         Gate::define('view-orders', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
@@ -65,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // VIEW INGRIDIENTS GATE
-        Gate::define('view-ingridients', function(User $user, Request $r) {
+        Gate::define('view-ingrFidients', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
                 return true;
             else if($r->filled('company_id'))
