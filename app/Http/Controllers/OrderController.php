@@ -13,7 +13,7 @@ use App\Models\MenuExtra;
 use App\Models\Order;
 use Gate;
 use Illuminate\Database\Eloquent\Collection;
-use Request;
+use \Illuminate\Http\Request;
 use Response;
 use Str;
 

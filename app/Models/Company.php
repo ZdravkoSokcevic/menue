@@ -37,7 +37,7 @@ class Company extends BaseModel
     ];
 
     protected $translatable = [
-        'name'
+        // 'name'
     ];
 
     public function currency(): BelongsTo

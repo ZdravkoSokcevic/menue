@@ -15,6 +15,7 @@ export default defineConfig({
                 'resources/sass/frontapp/tailwind.css',
                 'resources/sass/frontapp/app.scss',
                 'resources/sass/frontapp/home.scss',
+                'resources/sass/frontapp/footer.scss',
                 'resources/sass/frontapp/details.scss',
                 'resources/sass/frontapp/cart.scss',
                 'resources/sass/menu.scss',

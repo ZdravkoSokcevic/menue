@@ -52,6 +52,7 @@ class OrderRepository implements OrderRepositoryInterface
             $q->where('status', request()->input('status'));
 
         // $q->where('items.menu.company.id', request()->input('company_id'));
+        
 
         return $q->get();
     }

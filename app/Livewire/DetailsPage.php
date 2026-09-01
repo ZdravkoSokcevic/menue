@@ -13,6 +13,8 @@ class DetailsPage extends Component
     public $item;
     public $code;
 
+    public $company;
+
     public $page;
     public function mount(Request $r, $id)
     {
@@ -42,6 +44,7 @@ class DetailsPage extends Component
 
         $this->item = $item;
         $this->code= $r->code;
+        $this->company = $company;
         $this->page = 'details';
     }
 
@@ -51,7 +54,8 @@ class DetailsPage extends Component
         $data = [
             'code' => $r->code,
             'item' => $this->item,
-            'page' => $this->page
+            'page' => $this->page,
+            'company' => $this->company
         ];
         return view('livewire.details-page')
             ->layout('layouts.frontapp', $data)

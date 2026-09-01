@@ -1,8 +1,29 @@
+/* Target your root layout wrapper or html/body */
+html, body {
+  height: 100%;
+  margin: 0;
+}
 
-/* NAVBAR */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Forces container to take full screen height */
+
+  /* The middle container where Svelte renders */
+  .main-content {
+    flex: 1 0 auto; /* Grows to take up all remaining space, pushing footer down */
+    min-height: 100vh;
+  }
+
+  /* The footer always stays at the bottom */
+  .site-footer {
+    flex-shrink: 0; /* Prevents footer from shrinking */
+  }
+}
+/* NAVBAR BASE */
 .navbar {
     background: #ffffff;
-    padding: 15px 20px;
+    padding: 12px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -12,9 +33,12 @@
     z-index: 100;
 }
 
+/* LOGO: Smaller on mobile, larger on desktop */
 .logo {
-    font-weight: bold;
-    font-size: 20px;
+    height: 36px; /* Phone default */
+    width: auto;
+    object-fit: contain;
+    transition: height 0.2s ease;
 }
 
 .nav-links {
@@ -33,35 +57,84 @@
     color: #007bff;
 }
 
-/* MOBILE NAV */
-.menu-toggle {
-    display: none;
-    font-size: 22px;
-    cursor: pointer;
-}
-
-    .card { transition: transform 0.2s ease-in-out; }
-    .card:hover { transform: translateY(-5px); }
-
-/* MOBILE */
-@media (max-width: 600px) {
-.nav-links {
-    position: absolute;
-    top: 60px;
-    right: 0;
-    background: white;
-    flex-direction: column;
-    width: 200px;
-    padding: 15px;
-    display: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.nav-links.active {
+/* RIGHT ACTION BUTTONS & ICONS */
+.nav-actions {
     display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.menu-toggle {
-    display: block;
+.action-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px; /* Phone default: Bigger icons */
+    line-height: 1;
 }
+
+.action-icon {
+    width: 28px;  /* Phone default: Bigger icon */
+    height: 28px;
+    object-fit: contain;
+}
+
+.flag-icon {
+    font-size: 24px;
+}
+
+/* CARDS */
+.card { 
+    transition: transform 0.2s ease-in-out; 
+}
+.card:hover { 
+    transform: translateY(-5px); 
+}
+
+/* DESKTOP BREAKPOINT (min-width: 601px) */
+@media (min-width: 601px) {
+    .logo {
+        height: 52px; /* Bigger logo on desktop */
+    }
+
+    .action-btn {
+        font-size: 20px; /* Standard/smaller icon size on desktop */
+    }
+
+    .action-icon {
+        width: 20px;  /* Smaller icon image on desktop */
+        height: 20px;
+    }
+
+    .flag-icon {
+        font-size: 18px;
+    }
+}
+
+/* MOBILE NAV (max-width: 600px) */
+@media (max-width: 600px) {
+    .nav-links {
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        width: 200px;
+        padding: 15px;
+        display: none;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+        font-size: 22px;
+        cursor: pointer;
+    }
 }

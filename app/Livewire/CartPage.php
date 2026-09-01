@@ -18,11 +18,26 @@ class CartPage extends Component
     }
     public function render(Request $r)
     {
-        // dd($r->code);
+        $code = $r->code;
+
+        if(!$code)
+            return redirect()->route('webpage');
+        $record = Code::with('table')->where('code', $code)->first();
+        if(!$record)
+            return abort(403);
+        
+        $table = $record->table;
+        // dd($record);
+        if(!$table) 
+            return abort(403);
+        $company = $table->company;
+        if(!$company)
+            return abort(403);
         // dd('here');
         $data = [
             'page' => 'cart',
-            'code' => $r->code
+            'code' => $r->code,
+            'company' => $company
         ];
         
         return view('livewire.cart-page')

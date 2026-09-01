@@ -71,6 +71,9 @@ class Discounts extends React.Component<IProps, IState> {
                             {this.state.discountItems.map((item: IDiscount, index) => {
                                 let picPath: String = item.menu?.picture as String;
                                 const picFullPath = (picPath) ? "url('/storage/" + picPath.replaceAll('\'', '') + "')" : '';
+
+                                let expired = this.isDiscountExpired(item);
+                                // if(now > item.start_at )
                                 return <div 
                                             className={'m-2 placeholder-4-3 col-3 rounded-dotted-div discount-item-container position-relative item-container position-relative overflow-hidden'}
                                             style={{backgroundImage: picFullPath ? picFullPath : ''}}
@@ -83,6 +86,11 @@ class Discounts extends React.Component<IProps, IState> {
                                             {item.new && (
                                                 <div className="ribbon ribbon-primary new">
                                                     NEW
+                                                </div>
+                                            )}
+                                            {expired && (
+                                                <div className="ribbon new bg-danger text-white">
+                                                    EXPIRED
                                                 </div>
                                             )}
                                             {/* <span className="name">{item.menu?.name}</span>  */}
@@ -100,7 +108,7 @@ class Discounts extends React.Component<IProps, IState> {
                                             {/* Title */}
                                             <div className="card-title-wrapper">
                                                 <span className="card-title">
-                                                    {item.menu?.name}
+                                                    {expired && ("\u26A0\uFE0F") }{item.menu?.name}
                                                 </span>
                                             </div>
 
@@ -288,6 +296,32 @@ class Discounts extends React.Component<IProps, IState> {
         })
 
         this.setState({ discountItems: newState });
+    }
+
+    isDiscountExpired = (item: IDiscount) => {
+        let expired = false;
+        if(
+            typeof item.start_at !== 'string' &&
+            typeof item.end_at !== 'string'
+        )
+            return false;
+
+        try {
+            // check if expired
+            let now = Date.now();
+            let startAt = Date.parse(item.start_at);
+            let endAt = Date.parse(item.end_at);
+            console.log({now}, {startAt}, {endAt});
+            if(startAt>now || endAt<now)
+                expired = true;
+            
+            return expired;
+        }catch(err) {
+
+        }finally {
+            return expired;
+        }
+
     }
 }
 

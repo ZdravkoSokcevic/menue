@@ -26,6 +26,7 @@ function initSvelteApp() {
   if(window.LaravelData) {
     globalState.setCode(window.LaravelData.code);
     globalState.setCurrentPage(window.LaravelData.page);
+    globalState.setCompany(window.LaravelData.company);
   }
 
   // LOAD LANGUAGES

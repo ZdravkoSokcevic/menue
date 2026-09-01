@@ -7,36 +7,45 @@
     const toggleLanguagesModal = () => {
         let opened = globalState.isLanguageModalOpened;
         globalState.setIsLanguageModalOpened(!opened);
-        console.log(opened);
     }
 
     const isLanguageChoosen = () => {
         // console.log(Object.keys(globalState.selectedLanguage).length);
         return Object.keys(globalState.selectedLanguage).length == 0;
     }
+    console.log(globalState.company);
 </script>
+<!-- {globalState.company} -->
 
 <nav class="navbar">
-    <div class="logo tracking-tighter"><a href="/shorts/{globalState.code}" {...{'wire:navigate': true }}>MyStore</a></div>
+    <a href="/shorts/{globalState.code}" {...{'wire:navigate': true }}>
+        <img src="/storage/{globalState.company.logo}" alt="{globalState.company.name}" class="logo"/>
+    </a>
     
     <div class="nav-links">
         <a href="/shorts/{globalState.code}" wire:navigate>Home</a>
         <a href="/details?code={globalState.code}" wire:navigate>Details</a>
     </div>
 
-    <div>
+    <div class="nav-actions">
         <button 
             style="padding: 5pt"
+            class="action-btn"
             onclick={toggleLanguagesModal}
+            aria-label="Language selection"
         >
             {#if (isLanguageChoosen()) == 1}
-                <img src='/icons/translation.svg' alt="Missing photo">
+                <img src='/icons/translation.svg' alt="Missing photo" class="action-icon">
             {/if}
             {#if (isLanguageChoosen()) == 0}
-                {globalState.selectedLanguage.flag}
+                <span class="flag-icon">{globalState.selectedLanguage.flag}</span>
             {/if}
         </button>
-        <button onclick={() => isCartOpen = !isCartOpen}>🛒</button>
+        <button
+            style="action-btn cart-btn" 
+            onclick={() => isCartOpen = !isCartOpen}
+            aria-label="Toggle cart"    
+        >🛒</button>
         
         {#if isCartOpen}
             <Cart closeCart={() => isCartOpen = false}/>

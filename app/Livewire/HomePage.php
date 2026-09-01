@@ -53,8 +53,7 @@ class HomePage extends Component
             'translations',
             'translations.language'
             ])
-            ->whereHas('portions')
-            ->get();
+            ->whereHas('portions');
             // dd($menu);
         $creator = $company->creator;
         if(!$creator)
@@ -99,14 +98,21 @@ class HomePage extends Component
             $q->where('end_at', '>=', $today);
             $q->orWhereNull('end_at');
         });
+
         // Match time in db
 
-        $discounts = $discounts->get();
+        $allDiscounts = $discounts->get();
+
+        // eliminate menu items that have discount
+        $allDiscountIds = $discounts->get()->pluck('menu_id')->toArray();
+        $menu = $menu->whereNotIn('id', $allDiscountIds)->get();
+
 
         // dd($discounts);
         $dataForLayout = [
             'company' => $company,
             'menuItems' => $menu,
+            'discountItems' => $allDiscounts,
             'creator' => $creator,
             'table' => $table,
             'code' => $code
@@ -120,7 +126,7 @@ class HomePage extends Component
         }
         
 
-        // dd('here');
+        // dd($dataForLayout['discountItems']);
     }
 
     public function render()

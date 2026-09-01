@@ -1,0 +1,132 @@
+/* FOOTER BASE */
+.site-footer {
+    background: #111827;
+    color: #f3f4f6;
+    padding: 40px 20px 20px;
+    margin-top: auto;
+}
+
+.footer-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* BRANDING & LOGO */
+.footer-logo {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 12px;
+}
+
+.footer-company-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.footer-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #9ca3af;
+    max-width: 500px;
+}
+
+/* CONTACT ITEMS (Mobile Default: Single Column) */
+.footer-contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.footer-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #1f2937;
+    padding: 12px 16px;
+    border-radius: 8px;
+}
+
+.contact-icon {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: #374151;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.contact-text {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.contact-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9ca3af;
+}
+
+.contact-text a,
+.contact-text span {
+    font-size: 14px;
+    color: #e5e7eb;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.contact-text a:hover {
+    color: #3b82f6;
+    text-decoration: underline;
+}
+
+/* FOOTER BOTTOM BAR */
+.footer-bottom {
+    max-width: 1100px;
+    margin: 30px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid #1f2937;
+    text-align: center;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* DESKTOP RESPONSIVE BREAKPOINT */
+@media (min-width: 768px) {
+    .site-footer {
+        padding: 60px 30px 20px;
+    }
+
+    .footer-container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .footer-brand {
+        flex: 1;
+        padding-right: 40px;
+    }
+
+    .footer-logo {
+        height: 50px;
+    }
+
+    .footer-contact-grid {
+        flex: 1;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+}

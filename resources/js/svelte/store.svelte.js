@@ -73,6 +73,7 @@ export const globalState = $state({
     setCartModalSelectedItem(item) {
         this.cartModalSelectedItem = item;
     },
+    company: {},
     // This allows you to set the code from anywhere (Blade or Svelte)
     setCode(newCode) {
         this.code = newCode;
@@ -88,6 +89,9 @@ export const globalState = $state({
         // debugger;
         this.currentPage = page;
         addPageToPersisted(page);
+    },
+    setCompany(company) {
+        this.company = company;
     },
     get currentPage() {
         // this.currentPage = get('persisted').page;
