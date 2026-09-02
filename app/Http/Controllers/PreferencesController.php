@@ -24,7 +24,7 @@ class PreferencesController extends Controller
         $this->preferencesRepository = $pr;
     }
 
-    public function all(Request $r): JsonResponse
+    public function all(Request $r): JsonResponse | Collection
     {
         if(Gate::denies('view-preferences',  $r)) {
             return Response::json(null, 403);

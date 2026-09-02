@@ -1,5 +1,8 @@
 import axios from "axios";
-const AxiosApiInstance = axios.create();
+const AxiosApiInstance = axios.create({
+    baseURL: '',
+    withCredentials: true
+});
 class Api
 {
     static apiUrl   = '/api/';

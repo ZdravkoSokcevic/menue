@@ -1,6 +1,7 @@
 import { mount, unmount } from 'svelte';
 import Navbar from './components/Navbar.svelte'
 import MenuItems from './components/MenuItems.svelte';
+import DiscountItems from './components/DiscountItems.svelte';
 import MenuDetails from './components/MenuDetails.svelte'
 import CartPage from './components/CartPage.svelte'
 import Order from './components/Order.svelte'
@@ -52,6 +53,19 @@ function initSvelteApp() {
         props: { menuItems }
       });
     }
+  }
+
+  const menuDiscountsTarget = document.getElementById('menudiscounts-component');
+  const discountDataElement = document.getElementById('menu-discounts');
+  if(menuDiscountsTarget && discountDataElement && !menuDiscountsTarget.dataset.mounted) {
+    
+    const discountItems = JSON.parse(discountDataElement.textContent || '[]');
+
+    menuDiscountsTarget.dataset.mounted = "true";
+    mount(DiscountItems, {
+      target: menuDiscountsTarget,
+      props: { discountItems }
+    });
   }
 
   const menuDetailsTarget = document.getElementById('menu-details');

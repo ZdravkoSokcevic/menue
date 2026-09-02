@@ -12,6 +12,8 @@ use Carbon\Carbon;
 class HomePage extends Component
 {
     public $menuItems;
+
+    public $discountItems;
     public $company;
     public $creator;
     public $table;

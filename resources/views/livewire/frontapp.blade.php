@@ -19,6 +19,17 @@
         <h1 class="text-center text-3xl font-bold my-6 text-gray-800">
             {{$company->name}}
         </h1>
+
+        <!-- DISCOUNTS COMPONENT -->
+        <script id="menu-discounts" type="application/ld+json">
+            {!! json_encode($discountItems) !!}
+        </script>
+        <script>
+            console.log("{!! json_encode($discountItems) !!}")
+        </script>
+        <div class="discount-content" id="menudiscounts-component" wire:ignore></div>
+
+        <!-- MENU ITEMS COMPONENT -->
         <script id="menu-data" type="application/ld+json">
             {!! json_encode($menuItems) !!}
         </script>
