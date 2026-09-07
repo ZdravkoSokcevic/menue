@@ -2,6 +2,7 @@
     import { cart } from '../store.svelte'
     import AddToCartModal from './AddToCartModal.svelte';
     import { globalState } from '../store.svelte.js';
+    import { getDiscountPrice } from '../functions'
 
     const { discountItems } = $props();
     let activeIndex = $state(0);
@@ -12,19 +13,7 @@
         activeIndex = Math.round(scrollLeft / cardWidth);
     }
 
-    function getPrice(item) {
-        console.log(item);
-        let regularPrice = item?.portion?.prices?.price || 0.0;
-        let discountedValue = item.value;
-        let discountType = item.type;
-        console.log(regularPrice, discountedValue, discountType);
-        if(discountType == 'fixed')
-            return discountedValue;
-        else if(discountType == 'percent') {
-            
-            return '0.0';
-        }
-    }
+
     console.log(discountItems)
 </script>
 <div class="mx-auto max-w-7xl px-4 py-8">
@@ -39,22 +28,24 @@
     >
         {#each discountItems as item}
             <div class="w-[82vw] sm:w-[350px] flex-none snap-start bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden flex flex-col justify-between">
-                <div>
-                    <div class="relative h-48 w-full overflow-hidden">
-                        <img 
-                            src={item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"} 
-                            alt={item.menu?.name || "Discount item"} 
-                            class="w-full h-full object-cover"
-                        />
-                    </div>
-                    <div class="p-4">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="text-lg font-bold text-gray-900">{item.menu?.name || 'Discounted Item'}</h3>
-                            <span class="text-lg font-bold text-blue-600">${getPrice(item)}</span>
+                <a href="/details/discount/{item.id}/{globalState.code}">
+                    <div>
+                        <div class="relative h-48 w-full overflow-hidden">
+                            <img 
+                                src={item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"} 
+                                alt={item.menu?.name || "Discount item"} 
+                                class="w-full h-full object-cover"
+                            />
                         </div>
-                        <p class="text-sm text-gray-500">{item.description || 'Special discount offer'}</p>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="text-lg font-bold text-gray-900">{item.menu?.name + '(' + item.portion.name +')' || 'Discounted Item'}</h3>
+                                <span class="text-lg font-bold text-blue-600">${getDiscountPrice(item)}</span>
+                            </div>
+                            <p class="text-sm text-gray-500">{item.description || 'Special discount offer'}</p>
+                        </div>
                     </div>
-                </div>
+                </a>
                 <div class="p-4 pt-0">
                     <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition duration-150">
                         Add to Order +

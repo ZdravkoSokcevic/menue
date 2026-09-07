@@ -17,7 +17,15 @@ class DiscountsRepository implements DiscountsRepositoryInterface
         $isAdmin = auth('sanctum')->user()->isAdmin();
         // allow admin and demo users to see every company list
         $isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
-        $q = Discount::with('menu', 'menu.portions','menu.translations', 'menu.translations.language', 'menu.translations.language.countries', 'portions', 'portion');
+        $q = Discount::with(
+            'menu', 
+            'menu.portions',
+            'menu.translations', 
+            'menu.translations.language', 
+            'menu.translations.language.countries', 
+            'portions', 
+            'portion'
+        );
         // TODO: if user is not superadmin, if the role is company_admin, agent, or user,
         // filter company_id
         if($isNotAdmin)

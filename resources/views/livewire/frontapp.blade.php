@@ -8,7 +8,8 @@
         window.LaravelData = {
             code: "{{ $code }}",
             page: "{{ $page }}",
-            company: @json($company)
+            company: @json($company),
+            type: "{{ @$type }}"
         };
     </script>
     @endpush

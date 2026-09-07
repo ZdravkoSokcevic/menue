@@ -28,6 +28,8 @@ function initSvelteApp() {
     globalState.setCode(window.LaravelData.code);
     globalState.setCurrentPage(window.LaravelData.page);
     globalState.setCompany(window.LaravelData.company);
+    if(window.LaravelData.type)
+      globalState.setType(window.LaravelData.type);
   }
 
   // LOAD LANGUAGES
@@ -71,13 +73,13 @@ function initSvelteApp() {
   const menuDetailsTarget = document.getElementById('menu-details');
   if(menuDetailsTarget && !menuDetailsTarget.dataset.mounted) {
     const dataElement = document.getElementById('menuitem-data');
-    const menuItem = JSON.parse(dataElement.textContent);
+    const item = JSON.parse(dataElement.textContent);
 
     if(dataElement) {
       menuDetailsTarget.dataset.mounted = "true";
       mount(MenuDetails, {
         target: menuDetailsTarget,
-        props: { menuItem }
+        props: { item }
       });
     }
   }

@@ -70,6 +70,8 @@ export const globalState = $state({
     languages: get(appPreferences).languages || [],
     selectedLanguage: get(appPreferences).selectedLanguage || {},
     isLanguageModalOpened: false,
+    // for details page type
+    type: '',
     setCartModalSelectedItem(item) {
         this.cartModalSelectedItem = item;
     },
@@ -92,6 +94,9 @@ export const globalState = $state({
     },
     setCompany(company) {
         this.company = company;
+    },
+    setType(type) {
+        this.type = type;
     },
     get currentPage() {
         // this.currentPage = get('persisted').page;

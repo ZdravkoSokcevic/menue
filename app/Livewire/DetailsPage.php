@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Code;
+use App\Models\Discount;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 use Livewire\Attributes\Layout;
@@ -16,9 +17,34 @@ class DetailsPage extends Component
     public $company;
 
     public $page;
-    public function mount(Request $r, $id)
+
+    // Type references to either: menu, discount or combo
+    public $type;
+    public function mount(Request $r, $type, $id)
     {
-        $item = Menu::with(['category', 'extras', 'extras.prices', 'preferences', 'ingridients', 'ingridients.allergens' ,'portions', 'portions.prices'])->whereId($id)->first();
+        $item = null;
+        if($type == 'menu')
+            $item = Menu::with([
+                'category', 
+                'extras', 
+                'extras.prices', 
+                'preferences', 
+                'ingridients', 
+                'ingridients.allergens' ,
+                'portions', 
+                'portions.prices'
+            ])->whereId($id)->first();
+        else if($type == 'discount')
+            $item = Discount::with(
+                'menu', 
+                'menu.portions',
+                'menu.category',
+                'menu.translations', 
+                'menu.translations.language', 
+                'menu.translations.language.countries', 
+                'portions', 
+                'portion'
+            )->whereId($id)->first();
         if(!$item)
             return abort(403);
 
@@ -46,18 +72,23 @@ class DetailsPage extends Component
         $this->code= $r->code;
         $this->company = $company;
         $this->page = 'details';
+        $this->type = $r->type;
     }
 
     public function render(Request $r)
     {
+        $view = 'livewire.details-page';
+        if($r->type == 'menu')
+            $view = 'livewire.details-page';
 
         $data = [
-            'code' => $r->code,
-            'item' => $this->item,
-            'page' => $this->page,
-            'company' => $this->company
+            'code'      => $r->code,
+            'item'      => $this->item,
+            'page'      => $this->page,
+            'company'   => $this->company,
+            'type'      => $this->type
         ];
-        return view('livewire.details-page')
+        return view($view)
             ->layout('layouts.frontapp', $data)
             ->with($data);
     }

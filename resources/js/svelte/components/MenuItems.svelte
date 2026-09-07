@@ -67,7 +67,7 @@
             >
                 <a 
                         class="mb-1 flex items-start justify-between"
-                        href='/details/{item.id}/{globalState.code}'   
+                        href='/details/menu/{item.id}/{globalState.code}'   
                         wire:navigate 
                         aria-label={`View details for ${item.name}`}
                     >
@@ -101,7 +101,7 @@
                 <div class="flex flex-1 flex-col p-5">
                     <a 
                         class="mb-1 flex items-start justify-between"
-                        href='/details/{item.id}/{globalState.code}'   
+                        href='/details/menu/{item.id}/{globalState.code}'   
                         wire:navigate 
                     >
                         <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">

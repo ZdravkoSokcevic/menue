@@ -8,7 +8,8 @@
                 code: "{{ $code }}",
                 item: "{{ $item }}",
                 page: "{{ $page }}",
-                company: @json($company)
+                company: @json($company),
+                type: "{{ @$type }}"
             };
         </script>
     @endpush

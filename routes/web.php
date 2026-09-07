@@ -27,7 +27,7 @@ $baseDomain = parse_url(config('app.url'), PHP_URL_HOST);
 // API ROUTES
 Route::domain('app.' . $baseDomain)->group(function() {
     Route::get('/details', DetailsPage::class);
-    Route::get('/details/{id}/{code}', DetailsPage::class);
+    Route::get('/details/{type}/{id}/{code}', DetailsPage::class);
     
     // not working with livewire
     // Route::get('/shorts/{code}', '\App\Http\Controllers\HomeController@index');
