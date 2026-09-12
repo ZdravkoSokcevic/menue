@@ -136,6 +136,7 @@
 <h1>Test</h1>
     <AddToCartModal
         item={globalState.cartModalSelectedItem}
+        type="menu-item"
         close={() => globalState.setCartModalSelectedItem(null)} 
     />
 {/if}

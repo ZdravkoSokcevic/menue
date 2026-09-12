@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Code;
+use App\Models\Combo;
 use App\Models\Discount;
 use Illuminate\Http\Request;
 use Livewire\Attributes\Layout;
@@ -101,6 +102,64 @@ class HomePage extends Component
             $q->orWhereNull('end_at');
         });
 
+        // Match active days of week
+        $discounts->where(function ($query) {
+            $query->where('active_times', '!=', 2)
+            ->orWhere(function ($q) {
+                $weekMap = [
+                    0 => 'su',
+                    1 => 'mo',
+                    2 => 'tu',
+                    3 => 'we',
+                    4 => 'th',
+                    5 => 'fr',
+                    6 => 'sa',
+                ];
+                $dayOfWeek = Carbon::now()->dayOfWeek;
+                $weekDay = $weekMap[$dayOfWeek];
+                $q->where('active_times', 2);
+                $q->where(function ($q) use ($weekDay) {
+                    $q->whereNull('times')
+                        ->orWhereRaw('FIND_IN_SET(?, times)', [$weekDay]);
+                });
+            });
+        });
+
+        // Discount times
+        $discounts->where(function ($query) {
+            // match discounts time
+            $query->where(function ($q) {
+                $q->whereNull('time_from')
+                    ->whereNull('time_to');
+            })
+            ->orWhere(function ($q) {
+                $q->whereNull('time_from')
+                    ->whereNotNull('time_to')
+                    ->whereRaw('CURRENT_TIME() <= time_to');
+            })
+            ->orWhere(function ($q) {
+                $q->whereNotNull('time_from')
+                    ->whereNull('time_to')
+                    ->whereRaw('CURRENT_TIME() >= time_from');
+            })
+            ->orWhere(function ($q) {
+                $q->where(function ($q) {
+                    $q->where('time_from', '<=', 'time_to')
+                    ->whereRaw("CURRENT_TIME() BETWEEN time_from AND time_to");
+                });
+            })
+            ->orWhere(function ($q) {
+                $q->whereNotNull('time_from')
+                    ->whereNotNUll('time_to')
+                    ->whereColumn('time_from', '>', 'time_to')
+                    ->where(function ($q) {
+                        $q->whereRaw('CURRENT_TIME() >= time_from')
+                        ->orWhereRaw('CURRENT_TIME() <= time_to');
+                    });
+            });
+
+        });
+
         // Match time in db
 
         $allDiscounts = $discounts->get();
@@ -108,6 +167,40 @@ class HomePage extends Component
         // eliminate menu items that have discount
         $allDiscountIds = $discounts->get()->pluck('menu_id')->toArray();
         $menu = $menu->whereNotIn('id', $allDiscountIds)->get();
+
+
+        // Combos
+        $combos = Combo::with([
+            'items',
+            'items.menu',
+            'items.portion',
+            'items.portion.prices',
+            'items.menu',
+            'items.menu.category', 
+            'items.menu.extras', 
+            'items.menu.extras.prices', 
+            'items.menu.preferences', 
+            'items.menu.ingridients', 
+            'items.menu.portions.prices',
+            'items.menu.translations',
+            'items.menu.translations.language'
+        ])->whereIn('items.menu_id', $menuIds);
+
+        $combos->where(function ($q) use ($today) {
+            $q->where('start_at', '<=', $today);
+            $q->orWhereNull('start_at');
+        });
+        $combos->where(function ($q) use ($today) {
+            $q->where('end_at', '>=', $today);
+            $q->orWhereNull('end_at');
+        });
+
+        $combos->where(function ($q) {
+            $now = Carbon::now();
+            $q->whereRaw("CURRENT_TIME() BETWEEN time_from AND time_to");
+        });
+
+        // match combo times
 
 
         // dd($discounts);

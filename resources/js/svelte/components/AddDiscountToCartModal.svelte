@@ -1,26 +1,28 @@
 <script>
+    import { getDiscountPrice } from '../functions.js';
     import { cart, globalState } from '../store.svelte.js';
     import { fly } from 'svelte/transition';
 
-    let item = globalState.cartModalSelectedItem;
     // export let close;
-    let { type, close } = $props();
+    let { type, close, discountItem } = $props();
 
     let quantity = 1;
-    let selectedPortion = item.portions[0];
+    let selectedPortion = discountItem.portion;
     let extras = [];
     let preferences = [];
     let note = '';
 
-    // Example 
+    // Convert everything and adapt
+
 
     // Example data (you'll pass real later)
-    let portions = item.portions || [];
-    let availableExtras = item.extras || [];
-    let availablePreferences = item.preferences || [];
+    let availableExtras = discountItem.menu.extras || [];
+    let availablePreferences = discountItem.menu.preferences || [];
+    console.log(availableExtras, availablePreferences);
 
+    // we need to calculate prices
     let basePrice = $derived(
-        selectedPortion ? selectedPortion.prices.price : item.portions[0].prices.price
+        selectedPortion ? selectedPortion.prices.price : discountItem.portion.prices.price
     )
 
     let extrasTotal = $derived(
@@ -47,10 +49,10 @@
 
     function addToCart() {
         console.log('### ADD TO CART ###')
-        console.log({item}, {selectedPortion}, {extras});
+        console.log({discountItem}, {selectedPortion}, {extras});
         console.log('### /// ADD TO CART ###')
         cart.add({
-            item,
+            discountItem,
             quantity,
             selectedPortion: selectedPortion,
             extras: extras,
@@ -88,7 +90,7 @@
 
     <!-- HEADER -->
     <div class="p-4 border-b flex justify-between items-center">
-        <h2 class="font-bold text-lg">{item.name}</h2>
+        <h2 class="font-bold text-lg">{discountItem.menu.name}</h2>
         <button onclick={close}>✕</button>
     </div>
 
@@ -96,20 +98,17 @@
     <div class="flex-1 overflow-y-auto p-4 space-y-6">
 
         <!-- PORTIONS -->
-        {#if portions.length}
+        {#if selectedPortion}
             <div>
-                <h3 class="font-semibold mb-2">Choose portion</h3>
+                <h3 class="font-semibold mb-2">Portion</h3>
                 <div class="space-y-2">
-                    {#each portions as portion}
                         <button
                             class="w-full flex justify-between p-3 rounded-xl border
-                            {selectedPortion === portion ? 'border-blue-600 bg-blue-50' : 'border-gray-200'}"
-                            onclick={() => selectedPortion = portion}
+                            {true ? 'border-blue-600 bg-blue-50' : 'border-gray-200'}"
                         >
-                            <span>{portion.name}</span>
-                            <span>${portion.prices.price}</span>
+                            <span>{discountItem.portion.name}</span>
+                            <span>${getDiscountPrice(discountItem)}</span>
                         </button>
-                    {/each}
                 </div>
             </div>
         {/if}

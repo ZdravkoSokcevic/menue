@@ -1,8 +1,8 @@
 <script>
     import { cart } from '../store.svelte'
-    import AddToCartModal from './AddToCartModal.svelte';
     import { globalState } from '../store.svelte.js';
     import { getDiscountPrice } from '../functions'
+    import AddDiscountToCartModal from './AddDiscountToCartModal.svelte';
 
     const { discountItems } = $props();
     let activeIndex = $state(0);
@@ -47,7 +47,12 @@
                     </div>
                 </a>
                 <div class="p-4 pt-0">
-                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition duration-150">
+                    <button 
+                        class="mt-auto w-full rounded-xl bg-blue-600 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700 active:scale-95"
+                        onclick={() => {
+                            globalState.setCartDiscountSelectedItem(item)
+                        }} 
+                    >
                         Add to Order +
                     </button>
                 </div>
@@ -66,3 +71,12 @@
         </div>
     {/if}
 </div>
+
+{#if globalState.cartDiscountModalSelectedItem}
+<h1>Test</h1>
+    <AddDiscountToCartModal
+        discountItem={globalState.cartDiscountModalSelectedItem}
+        type="discount-item"
+        close={() => globalState.setCartDiscountSelectedItem(null)} 
+    />
+{/if}

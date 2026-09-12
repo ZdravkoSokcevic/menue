@@ -27,6 +27,19 @@ class Discount extends Model
         'is_active',
     ];
 
+    public $relations = [
+        'portion',
+        'portion.prices',
+        'menu.category', 
+        'menu.extras', 
+        'menu.extras.prices', 
+        'menu.preferences', 
+        'menu.ingridients', 
+        'menu.portions.prices',
+        'menu.translations',
+        'menu.translations.language'
+    ];
+
     public function menu(): BelongsTo
     {
         return $this->belongsTo(Menu::class);

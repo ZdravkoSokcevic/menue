@@ -64,6 +64,8 @@ export const globalState = $state({
     code: get(appPreferences).code || '',
     items: [],
     cartModalSelectedItem: null,
+    cartDiscountModalSelectedItem: null,
+    cardComboModalSelectedItem: null,
     currentOrder: '',
     currentOrderStatus: -1,
     currentPage: '',
@@ -74,6 +76,12 @@ export const globalState = $state({
     type: '',
     setCartModalSelectedItem(item) {
         this.cartModalSelectedItem = item;
+    },
+    setCartDiscountSelectedItem(item) {
+        this.cartDiscountModalSelectedItem = item;
+    },
+    setCardComboSelectedItem(item) {
+        this.cardComboModalSelectedItem = item;
     },
     company: {},
     // This allows you to set the code from anywhere (Blade or Svelte)
