@@ -39,6 +39,8 @@ import Preferences from '@/pages/admin/Preferences';
 import Order from '@/pages/admin/Order';
 import Combos from '@/pages/admin/Combos';
 import Users from '@/pages/admin/Users';
+import Settings from '@/pages/admin/Settings';
+import Rooms from '@/pages/admin/Rooms';
 
 const pageVariants = {
     initial: { opacity: 0, x: "-100vw" },
@@ -140,7 +142,7 @@ const App: React.FC = () => {
                     <Route path="/home" element={<Home />} />
                     <Route path="/about" element={ <About nesto="to nesto" /> }></Route>
                     <Route path="/settings" element= {
-                        <ProtectedRoute children={<About nesto="nesto" />}></ProtectedRoute>
+                        <ProtectedRoute children={<Settings />}></ProtectedRoute>
                     }/>
 
                     {/* ADMIN COMPONENTS */}
@@ -170,6 +172,10 @@ const App: React.FC = () => {
 
                     <Route path='/tables' element = {
                         <ProtectedRoute children={<Tables />} />
+                    } />
+
+                    <Route path='/rooms' element = {
+                        <ProtectedRoute children={<Rooms />} />
                     } />
 
                     <Route path='/allergens' element = {

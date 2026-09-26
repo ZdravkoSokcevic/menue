@@ -7,6 +7,7 @@ export const appPreferences = persisted('preferences', {
     cart: [],
     code: '',
     page: '',
+    company: {}
 })
 export const addWholeItemsToPersistedStore  = cartItems => {
     
@@ -43,6 +44,13 @@ export const addLanguagesToPersisted = languages => {
     }))
 }
 
+export const addCompanyToPersisted = company => {
+    appPreferences.update(state => ({
+        ...state,
+        company
+    }));
+}
+
 export const addSelectedLanguageToPersisted = language => {
     appPreferences.update(state => ({
         ...state,
@@ -65,7 +73,7 @@ export const globalState = $state({
     items: [],
     cartModalSelectedItem: null,
     cartDiscountModalSelectedItem: null,
-    cardComboModalSelectedItem: null,
+    cartComboModalSelectedItem: null,
     currentOrder: '',
     currentOrderStatus: -1,
     currentPage: '',
@@ -74,20 +82,24 @@ export const globalState = $state({
     isLanguageModalOpened: false,
     // for details page type
     type: '',
+    company: {},
     setCartModalSelectedItem(item) {
         this.cartModalSelectedItem = item;
     },
     setCartDiscountSelectedItem(item) {
         this.cartDiscountModalSelectedItem = item;
     },
-    setCardComboSelectedItem(item) {
-        this.cardComboModalSelectedItem = item;
+    setCartComboSelectedItem(item) {
+        this.cartComboModalSelectedItem = item;
     },
-    company: {},
     // This allows you to set the code from anywhere (Blade or Svelte)
     setCode(newCode) {
         this.code = newCode;
         addCodeToPersistedStore(newCode);
+    },
+    setCompany(company) {
+        this.company = company;
+        addCompanyToPersisted(company)
     },
     setCurrentOrder(id) {
         this.setCurrentOrder = id;
@@ -99,9 +111,6 @@ export const globalState = $state({
         // debugger;
         this.currentPage = page;
         addPageToPersisted(page);
-    },
-    setCompany(company) {
-        this.company = company;
     },
     setType(type) {
         this.type = type;
@@ -122,12 +131,13 @@ export const globalState = $state({
         this.isLanguageModalOpened = value;
     },
     getNameTranslation(item) {
+        console.log(item);
         let code = (globalState.selectedLanguage && globalState.selectedLanguage.language) ? globalState.selectedLanguage.language.code : null;
         if(!code)
             return item.name;
-        console.log(code);
-        console.log(item.translations);
-        console.log(item.translations[code]);
+        // console.log(code);
+        // console.log(item.translations);
+        // console.log(item.translations[code]);
         if(item.translations && item.translations[code] && item.translations[code].name)
             return item.translations[code].name;
         else return item.name;
@@ -139,7 +149,100 @@ export const globalState = $state({
         if(item.translations && item.translations[code] && item.translations[code].description)
             return item.translations[code].description;
         else return item.description;
-    }
+    },
+    getDiscountNameTranslation(item) {
+        let code = (globalState.selectedLanguage && globalState.selectedLanguage.language) ? globalState.selectedLanguage.language.code : null;
+        if(!code)
+            return item?.menu?.name;
+
+        let menu = item.menu;
+        let translations = menu?.translations
+
+        if(menu && translations && translations[code] && translations[code].name)
+            return translations[code].name;
+
+        else return item.menu.name;
+    },
+    getDiscountDescriptionTranslation(item) {
+        let code = (globalState.selectedLanguage && globalState.selectedLanguage.language) ? globalState.selectedLanguage.language.code : null;
+        if(!code)
+            return item?.menu?.description;
+
+        let menu = item.menu;
+        let translations = menu?.translations
+
+        if(menu && translations && translations[code] && translations[code].description)
+            return translations[code].description;
+
+        else return item.menu.description;
+    },
+    getComboNameTranslated(item) {
+        let str = '';
+        let code = (globalState.selectedLanguage && globalState.selectedLanguage.language) ? globalState.selectedLanguage.language.code : null;
+        if(item.items)
+        {
+            item.items.map((comboItem, index) => {
+                // fetchTranslation if exists
+                let itemName = comboItem.menu?.name;
+                let itemMenu = comboItem.menu;
+                let translations = itemMenu?.translations;
+                let itemNameTranslation = (itemMenu && translations && translations[code] && translations[code].name) ? translations[code].name : itemName;
+
+                str += ' ' + itemNameTranslation;
+                if(index < item.items.length -1)
+                    str += ' +';
+            })
+        }
+        return str;
+    },
+    getComboItemNameTranslation(item) {
+        let code = (globalState.selectedLanguage && globalState.selectedLanguage.language) ? globalState.selectedLanguage.language.code : null;
+        if(!code)
+            return item?.menu?.name;
+
+        let menu = item.menu;
+        let translations = menu?.translations
+
+        if(menu && translations && translations[code] && translations[code].name)
+            return translations[code].name;
+
+        else return item.menu.name;
+    },
+    getComboDescriptionTranslated(item) {
+        let str = '<ul class="list-disc">';
+        let code = (globalState.selectedLanguage && globalState.selectedLanguage.language) ? globalState.selectedLanguage.language.code : null;
+        if(item.items)
+        {
+            item.items.map((comboItem, index) => {
+                // fetchTranslation if exists
+                let itemName = comboItem.menu?.description;
+                let itemMenu = comboItem.menu;
+                let translations = itemMenu?.translations;
+                let itemNameTranslation = (itemMenu && translations && translations[code] && translations[code].description) ? translations[code].description : itemName;
+
+                str += '<li>' + itemNameTranslation + '</li>';
+                if(index < item.items.length -1)
+                    str += '';
+            })
+        }
+        str += '</ul>'
+        console.log(str);
+        return str;
+    },
+    getComboItemDescriptionTranslation(item) {
+        let code = (globalState.selectedLanguage && globalState.selectedLanguage.language) ? globalState.selectedLanguage.language.code : null;
+        if(!code)
+            return item?.menu?.description;
+
+        let menu = item.menu;
+        let translations = menu?.translations
+
+        if(menu && translations && translations[code] && translations[code].description)
+            return translations[code].description;
+
+        else return item.menu.description;
+    },
+
     // add data to cart:
 });
 
@@ -157,7 +260,8 @@ export const cart = $state({
         const existingItem = this.items.find(i =>
             i.id === newItem.id &&
             i.portionSize === newCartItem.portionSize &&
-            i.specialOccasion === newCartItem.specialOccasion
+            i.specialOccasion === newCartItem.specialOccasion &&
+            type == 'menu-item'
         );
         
         if (existingItem) {
@@ -169,7 +273,32 @@ export const cart = $state({
                 quantity: newCartItem.quantity, 
                 selectedPortion: newCartItem.selectedPortion,
                 extras: newCartItem.extras,
-                preferences: newCartItem.preferences
+                preferences: newCartItem.preferences,
+                type: 'menu-item'
+            });
+            addWholeItemsToPersistedStore(this.items);
+        }
+    },
+    addDiscount(newDiscountItem) {
+        const newItem = newDiscountItem.discountItem;
+        const existingItem = this.items.find(i =>
+            i.id === newItem.id &&
+            i.portionSize === newDiscountItem.portionSize &&
+            i.specialOccasion === newDiscountItem.specialOccasion &&
+            type == 'discount-item'
+        );
+
+        if (existingItem) {
+            existingItem.quantity += parseInt(newDiscountItem.quantity);
+        } else {
+            // Add new item with quantity 1
+            this.items.push({ 
+                ...newItem, 
+                quantity: newDiscountItem.quantity, 
+                selectedPortion: newDiscountItem.selectedPortion,
+                extras: newDiscountItem.extras,
+                preferences: newDiscountItem.preferences,
+                type: 'discount-item'
             });
             addWholeItemsToPersistedStore(this.items);
         }
@@ -271,5 +400,31 @@ export const cart = $state({
 
     get getItems() {
         return get(appPreferences).cart;
+    },
+
+    getItemNameAndTranslation(item) {
+        let type = item.type;
+        if(type == 'menu-item')
+            return globalState.getNameTranslation(item);
+        else if(type == 'discount-item') {
+            return globalState.getDiscountNameTranslation(item)
+        }
+        else if(type == 'combo-item') {
+            return ''
+        }
+    },
+
+    // Only menu-item and discount-item 
+    // are passed here
+    getCorrectPicture(item) {
+        let type = item.type;
+        let pictureStr = (type == 'menu-item') ? item.picture : item.menu.picture;
+        if(!pictureStr)
+            return '';
+        return `/storage/${pictureStr}`;
+    },
+
+    getCorrectPrice(item) {
+
     }
 })

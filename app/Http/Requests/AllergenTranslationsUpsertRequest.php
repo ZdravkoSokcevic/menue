@@ -35,6 +35,9 @@ class AllergenTranslationsUpsertRequest extends FormRequest
         if(!$targetCompanyId)
             return false;
 
+        if($targetCompanyId != $user->getActiveCompanyId())
+            return false;
+
         // 4. Role-Based Editing Constraints
         if ($user->role === User::AGENT_ROLE) {
             // Agent can only edit Extras attached to companies they created

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('location_lng')->nullable();
             $table->string('street')->nullable();
             $table->string('website')->nullable();
+            $table->json('settings')->nullable();
             $table->bigInteger('language_id')
                 ->unsigned()
                 ->nullable()

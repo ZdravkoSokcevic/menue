@@ -89,7 +89,7 @@ class Discounts extends React.Component<IProps, IState> {
                                                 </div>
                                             )}
                                             {expired && (
-                                                <div className="ribbon new bg-danger text-white">
+                                                <div className="ribbon new bg-danger text-white" style={{zIndex: '1'}}>
                                                     EXPIRED
                                                 </div>
                                             )}

@@ -2,6 +2,15 @@
     import { cart } from '../store.svelte'
     import AddToCartModal from './AddToCartModal.svelte';
     import { globalState } from '../store.svelte.js';
+    import OldCart from './parts/OldCart.svelte';
+    import CleanItemCart from './parts/CleanItemCard.svelte';
+    import CompactItemCard from './parts/CompactItemCard.svelte';
+
+    let companySettings = globalState.company.settings;
+
+    const menuItemsAppearance = companySettings.menuItemsAppearance || 'compact';
+    const menuItemsAppearanceGridType = companySettings.menuItemsAppearanceGridType || 'single';
+    // console.log({menuItemsAppearance}, {menuItemsAppearanceGridType})
 
 
     let { menuItems = [] } = $props();
@@ -44,7 +53,7 @@
 
 </script>
 
-<div class="mx-auto max-w-7xl px-4 py-8">
+<div class="mx-auto max-w-7xl">
     
     <div class="mb-8 flex flex-wrap justify-center gap-3">
         {#each categories as cat}
@@ -59,78 +68,36 @@
             </button>
         {/each}
     </div>
-    <div class="mx-auto max-w-2xl">
-    <div class="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
-        {#each filteredItems as item,index (item.id || item.name)}
-            <div
-                class="group flex flex-col w-full overflow-hidden md:max-w-[320px] rounded-2xl border border-gray-100 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
-            >
-                <a 
-                        class="mb-1 flex items-start justify-between"
-                        href='/details/menu/{item.id}/{globalState.code}'   
-                        wire:navigate 
-                        aria-label={`View details for ${item.name}`}
-                    >
-                    
-                    <div 
-                        class="relative aspect-video w-full overflow-hidden bg-gray-200 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                        // style="background-image: url('/storage/{item.picture}');"
-                    >
-                        <!-- Animated Skeleton Placeholder -->
-                        <div 
-                            class="absolute inset-0 animate-pulse bg-gray-300"
-                            id="skeleton-{item.id}"
-                        ></div>
-                            <!-- Native Lazy Loaded Image replacement for background-image -->
-                        <img 
-                            src="/storage/{item.picture}" 
-                            loading={index < 4 ? "eager" : "lazy"}
-                            fetchpriority={index < 4 ? "high" : "auto"}
-                            decoding="async"
-                            class="h-full w-full object-cover object-center opacity-0 transition-transform duration-500 group-hover:scale-110"
-                            onload={(e) => {
-                                e.currentTarget.classList.remove('opacity-0');
-                                const skeleton = document.getElementById(`skeleton-${item.id}`);
-                                if (skeleton) skeleton.style.display = 'none';
-                            }}
-                        />
-                        <div class="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
-                    </div>
-                </a>
-
-                <div class="flex flex-1 flex-col p-5">
-                    <a 
-                        class="mb-1 flex items-start justify-between"
-                        href='/details/menu/{item.id}/{globalState.code}'   
-                        wire:navigate 
-                    >
-                        <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                            {globalState.getNameTranslation(item)}
-                        </h3>
-                        <span class="text-lg font-black text-blue-600">${ (item && item.portions && item.portions[0] && item.portions[0].prices) ? item.portions[0].prices.price : 0}</span>
-                    </a>
-                    
-                    <p class="mb-5 text-sm leading-relaxed text-gray-500 line-clamp-2">
-                        {globalState.getDescriptionTranslation(item)}
-                    </p>
-
-                    <button 
-                        class="mt-auto w-full rounded-xl bg-blue-600 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700 active:scale-95"
-                        onclick={() => {
-                            globalState.setCartModalSelectedItem(item)
-                        }}    
-                    >
-                        Add to Order +
-                    </button>
+</div>
+<div class="mx-auto max-w-7xl">
+    <!-- SINGLE ITEM COLUMN -->
+    {#if menuItemsAppearanceGridType == 'single'}
+        <div class={menuItemsAppearanceGridType == 'single' ? "grid grid-cols-1 gap-4" : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 p-2"}>
+            {#each filteredItems as item,index (item.id || item.name)}
+                    <CleanItemCart item={item} index={index} />
+                    <!-- <OldCart item={item} index={index} /> -->
+            {:else}
+                <div class="col-span-full py-20 text-center text-gray-400 italic">
+                    No items found in {activeCategory}.
                 </div>
-            </div>
-        {:else}
-            <div class="col-span-full py-20 text-center text-gray-400 italic">
-                No items found in {activeCategory}.
-            </div>
-        {/each}
-    </div>
-    </div>
+            {/each}
+        </div>
+    {/if}
+
+    <!-- DOUBLE ITEM COLUMN -->
+    {#if menuItemsAppearanceGridType == 'double'}
+        <!-- <div class="mx-auto max-w-2xl"> -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 p-2">
+            {#each filteredItems as item,index (item.id || item.name)}
+                    <CompactItemCard item={item} index={index}/>
+            {:else}
+                <div class="col-span-full py-20 text-center text-gray-400 italic">
+                    No items found in {activeCategory}.
+                </div>
+            {/each}
+        </div>
+        <!-- </div> -->
+    {/if}
 </div>  
 {#if globalState.cartModalSelectedItem}
 <h1>Test</h1>

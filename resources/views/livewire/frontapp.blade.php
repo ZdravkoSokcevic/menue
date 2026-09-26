@@ -25,10 +25,13 @@
         <script id="menu-discounts" type="application/ld+json">
             {!! json_encode($discountItems) !!}
         </script>
-        <script>
-            console.log("{!! json_encode($discountItems) !!}")
-        </script>
         <div class="discount-content" id="menudiscounts-component" wire:ignore></div>
+        
+        <!-- COMBOS COMPONENT -->
+        <script id="menu-combos" type="application/ld+json">
+            {!! json_encode($comboItems) !!}
+        </script>
+        <div class="combos-component" id="menucombos-component" wire:ignore></div>
 
         <!-- MENU ITEMS COMPONENT -->
         <script id="menu-data" type="application/ld+json">
@@ -37,6 +40,12 @@
         <div class="main-content" id="menuitems-component" wire:ignore></div>
 
         <div id="lang-chooser" class="language-list-container"></div> 
+
+        <div id="cart-button" class="cart-choose-button"></div>
+
+        <!-- FOOTER ITEMS -->
         @include('components.footer', ['company' => $company])
     </div>
+
+
 </div>

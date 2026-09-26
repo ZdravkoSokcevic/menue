@@ -30,7 +30,7 @@ class UsersDeleteRequest extends FormRequest
             // detect which company he is trying to join user
             $company = Company::where('creator_id', $user->id)->toArray();
             if(
-                in_array(request()->input('company_id'), $company) &&
+                in_array($user->getActiveCompanyId(), $company) &&
                 request('role') == 'user' 
             ) {
                 return true;

@@ -16,48 +16,70 @@
 
     console.log(discountItems)
 </script>
-<div class="mx-auto max-w-7xl px-4 py-8">
-    <div class="mb-4">
-        <h3 class="text-xl font-bold text-gray-900">Popular discounts</h3>
+<div class="mx-auto max-w-7xl px-4 py-2">
+    <div class="mx-auto max-w-2xl">
+        <div class="mb-4">
+            <h3 class="text-xl font-bold text-gray-900">Popular discounts</h3>
+        </div>
     </div>
 
     <!-- MAIN SLIDER CONTAINER -->
-    <div 
-        onscroll={handleScroll}
-        class="flex space-x-4 overflow-x-auto snap-x snap-mandatory px-4 pb-4 no-scrollbar"
-    >
-        {#each discountItems as item}
-            <div class="w-[82vw] sm:w-[350px] flex-none snap-start bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden flex flex-col justify-between">
-                <a href="/details/discount/{item.id}/{globalState.code}">
-                    <div>
-                        <div class="relative h-48 w-full overflow-hidden">
-                            <img 
-                                src={item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"} 
-                                alt={item.menu?.name || "Discount item"} 
-                                class="w-full h-full object-cover"
-                            />
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-1">
-                                <h3 class="text-lg font-bold text-gray-900">{item.menu?.name + '(' + item.portion.name +')' || 'Discounted Item'}</h3>
-                                <span class="text-lg font-bold text-blue-600">${getDiscountPrice(item)}</span>
+     <div class="mx-auto max-w-2xl">
+        <div 
+            onscroll={handleScroll}
+            class="mb-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4"
+        >
+            {#each discountItems as item, index}
+                <div class="flex w-[45vw] flex-none snap-start flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm sm:w-[220px]">
+                    <a href="/details/discount/{item.id}/{globalState.code}">
+                        <div class="relative aspect-[4/3] w-full bg-gray-200">
+                            <div
+                                class="grid h-full w-full gap-0.5"
+                                style="grid-template-columns: repeat({item.items?.length || 1}, minmax(0, 1fr));"
+                            >
+                                <div class="relative h-full w-full overflow-hidden bg-gray-100">
+                                    <img
+                                        src={item.menu.picture ? '/storage/' + item.menu.picture : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"} 
+                                        alt={item.menu?.name || "Discount item"} 
+                                        loading={index < 2 ? "eager" : "lazy"}
+                                        decoding="async"
+                                        class="h-full w-full object-cover"
+                                    />
+                                </div>
                             </div>
-                            <p class="text-sm text-gray-500">{item.description || 'Special discount offer'}</p>
+
+                            <!-- Add button, overlaid like menu item card -->
+                            <button
+                                type="button"
+                                aria-label="Add {globalState.getDiscountNameTranslation(item)} to order"
+                                class="absolute bottom-2 right-2 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white shadow-lg ring-2 ring-white transition hover:bg-blue-700 active:scale-90"
+                                onclick={(e) => {
+                                    e.preventDefault();
+                                    globalState.setCartDiscountSelectedItem(item);
+                                }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="h-3.5 w-3.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>
+                            </button>
                         </div>
-                    </div>
-                </a>
-                <div class="p-4 pt-0">
-                    <button 
-                        class="mt-auto w-full rounded-xl bg-blue-600 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700 active:scale-95"
-                        onclick={() => {
-                            globalState.setCartDiscountSelectedItem(item)
-                        }} 
-                    >
-                        Add to Order +
-                    </button>
+
+                        <!-- Details -->
+                        <div class="flex flex-1 flex-col p-2.5">
+                            <h3 class="line-clamp-1 text-sm font-bold text-gray-900">
+                                {globalState.getDiscountNameTranslation(item)}
+                            </h3>
+                            <p class="line-clamp-1 text-xs text-gray-400">
+                                {@html globalState.getDiscountDescriptionTranslation(item) || 'Special discount offer'}
+                            </p>
+                            <span class="mt-1 text-base font-extrabold leading-none text-blue-600">
+                                ${getDiscountPrice(item)}
+                            </span>
+                        </div>
+                    </a>
                 </div>
-            </div>
-        {/each}
+            {/each}
+        </div>
     </div>
 
     <!-- PAGINATION DOTS -->

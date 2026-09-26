@@ -15,9 +15,13 @@ class HomePage extends Component
     public $menuItems;
 
     public $discountItems;
+
+    public $comboItems;
     public $company;
     public $creator;
     public $table;
+
+    public $room;
 
     public $code;
 
@@ -36,11 +40,16 @@ class HomePage extends Component
         if(!$record)
             return abort(403);
         
-        $table = $record->table;
+        $tableOrRoom = $record->table;
         // dd($record);
-        if(!$table) 
+        if(!$tableOrRoom) {
+            $tableOrRoom = $record->room;
+        }
+
+        if(!$tableOrRoom)
             return abort(403);
-        $company = $table->company;
+
+        $company = $tableOrRoom->company;
         if(!$company)
             return abort(403);
 
@@ -72,133 +81,30 @@ class HomePage extends Component
         // eg(scan another qr code)
         // if($license->type == 'basic' && !$is_local)
         //     return response(403);
+        $menuIds = $company->menu()->pluck('id')->toArray();
+        $comboIds = Combo::with('items')->whereHas('items.menu', function ($query)use ($menuIds) {
+            $query->whereIn('id', $menuIds);
+        })->get()->pluck('id')->toArray();
+        
+        $discounts = Discount::query();
 
         // Discounts
-        $menuIds = $company->menu()->pluck('id')->toArray();
-        // TODO: Match active times and active days
-        $discounts = Discount::with([
-            'portion',
-            'portion.prices',
-            'menu.category', 
-            'menu.extras', 
-            'menu.extras.prices', 
-            'menu.preferences', 
-            'menu.ingridients', 
-            'menu.portions.prices',
-            'menu.translations',
-            'menu.translations.language'
-        ])->whereIn('menu_id', $menuIds);
-        // Match discount times
-        // and active dates
-        $today = Carbon::now()->startOfDay();
-        $now = Carbon::parse($today);
-        
-        $discounts->where(function ($q) use ($today) {
-            $q->where('start_at', '<=', $today);
-            $q->orWhereNull('start_at');
-        });
-        $discounts->where(function ($q) use ($today) {
-            $q->where('end_at', '>=', $today);
-            $q->orWhereNull('end_at');
-        });
 
-        // Match active days of week
-        $discounts->where(function ($query) {
-            $query->where('active_times', '!=', 2)
-            ->orWhere(function ($q) {
-                $weekMap = [
-                    0 => 'su',
-                    1 => 'mo',
-                    2 => 'tu',
-                    3 => 'we',
-                    4 => 'th',
-                    5 => 'fr',
-                    6 => 'sa',
-                ];
-                $dayOfWeek = Carbon::now()->dayOfWeek;
-                $weekDay = $weekMap[$dayOfWeek];
-                $q->where('active_times', 2);
-                $q->where(function ($q) use ($weekDay) {
-                    $q->whereNull('times')
-                        ->orWhereRaw('FIND_IN_SET(?, times)', [$weekDay]);
-                });
-            });
-        });
-
-        // Discount times
-        $discounts->where(function ($query) {
-            // match discounts time
-            $query->where(function ($q) {
-                $q->whereNull('time_from')
-                    ->whereNull('time_to');
-            })
-            ->orWhere(function ($q) {
-                $q->whereNull('time_from')
-                    ->whereNotNull('time_to')
-                    ->whereRaw('CURRENT_TIME() <= time_to');
-            })
-            ->orWhere(function ($q) {
-                $q->whereNotNull('time_from')
-                    ->whereNull('time_to')
-                    ->whereRaw('CURRENT_TIME() >= time_from');
-            })
-            ->orWhere(function ($q) {
-                $q->where(function ($q) {
-                    $q->where('time_from', '<=', 'time_to')
-                    ->whereRaw("CURRENT_TIME() BETWEEN time_from AND time_to");
-                });
-            })
-            ->orWhere(function ($q) {
-                $q->whereNotNull('time_from')
-                    ->whereNotNUll('time_to')
-                    ->whereColumn('time_from', '>', 'time_to')
-                    ->where(function ($q) {
-                        $q->whereRaw('CURRENT_TIME() >= time_from')
-                        ->orWhereRaw('CURRENT_TIME() <= time_to');
-                    });
-            });
-
-        });
+        $discounts->whereIn('menu_id', $menuIds);
+        $discounts->matchActiveDatesAndTimes();
 
         // Match time in db
 
         $allDiscounts = $discounts->get();
+        // dd($allDiscounts);
 
         // eliminate menu items that have discount
         $allDiscountIds = $discounts->get()->pluck('menu_id')->toArray();
-        $menu = $menu->whereNotIn('id', $allDiscountIds)->get();
+        // $menu = $menu->whereNotIn('id', $allDiscountIds)->get();
+        $menu = $menu->get();
 
-
-        // Combos
-        $combos = Combo::with([
-            'items',
-            'items.menu',
-            'items.portion',
-            'items.portion.prices',
-            'items.menu',
-            'items.menu.category', 
-            'items.menu.extras', 
-            'items.menu.extras.prices', 
-            'items.menu.preferences', 
-            'items.menu.ingridients', 
-            'items.menu.portions.prices',
-            'items.menu.translations',
-            'items.menu.translations.language'
-        ])->whereIn('items.menu_id', $menuIds);
-
-        $combos->where(function ($q) use ($today) {
-            $q->where('start_at', '<=', $today);
-            $q->orWhereNull('start_at');
-        });
-        $combos->where(function ($q) use ($today) {
-            $q->where('end_at', '>=', $today);
-            $q->orWhereNull('end_at');
-        });
-
-        $combos->where(function ($q) {
-            $now = Carbon::now();
-            $q->whereRaw("CURRENT_TIME() BETWEEN time_from AND time_to");
-        });
+        $combos = (new Combo)->matchActiveDatesAndTimes()->whereIn('id', $comboIds)->get();
+        // dd($combos);
 
         // match combo times
 
@@ -207,9 +113,11 @@ class HomePage extends Component
         $dataForLayout = [
             'company' => $company,
             'menuItems' => $menu,
+            'comboItems' => $combos,
             'discountItems' => $allDiscounts,
             'creator' => $creator,
-            'table' => $table,
+            'table' => $record->table ? $tableOrRoom : null,
+            'room' => $record->room ? $tableOrRoom : null,
             'code' => $code
         ];
 

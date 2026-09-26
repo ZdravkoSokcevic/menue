@@ -22,7 +22,8 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function all(): Collection | LengthAwarePaginator
     {
-        $companyId = request()->input('company_id');
+        $user = request()->user();
+        $companyId = $user->getActiveCompanyId();
         // TODO: return just orders that are 
         // from the menu from that restaurant/hotel
         $q =  Order::with([
@@ -32,9 +33,9 @@ class OrderRepository implements OrderRepositoryInterface
                 'items.menu.company', 
                 'items.modifications', 
                 'items.modifications.extra', 
-                'items.modifications.preference' => function($q) {
+                'items.modifications.preference' => function($q)use($companyId) {
             // $q->select('items.menu.id');
-            // $q->where('items.menu.company_id', request()->input('company_id'));
+            // $q->where('items.menu.company_id', $companyId);
             
         }])
         ->whereHas('items')
@@ -51,7 +52,7 @@ class OrderRepository implements OrderRepositoryInterface
         if(request()->has('status'))
             $q->where('status', request()->input('status'));
 
-        // $q->where('items.menu.company.id', request()->input('company_id'));
+        // $q->where('items.menu.company.id', $companyId);
         
 
         return $q->get();

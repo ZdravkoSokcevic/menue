@@ -16,12 +16,12 @@ class PreferenceCreateRequest extends FormRequest
     {
 
         $req = request();
-        $company_id = $req->input('company_id');
         $user = $req->user();
+        $company_id = $user->getActiveCompanyId();
         // Admin can create without company_id
         if($user->role === User::ADMIN_ROLE)
             return true;
-        else if(!$req->filled('company_id'))
+        else if(!$user->getActiveCompanyId())
             return false;
         else if($user->role === User::AGENT_ROLE && !is_null($company_id)) {
             // validate that company is owned by company_admin

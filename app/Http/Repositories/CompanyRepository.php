@@ -64,4 +64,16 @@ class CompanyRepository implements CompanyRepositoryInterface
 	{
 		return Company::with(['license', 'currency', 'language', 'creator', 'admin'])->get();
 	}
+
+	public function saveSettings($settingsArr, $companyId): bool
+	{
+		$company = Company::find($companyId);
+		$company->settings = $settingsArr;
+		try {
+			$company->save();
+			return true;
+		}catch(err){
+			return false;
+		}
+	}
 }

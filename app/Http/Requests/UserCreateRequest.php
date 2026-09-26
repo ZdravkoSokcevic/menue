@@ -26,7 +26,7 @@ class UserCreateRequest extends FormRequest
             if($role == User::ADMIN_ROLE || $role == User::COMPANY_ADMIN_ROLE) {
                 return false;
             }
-            if(request()->input('company_id') != $user->company_id)
+            if($user->getActiveCompanyId() != $user->company_id)
                 return false;
 
             return true;
@@ -35,8 +35,8 @@ class UserCreateRequest extends FormRequest
             // detect which company he is trying to join user
             $company = Company::where('creator_id', $user->id)->toArray();
             if(
-                request()->has('company_id') && 
-                in_array(request()->input('company_id'), $company) &&
+                $user->getActiveCompanyId() && 
+                in_array($user->getActiveCompanyId(), $company) &&
                 request('role') == 'user' 
             ) {
                 return true;

@@ -9,7 +9,6 @@ import { Button, Input, TextField } from "@mui/material";
 import "../../../sass/modal.scss"
 import MediaHelper from "@/helpers/MediaHelper";
 import CompaniesAPI from "@/api/CompaniesAPI";
-import { MenuCreateResponseItem } from "@/types/Menu";
 import { CompanyResponseItem, TCompany } from "@/types/TCompanies";
 import { Store } from "@/reducers/Store";
 import { disableLoading, enableLoading } from "@/reducers/appSlice";
@@ -20,6 +19,8 @@ import { TLicenses } from "@/types/TLicenses";
 import { ILanguage, TLanguages } from "@/types/TLanguages";
 import { ICurrency, TCurrencies } from "@/types/TCurrencies";
 import { ICountry, TCountries } from "@/types/TCountries";
+import { showToast } from "@/helpers/Toast";
+import { toast } from "react-toastify";
 
 interface IProps {
     // can be page or modal
@@ -231,14 +232,6 @@ class EditCompany extends React.Component<IProps, IState>
         event.preventDefault();
     }
 
-    handleDragEnter = () => {
-
-    }
-
-    handleDragLeave = () => {
-
-    }
-
     handleAreaClick = () => {
         this.fileInputRef.current?.click();
     }
@@ -398,8 +391,6 @@ class EditCompany extends React.Component<IProps, IState>
                                                 <div
                                                 onDrop={this.handleDrop}
                                                 onDragOver={this.handleDragOver}
-                                                onDragEnter={this.handleDragEnter}
-                                                onDragLeave={this.handleDragLeave}
                                                 onClick={this.handleAreaClick}
                                                 style={{
                                                     border: "2px dashed #ccc",
@@ -734,7 +725,7 @@ class EditCompany extends React.Component<IProps, IState>
             website: event.website,
             description: event.description
         }
-        debugger;
+        // debugger;
         if(event.loog != null && typeof event.logo != undefined && typeof (event.logo.name) == 'string')
             data.logo = event.logo;
         Store.dispatch(enableLoading({}));
@@ -748,10 +739,12 @@ class EditCompany extends React.Component<IProps, IState>
             const responseData: CompanyResponseItem = res.data as CompanyResponseItem;
             this.props.editCurrentItem(responseData.item);
             this.closeModal();
+            showToast.success('Company edited successfully!');
         }
         else {
-            alert('Unexpected error occured!');
+            toast.error('Unexpected error occured!');
             // this.closeModal();
+            showToast.error('Cannot save company');
         }
     }
 }

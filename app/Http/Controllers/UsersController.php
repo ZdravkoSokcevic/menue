@@ -16,12 +16,16 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use App\Http\Repositories\UsersRepository;
+use App\Services\CompanyContextService;
 
 class UsersController extends Controller
 {
     private UsersRepositoryInterface $userRepository;
-    public function __construct(UsersRepository $ue) {
+
+    protected CompanyContextService $companyContextService;
+    public function __construct(UsersRepository $ue, CompanyContextService $ce) {
         $this->userRepository = $ue;
+        $this->companyContextService = $ce;
     }
     public function login(UserLoginRequest $r) 
     {
@@ -35,7 +39,11 @@ class UsersController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
     
         if(Hash::check($data['password'], $user->password)) {
-            $token = $user->createToken($user->username.'-AuthToken')->plainTextToken;
+            // NOTE: important: is it admin or agent, we skip company_id
+            // and goes to the general view
+            $token = ($user->isAdmin() || $user->isAgent()) 
+                ? $this->companyContextService->issueCleanToken($user) 
+                : $this->companyContextService->issueCompanyToken($user, $user->company_id);
             return response()->json([
                 'access_token' => $token,
                 'user' => $user
@@ -60,8 +68,8 @@ class UsersController extends Controller
         // agent can see users only that belong to his companies
         // dd($user);
         $users = User::where('id', '!=' , $user->id);
-        if($r->filled('company_id'))
-            $users->where('company_id', $r->input('company_id'));
+        if($user->getActiveCompanyId())
+            $users->where('company_id', $user->getActiveCompanyId());
         if($user->isAdmin())
             return $users->get();
         else if($user->isCompanyAdmin()) {
@@ -80,10 +88,11 @@ class UsersController extends Controller
 
     public function create(UserCreateRequest $r): CreateResponse
     {
+        $user = $r->user();
         $data = $r->only(User::getFillableFields());
         // dd($data);   
         $data['password'] = Hash::make($r->input('password'));
-        $data['company_id'] = $r->input('company_id');
+        $data['company_id'] = $user->getActiveCompanyId();
         if(!$r->filled('name')) {
             $data['name'] = $r->input('first_name') . ' ' . $r->input('last_name');
         }
@@ -101,12 +110,13 @@ class UsersController extends Controller
 
     public function edit(UserEditRequest $r, $id): EditResponse
     {
+        $user = $r->user();
         $data = $r->only(User::getFillableFields());
         // dd($data);   
         if($r->filled('password'))
             $data['password'] = Hash::make($r->input('password'));
-        if($r->filled('company_id'))
-            $data['company_id'] = $r->input('company_id');
+        if($user->getActiveCompanyId())
+            $data['company_id'] = $user->getActiveCompanyId();
 
         $result = $this->userRepository->edit($id, $data);
         if($result) {

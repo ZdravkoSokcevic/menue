@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('code')->index();
             $table->text('qr_code');
             $table->bigInteger('table_id')->unsigned()->nullable();
+            $table->bigInteger('room_id')->unsigned()->nullable();
             $table->timestamps();
         });
 
@@ -23,6 +24,12 @@ return new class extends Migration
             $table->foreign('table_id')
                 ->references('id')
                 ->on('tables')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreign('room_id')
+                ->references('id')
+                ->on('rooms')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
         });
@@ -35,7 +42,9 @@ return new class extends Migration
     {
         Schema::table('codes', function (Blueprint $table) {
             $table->dropForeign('table_id');
-        });
+            $table->dropForeign('room_id');
+
+            });
         Schema::dropIfExists('codes');
     }
 };

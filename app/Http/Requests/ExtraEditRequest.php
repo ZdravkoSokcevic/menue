@@ -23,10 +23,11 @@ class ExtraEditRequest extends FormRequest
         }
 
         // 2. Non-admins must provide a company_id
-        $targetCompanyId = $this->input('company_id');
-        if (!$this->filled('company_id')) {
+        // company_id is now placed in session - moved away from http request
+        if (!$user->getActiveCompanyId()) {
             return false;
         }
+        $targetCompanyId = $user->getActiveCompanyId();
 
         // 3. Fetch the Extra being updated from the route parameter (e.g., /extras/{extra})
         $extra = $this->route('id'); 

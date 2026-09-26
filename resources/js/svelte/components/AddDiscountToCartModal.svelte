@@ -6,11 +6,11 @@
     // export let close;
     let { type, close, discountItem } = $props();
 
-    let quantity = 1;
-    let selectedPortion = discountItem.portion;
-    let extras = [];
-    let preferences = [];
-    let note = '';
+    let quantity = $state(1);
+    let selectedPortion = $state(discountItem.portion);
+    let extras = $state([]);
+    let preferences = $state([]);
+    let note = $state('');
 
     // Convert everything and adapt
 
@@ -19,6 +19,7 @@
     let availableExtras = discountItem.menu.extras || [];
     let availablePreferences = discountItem.menu.preferences || [];
     console.log(availableExtras, availablePreferences);
+
 
     // we need to calculate prices
     let basePrice = $derived(
@@ -51,7 +52,7 @@
         console.log('### ADD TO CART ###')
         console.log({discountItem}, {selectedPortion}, {extras});
         console.log('### /// ADD TO CART ###')
-        cart.add({
+        cart.addDiscount({
             discountItem,
             quantity,
             selectedPortion: selectedPortion,

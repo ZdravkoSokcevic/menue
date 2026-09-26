@@ -27,21 +27,25 @@
 
     <div class="flex-1 overflow-y-auto p-6 pt-0">
         {#each cart.items as item (item.id)}
-            <div class="hidden">{JSON.stringify(item)}</div>
+            <pre>
+                <div class="hidden">{JSON.stringify(item, null, 2)}</div>
+            </pre>
             <div class="pt-6 group mb-4 flex items-center gap-4 border-t border-gray-200">
+                {#if item.type == 'menu-item' || item.type == 'discount-item'}
                 <img
-                    src="/storage/{item.picture}"
-                    alt={item.name}
+                    src={cart.getCorrectPicture(item)}
+                    alt={cart.getItemNameAndTranslation(item)}
                     class="h-16 w-16 shrink-0 rounded-lg border border-gray-100 object-cover"
                     loading="lazy"
                     decoding="async"
                 />
+                {/if}
 
                 <div class="min-w-0 flex-1">
                     <div class="flex items-start justify-between gap-3">
                         <div class="min-w-0">
                             <div class="mt-2 flex flex-wrap gap-2">
-                                <h4 class="truncate font-bold text-gray-900">{item.name}</h4>
+                                <h4 class="truncate font-bold text-gray-900">{cart.getItemNameAndTranslation(item)}</h4>
                                 <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700">
                                     Portion: {item.portionSize}
                                 </span>

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Code;
+use App\Models\Combo;
 use App\Models\Discount;
 use App\Models\Menu;
 use Illuminate\Http\Request;
@@ -45,6 +46,9 @@ class DetailsPage extends Component
                 'portions', 
                 'portion'
             )->whereId($id)->first();
+        else if($type == 'combo')
+            $item = Combo::with((new Combo)->relations)->whereId($id)->first();
+
         if(!$item)
             return abort(403);
 
@@ -88,6 +92,8 @@ class DetailsPage extends Component
             'company'   => $this->company,
             'type'      => $this->type
         ];
+
+        // dd($data);
         return view($view)
             ->layout('layouts.frontapp', $data)
             ->with($data);

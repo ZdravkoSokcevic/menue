@@ -11,9 +11,6 @@ class TablesAPI extends Api
         if(data.company_id == '')
             delete data['company_id'];
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             let success: AxiosResponse<TTables> = await this.post('/api/tables/create', reqData, {}, true);
             if(success)
@@ -28,9 +25,6 @@ class TablesAPI extends Api
         if(data.company_id == '')
             delete data['company_id'];
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             const success: AxiosResponse<IResponseItem<ICompanyTable>> = await this.post(`/api/tables/edit/${data.id}`, reqData, {}, true);
             if(success)
@@ -58,9 +52,7 @@ class TablesAPI extends Api
  
         // debugger;
         let items: TTables = [];
-        const data: {company_id?: string} = {}
-        if(companyId)
-            data.company_id = companyId;
+        const data = {}
         try {
             let response = await this.get('/api/tables', data, {});
             if(response && response.data) {

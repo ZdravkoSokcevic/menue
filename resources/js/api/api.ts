@@ -15,6 +15,9 @@ import { redirect, useNavigate } from "react-router-dom";
 AxiosApiInstance.interceptors.request.use(
     async config => {
         const tokenObj: string = await Store.getState().user.token as string;
+        console.log('### REQUEST TOKEN ###');
+        console.log(tokenObj);
+        console.log('### ///REQUEST TOKEN ###');
         // console.log('### TOKEN OBJECT API MIDDLEWARE ###')
         // console.log(tokenObj);
         // console.log('////### TOKEN OBJECT API MIDDLEWARE ###')

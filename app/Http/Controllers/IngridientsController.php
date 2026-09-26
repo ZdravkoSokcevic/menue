@@ -29,9 +29,9 @@ class IngridientsController extends Controller
 
     public function all(Request $r)
     {
-        if(Gate::denies('view-ingridients',  $r)) {
-            return Response::json(null, 403);
-        }
+        // if(Gate::denies('view-ingridients',  $r)) {
+        //     return Response::json(null, 403);
+        // }
         return $this->ingridientsRepository->all($r);
     }
 

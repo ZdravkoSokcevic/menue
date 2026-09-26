@@ -41,6 +41,14 @@
 				// Companies routes
 				Route::get('/companies/delete/{id}', '\App\Http\Controllers\CompaniesController@delete');
 				Route::get('/companies/all', '\App\Http\Controllers\CompaniesController@all');
+
+				// Switch company context
+				Route::post('/companies/switch', '\App\Http\Controllers\CompaniesController@switchCompany');
+				Route::get('/companies/switch_back', '\App\Http\Controllers\CompaniesController@switchCompanyBack');
+
+				// Company settings
+				Route::get('/company/settings', '\App\Http\Controllers\CompaniesController@getSettings');
+				Route::post('/company/settings', '\App\Http\Controllers\CompaniesController@saveSettings');
 				
 				// Menu routes
 				Route::get('/menu', '\App\Http\Controllers\MenuController@get');
@@ -79,11 +87,19 @@
 				Route::get('/users/delete/{id}', action: '\App\Http\Controllers\UsersController@delete');
 				Route::get('/users/me', '\App\Http\Controllers\UsersController@me');
 	
+				// TABLES
 				Route::get('/tables', '\App\Http\Controllers\TablesController@get');
 				Route::post('/tables/create', action: '\App\Http\Controllers\TablesController@create');
 				Route::post('/tables/edit/{id}', action: '\App\Http\Controllers\TablesController@edit');
 				Route::get('/tables/delete/{id}', action: '\App\Http\Controllers\TablesController@delete');
 				Route::get('/tables/download_qr/{id}', '\App\Http\Controllers\TablesController@downloadQRCodeImage');
+
+				// ROOMS
+				Route::get('/rooms', '\App\Http\Controllers\RoomsController@get');
+				Route::post('/rooms/create', action: '\App\Http\Controllers\RoomsController@create');
+				Route::post('/rooms/edit/{id}', action: '\App\Http\Controllers\RoomsController@edit');
+				Route::get('/rooms/delete/{id}', action: '\App\Http\Controllers\RoomsController@delete');
+				Route::get('/rooms/download_qr/{id}', '\App\Http\Controllers\RoomsController@downloadQRCodeImage');
 	
 				// Countries
 				Route::get('/countries', '\App\Http\Controllers\CountriesController@all');

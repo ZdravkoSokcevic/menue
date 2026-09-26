@@ -26,6 +26,7 @@ import Edit from "@/components/Edit";
 import Delete from "@/components/Delete";
 import { MdDelete } from "react-icons/md";
 import { ADMIN_ROLE } from "@/types/Roles";
+import { toast } from "react-toastify";
 
 interface IProps {
     animationRefreshKey?: number
@@ -221,10 +222,16 @@ class Companies extends React.Component<IProps, IState>
     // Then you must choose company there and will be able to see menu 
     switchToCompany = async(company: TCompany) => {
         console.log('Switch to company');
-        CompanyHelper.storeDefaultCompany(company);
-        // Store.dispatch(setDefaultCompany(company));
-        this.setState({ isVisitAllowed: false });
-        Store.dispatch(animatedRefresh({}));
+        const switchResponse: {success: boolean} = await CompaniesAPI.switchCompany(company.id as string);
+        if(switchResponse.success) {
+            CompanyHelper.storeDefaultCompany(company);
+            // Store.dispatch(setDefaultCompany(company));
+            this.setState({ isVisitAllowed: false });
+            Store.dispatch(animatedRefresh({}));
+        }else {
+            console.log(switchResponse);
+            toast.error('Cannot switch company')
+        }
         
     }
 

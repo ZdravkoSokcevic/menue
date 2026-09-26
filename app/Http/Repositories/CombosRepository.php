@@ -15,8 +15,9 @@ class CombosRepository implements CombosRepositoryInterface
     }
     public function all(Request $r)
     {
+        $user = $r->user();
         $isAdmin = auth('sanctum')->user()->isAdmin();
-        $companyId = request()->input('company_id');
+        $companyId = $user->getActiveCompanyId();
         // allow admin and demo users to see every company list
         $isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
         $q = Combo::with([
@@ -36,12 +37,12 @@ class CombosRepository implements CombosRepositoryInterface
         // TODO: if user is not superadmin, if the role is company_admin, agent, or user,
         // filter company_id
         // if($isNotAdmin)
-        //     $q->whereHas('items.menu', function($query)use ($r) {
-        //         $query->where('items.menus.company_id', $r->input('company_id'));
+        //     $q->whereHas('items.menu', function($query)use ($r, $user) {
+        //         $query->where('items.menus.company_id', $user->getActiveCompanyId()));
         //     });
-        // else if ($r->filled('company_id')) {
-        //     $q->whereHas('items.menu', function($query) use ($r) {
-        //         $query->where('items.menus.company_id', $r->input('company_id'));
+        // else if ($user->getActiveCompanyId()) {
+        //     $q->whereHas('items.menu', function($query) use ($r, $user) {
+        //         $query->where('items.menus.company_id', $user->getActiveCompanyId());
         //     });
         // }
 

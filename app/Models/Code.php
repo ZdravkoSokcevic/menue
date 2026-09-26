@@ -11,11 +11,17 @@ class Code extends BaseModel
     protected $fillable = [
         'code',
         'qr_code',
-        'table_id'
+        'table_id',
+        'room_id',
     ];
 
     public function table(): BelongsTo
     {
         return $this->belongsTo(Table::class);
+    }
+
+    public function room(): BelongsTo
+    {
+        return $this->belongsTo(Room::class);
     }
 }

@@ -14,13 +14,9 @@ import {
     TableHead,
     TableRow
 } from "@mui/material";
-import { TCompaniesArr, TCompany } from "@/types/TCompanies";
-import CompaniesAPI from "@/api/CompaniesAPI";
+import { TCompaniesArr } from "@/types/TCompanies";
 import Login from "@/api/Login";
-import CompanyHelper from "@/helpers/CompanyHelper";
 import { RootState, Store } from "@/reducers/Store";
-import { animatedRefresh, setDefaultCompany } from "@/reducers/appSlice";
-import CreateCompany from "@/components/companies/CreateCompany";
 import View from "@/components/View";
 import { TComponentProps } from "@/types/TComponentProps";
 import Edit from "@/components/Edit";
@@ -72,7 +68,7 @@ class Tables extends React.Component<IProps, IState>
 
     // PREVENTION LOADING ADMIN PAGE WHEN LOGGED IN
     componentDidMount(): void {
-        this.loadCategories();
+        this.loadTables();
         this.getLoggedIn();
     }
 
@@ -229,7 +225,7 @@ class Tables extends React.Component<IProps, IState>
         
     // }
 
-    loadCategories = async() => {
+    loadTables = async() => {
         let tables = await TablesAPI.getItems();
         this.setState({ tables: tables as TTables}); 
     }

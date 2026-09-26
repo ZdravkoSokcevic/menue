@@ -10,9 +10,6 @@ class UsersAPI extends Api
     static async createUser(data: any)
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             let success: AxiosResponse<UserResponseItem> = await this.post('/api/users/create', reqData, {}, true);
             if(success)
@@ -25,9 +22,6 @@ class UsersAPI extends Api
     static async editUser(data: TUser) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             const success: AxiosResponse<UserResponseItem> = await this.post(`/api/users/edit/${data.id}`, reqData, {}, true);
             if(success)
@@ -40,9 +34,6 @@ class UsersAPI extends Api
     static async getUsers(): Promise<TUsers>
     {
         const data: any = {};
-        let companyId = Store.getState().app.defaultCompany.id;
-        if(companyId)
-            data['company_id'] = companyId
         let users: TUsers = [];
         try {
             let usersRes = await this.get('/api/users', data, {});

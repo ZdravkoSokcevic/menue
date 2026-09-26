@@ -13,7 +13,7 @@ import { MdOutlineRestaurantMenu, MdOutlineRoomPreferences } from "react-icons/m
 import { BiCategory, BiShoppingBag } from "react-icons/bi";
 import { TbShoppingCartDiscount } from "react-icons/tb";
 import { PiDeskBold } from "react-icons/pi";
-import { BiDish } from "react-icons/bi";
+import { MdOutlineRoomService } from 'react-icons/md';
 import { MdDashboard } from "react-icons/md";
 import { MdSettings } from 'react-icons/md';
 import { GrRestaurant } from "react-icons/gr";
@@ -21,6 +21,8 @@ import { LiaAllergiesSolid } from "react-icons/lia";
 import { LuCookingPot } from "react-icons/lu";
 import { FaRegSquarePlus } from 'react-icons/fa6';
 import { ADMIN_ROLE } from '@/types/Roles';
+import CompaniesAPI from '@/api/CompaniesAPI';
+import { toast } from 'react-toastify';
 
 
 interface IProps {
@@ -174,6 +176,17 @@ class Navigation extends React.Component<IProps, IState>
             : false;
     }
 
+    isAllowedToRenderRooms = (): boolean => {
+        // return true;
+        let {defaultCompany} = this.props;
+        const userSettings = this.props.userSettings;
+        let store = Store.getState().app;
+
+        return userSettings.isLoggedIn && (Store.getState().app.defaultCompany.id != '')
+            ? true
+            : false;
+    }
+
     isAllowedToRenderMenus = (): boolean => {
         let {defaultCompany} = this.props;
         const userSettings = this.props.userSettings;
@@ -258,10 +271,15 @@ class Navigation extends React.Component<IProps, IState>
         )
     }
 
-    goToAllCompanies = (e: any): void => {
-        CompanyHelper.removeSelectedCompany();
-        // eslint-disable-next-line
-        this.setState({ refreshKey: Math.random() });
+    goToAllCompanies = async(e: any) => {
+        let switchToAdminViewReq: {success: boolean} = await CompaniesAPI.switchToAdminView();
+        if(switchToAdminViewReq.success) {
+            CompanyHelper.removeSelectedCompany();
+            // eslint-disable-next-line
+            this.setState({ refreshKey: Math.random() });
+        }else {
+            toast.error('Cannot switch to default view');
+        }
     }
 
     logout = async(e: any) => {
@@ -333,6 +351,15 @@ class Navigation extends React.Component<IProps, IState>
                         viewTransition
                     >
                             <PiDeskBold /> Tables
+                    </Link>}
+
+                    {/* ROOMS */}
+                    {this.isAllowedToRenderRooms() && <Link 
+                        to="/rooms"
+                        className={this.props.location?.pathname === '/rooms' ? 'nav-link active': 'nav-link' }  
+                        viewTransition
+                    >
+                            <MdOutlineRoomService /> Rooms
                     </Link>}
 
                     {/* MENU */}

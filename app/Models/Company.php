@@ -33,11 +33,16 @@ class Company extends BaseModel
         'license_id',
         'license_expire',
         // creator_id is id of agent who makes company
-        'creator_id'
+        'creator_id',
+        'settings',
     ];
 
     protected $translatable = [
         // 'name'
+    ];
+
+    protected $casts = [
+        'settings' => 'array'
     ];
 
     public function currency(): BelongsTo

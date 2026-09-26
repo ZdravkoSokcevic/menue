@@ -16,9 +16,10 @@ class MenuRepository implements MenuRepositoryInterface
     }
     public function all(Request $r)
     {
-        $isAdmin = $r->user()->isAdmin();
+        $user = $r->user();
+        $isAdmin = $user->isAdmin();
         // allow admin and demo users to see every company list
-        $isNotAdmin = $r->user()->isNotAdminOrDemo();
+        $isNotAdmin = $user->isNotAdminOrDemo();
         $q = Menu::with([
             'ingridients', 
             'extras', 
@@ -32,9 +33,9 @@ class MenuRepository implements MenuRepositoryInterface
             'name_translations.language.countries',
         ]);
         if($isNotAdmin)
-            $q->where('company_id', $r->input('company_id'));
-        else if ($r->filled('company_id'))
-            $q->where('company_id', $r->input('company_id'));
+            $q->where('company_id', $user->getActiveCompanyId());
+        else if ($user->getActiveCompanyId())
+            $q->where('company_id', $user->getActiveCompanyId());
 
         $q->with('translations.language', function($q) {
             // filter language

@@ -5,6 +5,8 @@
     let type = globalState.type;
     // ITEM TYPE: menu|discount|combo
     let { item } = $props();
+    let comboItem = item;
+    console.log(type);
 </script>
 <div class="mx-auto max-w-5xl px-4 pb-24 pt-6">
     {#if type == 'menu' }
@@ -120,7 +122,7 @@
                 </span>
 
                 <h1 class="text-2xl font-bold sm:text-3xl">
-                    {item.menu.name}
+                    {globalState.getDiscountNameTranslation(item)}
                 </h1>
 
                 <p class="mt-1 text-lg font-semibold">
@@ -140,7 +142,7 @@
 
             <!-- NAME -->
             <h1 class="mt-2 text-3xl font-black text-gray-900 sm:text-4xl">
-                {item.menu.name}
+                {globalState.getDiscountNameTranslation(item)}
             </h1>
 
             <!-- PRICE -->
@@ -150,7 +152,7 @@
 
             <!-- DESCRIPTION -->
             <p class="mt-4 text-gray-600 leading-relaxed">
-                {item.menu.description}
+                {globalState.getDiscountDescriptionTranslation(item)}
             </p>
 
             <!-- ALLERGENS -->
@@ -192,6 +194,73 @@
             {/if}
 
         </div>
+    {/if}
+
+    {#if type == 'combo'}
+
+        {#each item.items as item, index}
+            <!-- IMAGE -->
+            <div class="relative mb-6 overflow-hidden rounded-3xl border border-gray-100 shadow-sm">
+                
+                <div
+                    class="aspect-[4/3] w-full bg-cover bg-center"
+                    style={`background-image: url('/storage/${item.menu.picture}')`}
+                ></div>
+
+                <!-- GRADIENT -->
+                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+
+                <!-- TEXT OVER IMAGE -->
+                <div class="absolute bottom-4 left-4 right-4 text-white">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-white/80">
+                        {item.menu.category.name}
+                    </span>
+
+                    <h1 class="text-2xl font-bold sm:text-3xl">
+                        {globalState.getComboItemNameTranslation(item)}
+                    </h1>
+
+                    <p class="mt-1 text-lg font-semibold">
+                        ${getDiscountPrice(item)}
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- CONTENT -->
+            <div class="max-w-3xl">
+
+                <!-- CATEGORY -->
+                <span class="text-sm font-semibold uppercase tracking-wide text-blue-600">
+                    {item.menu.category.name}
+                </span>
+
+                <!-- NAME -->
+                <h1 class="mt-2 text-3xl font-black text-gray-900 sm:text-4xl">
+                    {globalState.getComboItemNameTranslation(item)}
+                </h1>
+
+                <!-- PRICE -->
+                <p class="mt-3 text-2xl font-extrabold text-gray-900">
+                    ${ getDiscountPrice(item)}
+                </p>
+
+                <!-- DESCRIPTION -->
+                <p class="mt-4 text-gray-600 leading-relaxed">
+                    {globalState.getComboItemDescriptionTranslation(item)}
+                </p>
+
+            </div>
+
+            {#if index < comboItem.items.length - 1}
+            <div class="relative mb-6 flex items-center justify-center overflow-hidden 3xl min-h-[200px]">
+            <span class="text-[12rem] font-black leading-none text-gray-300 select-none pointer-events-none">
+                +
+            </span>
+            </div>
+            {/if}
+        {/each}
+
     {/if}
 
 </div>

@@ -42,7 +42,8 @@ class TablesController extends Controller
 
     public function create(TableCreateRequest $r): CreateResponse
     {
-        $data = $r->only(['name', 'company_id']);
+        $data = $r->only(['name']);
+        $data['company_id'] = $r->user()->getActiveCompanyId();
         $success = $this->tableRepository->storeTable($data);
         // generate qrcode
         if($success) {

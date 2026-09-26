@@ -14,9 +14,10 @@ class DiscountsRepository implements DiscountsRepositoryInterface
     }
     public function all(Request $r)
     {
-        $isAdmin = auth('sanctum')->user()->isAdmin();
+        $user = $r->user();
+        $isAdmin = $user->isAdmin();
         // allow admin and demo users to see every company list
-        $isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
+        $isNotAdmin = $user->isNotAdminOrDemo();
         $q = Discount::with(
             'menu', 
             'menu.portions',
@@ -29,12 +30,12 @@ class DiscountsRepository implements DiscountsRepositoryInterface
         // TODO: if user is not superadmin, if the role is company_admin, agent, or user,
         // filter company_id
         if($isNotAdmin)
-            $q->whereHas('menu', function($query)use ($r) {
-                $query->where('menus.company_id', $r->input('company_id'));
+            $q->whereHas('menu', function($query)use ($r, $user) {
+                $query->where('menus.company_id', $user->getActiveCompanyId());
             });
-        else if ($r->filled('company_id')) {
-            $q->whereHas('menu', function($query) use ($r) {
-                $query->where('menus.company_id', $r->input('company_id'));
+        else if ($user->getActiveCompanyId()) {
+            $q->whereHas('menu', function($query) use ($r, $user) {
+                $query->where('menus.company_id', $user->getActiveCompanyId());
             });
         }
 

@@ -11,9 +11,6 @@ class CategoriesAPI extends Api
     static async createCategory(data: ICategory) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             let success: AxiosResponse<ICategoriesResponseItem> = await this.post('/api/categories/create', reqData, {}, true);
             if(success)
@@ -26,9 +23,6 @@ class CategoriesAPI extends Api
     static async editCategory(data: ICategory) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             const success: AxiosResponse<ICategoriesResponseItem> = await this.post(`/api/categories/edit/${data.id}`, reqData, {}, true);
             if(success)
@@ -57,8 +51,6 @@ class CategoriesAPI extends Api
         // debugger;
         let items: Array<ICategory> = [];
         const data: {company_id?: string} = {}
-        if(companyId)
-            data.company_id = companyId;
         try {
             let response = await this.get('/api/categories', data, {});
             if(response && response.data) {

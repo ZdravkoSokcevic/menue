@@ -30,7 +30,10 @@ export default defineConfig({
             refresh: false,
         }),
         react(),
-        svelte(),
+        svelte({
+            // force to check extensions .svelte
+            extensions: ['.svelte']
+        }),
     ],
 
     resolve: {

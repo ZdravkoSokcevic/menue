@@ -27,6 +27,8 @@ import EditCombo from './combos/EditCombo';
 import { ICombo } from "@/types/Combo";
 import EditUser from "./users/EditUser";
 import TUser from "@/types/TUser";
+import EditRoom from "./rooms/EditRoom";
+import { IRoom } from "@/types/TRooms";
 
 interface IProps {
     isOpen?: boolean;
@@ -91,6 +93,11 @@ class Edit extends React.Component<IProps & WithRouterProps, IState>
                     /> }
                     {this.props.type == 'table' && <EditCompanyTable
                         currentItem={this.props.currentItem as ICompanyTable}
+                        closeModal={this.closeModal}
+                        editCurrentItem={this.props.editCurrentItem as Function}
+                    />}
+                    {this.props.type == 'table' && <EditRoom
+                        currentItem={this.props.currentItem as IRoom}
                         closeModal={this.closeModal}
                         editCurrentItem={this.props.editCurrentItem as Function}
                     />}

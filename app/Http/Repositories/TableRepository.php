@@ -18,14 +18,15 @@
 		}
 		public function getTables(Request $r)
 		{
-			$isAdmin = auth('sanctum')->user()->isAdmin();
+			$user = $r->user();
+			$isAdmin = $user->isAdmin();
 			// allow admin and demo users to see every company list
-			$isNotAdmin = auth('sanctum')->user()->isNotAdminOrDemo();
+			$isNotAdmin = $user->isNotAdminOrDemo();
 			$q = Table::with('code');
 			if($isNotAdmin)
-				$q->where('company_id', $r->input('company_id'));
-			else if ($r->filled('company_id'))
-				$q->where('company_id', $r->input('company_id'));
+				$q->where('company_id', $user->getActiveCompanyId());
+			else if ($user->getActiveCompanyId())
+				$q->where('company_id', $user->getActiveCompanyId());
 			return $q->get();
 		}
 

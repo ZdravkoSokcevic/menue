@@ -9,9 +9,6 @@ class AllergensAPI extends Api
     static async createAllergen(data: IAllergen) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             let success: AxiosResponse<IResponseItem> = await this.post('/api/allergens/create', reqData, {}, true);
             if(success)
@@ -24,9 +21,6 @@ class AllergensAPI extends Api
     static async editAllergen(data: IAllergen) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             const success: AxiosResponse<IResponseItem> = await this.post(`/api/allergens/edit/${reqData.id}`, reqData, {}, true);
             if(success)
@@ -55,8 +49,6 @@ class AllergensAPI extends Api
  
         // debugger;
         const data: {company_id?: string} = {}
-        if(companyId)
-            data.company_id = companyId;
         try {
             let response = await this.get('/api/allergens', data, {});
             // console.log('### RESPONSE GET ALLERGENS ###');

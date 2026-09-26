@@ -12,6 +12,7 @@ interface CompanyRepositoryInterface
     public function createDefaultCategories(Company $c);
     public function edit($id, $data);
     public function delete($id); 
+    public function saveSettings($settingsArr, $companyId) : bool;
 }
 
 ?>

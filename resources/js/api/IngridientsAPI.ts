@@ -10,9 +10,6 @@ class IngridientsAPI extends Api
     static async createIngridient(data: IIngridient) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             let success: AxiosResponse<IResponseItem> = await this.post('/api/ingridients/create', reqData, {}, true);
             if(success)
@@ -25,9 +22,6 @@ class IngridientsAPI extends Api
     static async editAllergen(data: IIngridient) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         let allergens: Array<string> = [];
         allergens = data.allergens?.map((allergen: IAllergen) => allergen.id) as Array<string>;
         
@@ -48,9 +42,6 @@ class IngridientsAPI extends Api
             is_vegan: data.is_vegan ? 1 : 0
         };
         postData.allergens = allergens;
-
-        if(reqData.company_id)
-            postData['company_id'] = reqData.company_id;
 
         try {
             const success: AxiosResponse<IResponseItem> = await this.post(`/api/ingridients/edit/${data.id}`, postData, {}, true);

@@ -25,6 +25,8 @@ import { ICombo } from "@/types/Combo";
 import ViewCombo from "./combos/ViewCombo";
 import TUser from "@/types/TUser";
 import ViewUser from "./users/View";
+import ViewRoom from "./rooms/ViewRoom";
+import { IRoom } from "@/types/TRooms";
 
 interface IProps {
     isOpen?: boolean;
@@ -72,17 +74,63 @@ class View extends React.Component<IProps & WithRouterProps, IState>
                     page={this.props.type}
                 >
                     <div className="view-page">
-                        {this.props.type == 'menu' && <ViewMenu currentItem={this.props.currentItem as TMenu} closeModal={this.props.closeModal as Function}/>}
-                        {this.props.type == 'category' && <ViewCategory currentItem={this.props.currentItem as TMenu} closeModal={this.props.closeModal as Function}/>}
-                        {this.props.type == 'company' && <ViewCompany currentItem={this.props.currentItem as TCompany} closeModal={this.props.closeModal as Function} />}
-                        {this.props.type == 'table' && <ViewCompanyTable currentItem={this.props.currentItem as ICompanyTable} closeModal={this.props.closeModal as Function} />}
-                        {this.props.type == 'allergen' && <ViewAllergen currentItem={this.props.currentItem as IAllergen} closeModal={this.props.closeModal as Function } />}
-                        {this.props.type == 'extra' && <ViewExtra currentItem={this.props.currentItem as IExtra} closeModal={this.props.closeModal as Function}/>}
-                        {this.props.type == 'preference' && <ViewPreference currentItem={this.props.currentItem as IPreference} closeModal={this.props.closeModal as Function}/>}
-                        {this.props.type == 'order' && <ViewOrder currentItem={this.props.currentItem as IOrder} />}
-                        {/* {this.props.type == 'discount' && <ViewDiscount currentItem={this.props.currentItem as IDiscount} closeModal={this.props.closeModal as Function} />} */}
-                        {this.props.type == 'combo' && <ViewCombo currentItem={this.props.currentItem as ICombo} closeModal={this.props.closeModal as Function} />}
-                        {this.props.type == 'user' && <ViewUser currentUser={this.props.currentItem as TUser} closeModal={this.props.closeModal as Function} />}
+                        {this.props.type == 'menu' && 
+                            <ViewMenu 
+                                currentItem={this.props.currentItem as TMenu} 
+                                closeModal={this.props.closeModal as Function}
+                            />}
+                        {this.props.type == 'category' && 
+                            <ViewCategory 
+                                currentItem={this.props.currentItem as TMenu} 
+                                closeModal={this.props.closeModal as Function}
+                            />}
+                        {this.props.type == 'company' && 
+                            <ViewCompany 
+                                currentItem={this.props.currentItem as TCompany} 
+                                closeModal={this.props.closeModal as Function} 
+                                />}
+                        {this.props.type == 'table' && 
+                            <ViewCompanyTable 
+                                currentItem={this.props.currentItem as ICompanyTable} 
+                                closeModal={this.props.closeModal as Function} 
+                                />}
+                        {this.props.type == 'room' && 
+                            <ViewRoom 
+                                currentItem={this.props.currentItem as IRoom} 
+                                closeModal={this.props.closeModal as Function} 
+                                />}
+                        {this.props.type == 'allergen' && 
+                            <ViewAllergen 
+                                currentItem={this.props.currentItem as IAllergen} 
+                                closeModal={this.props.closeModal as Function } 
+                            />}
+                        {this.props.type == 'extra' && 
+                            <ViewExtra 
+                                    currentItem={this.props.currentItem as IExtra} 
+                                    closeModal={this.props.closeModal as Function}/>}
+                        {
+                        this.props.type == 'preference' && 
+                            <ViewPreference 
+                                currentItem={this.props.currentItem as IPreference} 
+                                closeModal={this.props.closeModal as Function}
+                            />}
+                        {
+                        this.props.type == 'order' && 
+                            <ViewOrder 
+                                currentItem={this.props.currentItem as IOrder} 
+                            />}
+                        {/* {this.props.type == 'discount' 
+                        && <ViewDiscount currentItem={this.props.currentItem as IDiscount} closeModal={this.props.closeModal as Function} />} */}
+                        {this.props.type == 'combo' && 
+                            <ViewCombo 
+                                currentItem={this.props.currentItem as ICombo} 
+                                closeModal={this.props.closeModal as Function} 
+                            />}
+                        {this.props.type == 'user' && 
+                            <ViewUser 
+                                currentUser={this.props.currentItem as TUser} 
+                                closeModal={this.props.closeModal as Function} 
+                            />}
                     </div>
                 </ModalOrPage>
             </>

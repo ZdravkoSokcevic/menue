@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Services\CompanyContextService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -18,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-table', function($user,Request $r) {
             if($user->isAdminOrDemo())
                 return true;
-            else if($r->filled('company_id') && $user->company_id == $r->input('company_id'))
+            else if($user->company_id == $user->getActiveCompanyId())
                 return true;
             else if($user->isAgent() || $user->isDemo())
                 return true;
@@ -29,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-menu', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
                 return true;
-            else if($r->filled('company_id'))
+            else if($user->getActiveCompanyId())
                 return true;
 
             return false;  
@@ -38,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-categories', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
                 return true;
-            else if($r->filled('company_id'))
+            else if($user->getActiveCompanyId())
                 return true;
 
             return false;  
@@ -52,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-orders', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
                 return true;
-            else if($r->filled('company_id'))
+            else if($user->getActiveCompanyId())
                 return true;
 
             return false;  
@@ -62,17 +63,17 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-allergens', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
                 return true;
-            else if($r->filled('company_id'))
+            else if($user->getActiveCompanyId())
                 return true;
 
             return false;  
         });
 
         // VIEW INGRIDIENTS GATE
-        Gate::define('view-ingrFidients', function(User $user, Request $r) {
+        Gate::define('view-ingrididients', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
                 return true;
-            else if($r->filled('company_id'))
+            else if($user->getActiveCompanyId())
                 return true;
 
             return false;  
@@ -82,7 +83,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-extras', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
                 return true;
-            else if($r->filled('company_id'))
+            else if($user->getActiveCompanyId())
                 return true;
 
             return false;  
@@ -92,7 +93,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-preferences', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
                 return true;
-            else if($r->filled('company_id'))
+            else if($user->getActiveCompanyId())
                 return true;
 
             return false;  
@@ -103,7 +104,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-discounts', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
                 return true;
-            else if($r->filled('company_id'))
+            else if($user->getActiveCompanyId())
                 return true;
 
             return false;  
@@ -112,11 +113,13 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-combos', function(User $user, Request $r) {
             if($user->isAdminOrDemo())
                 return true;
-            else if($r->filled('company_id'))
+            else if($user->getActiveCompanyId())
                 return true;
 
             return false;  
         });
+        //     return new CompanyContextService();
+        // });
 
 
     }

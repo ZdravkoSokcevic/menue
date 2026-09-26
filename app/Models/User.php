@@ -113,4 +113,19 @@ class User extends Authenticatable
     {
         return (new static)->getFillable();
     }
+
+    public function getActiveCompanyId(): ?int
+    {
+        // If they have authorization to switch, check their bearer token for an active company context override
+        if (($this->isAdmin() || $this->isAgent()) && $this->currentAccessToken()) {
+            foreach ($this->currentAccessToken()->abilities as $ability) {
+                if (str_starts_with($ability, 'company-context:')) {
+                    return (int) str_replace('company-context:', '', $ability);
+                }
+            }
+        }
+
+        // Normal users and Company Admins will ALWAYS hit this line, returning their absolute assigned company
+        return $this->company_id; 
+    }
 }

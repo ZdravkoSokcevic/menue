@@ -13,3 +13,20 @@ export function getDiscountPrice(item) {
         // return '0.0';
     }
 }
+
+export function getComboName(item) {
+    let str = '';
+    if(item.items)
+    {
+        item.items.map((comboItem, index) => {
+            str += ' ' + comboItem.menu?.name;
+            if(index < item.items.length -1)
+                str += ' +';
+        })
+    }
+    return str;
+}
+
+export function getComboPrice(item) {
+    return item?.price?.price ?? '0.0'; 
+}

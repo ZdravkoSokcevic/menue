@@ -4,6 +4,7 @@ import Storage from "@/helpers/Storage";
 import { AxiosResponse } from "axios";
 import { Store } from "@/reducers/Store";
 import { ADMIN_ROLE } from "@/types/Roles";
+import { setToken } from "@/reducers/userSlice";
 
 class CompaniesAPI extends Api
 {
@@ -59,6 +60,38 @@ class CompaniesAPI extends Api
         }catch(err) {
             return Promise.resolve({ success: false, data: {}, reason: (err as Error).cause });
         }
+    }
+
+    static async switchCompany(id: string): Promise<{success: boolean}>
+    {
+        // try {
+            const res = await this.post(`api/companies/switch`, {company_id: id}, {});
+            console.log(res);
+            if(res && res.status == 200 && res.data && res.data.message == 'Switched context successfully') {
+                // resave token manually
+                Store.dispatch(setToken({token: res.data.token}));
+                return Promise.resolve({ success: true });
+            }else {
+                return Promise.resolve({ success: false });
+            }
+        // }catch(err) {
+        //     return Promise.resolve({ success: false, data: {}, reason: (err as Error).cause })
+        // }
+    }
+
+    static async switchToAdminView(): Promise<{success: boolean}>
+    {
+        try {
+            const res = await this.get(`api/companies/switch_back`, {}, {});
+            if(res && res.status == 200 && res.data && res.data.message == 'Returned to a standard global view') {
+                // resave token manually
+                const token = res.data.token;
+                Store.dispatch(setToken({token: res.data.token}));
+                return Promise.resolve({ success: true });
+            }else return Promise.resolve({ success: false });
+        }catch(err) {
+            return Promise.resolve({ success: false, data: {}, reason: (err as Error).cause })
+        } 
     }
 }
 

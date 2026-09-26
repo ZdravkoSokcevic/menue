@@ -8,9 +8,6 @@ class CombosAPI extends Api
     static async createCombo(data: ICombo) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             let success: AxiosResponse<ICombosResponseItem> = await this.post('/api/combos/create', reqData, {}, true);
             if(success)
@@ -23,9 +20,6 @@ class CombosAPI extends Api
     static async editCombo(data: ICombo) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             const success: AxiosResponse<ICombosResponseItem> = await this.post(`/api/combos/edit/${data.id}`, reqData, {}, true);
             if(success)
@@ -54,8 +48,6 @@ class CombosAPI extends Api
         // debugger;
         let items: Array<ICombo> = [];
         const data: {company_id?: string} = {}
-        if(companyId)
-            data.company_id = companyId;
         try {
             let response = await this.get('/api/combos', data, {});
             if(response && response.data) {

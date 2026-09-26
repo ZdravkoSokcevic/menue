@@ -2,10 +2,12 @@ import { mount, unmount } from 'svelte';
 import Navbar from './components/Navbar.svelte'
 import MenuItems from './components/MenuItems.svelte';
 import DiscountItems from './components/DiscountItems.svelte';
+import ComboItems from './components/ComboItems.svelte'
 import MenuDetails from './components/MenuDetails.svelte'
 import CartPage from './components/CartPage.svelte'
 import Order from './components/Order.svelte'
 import LanguageChooser from './components/LanguageChooser.svelte'
+import CartButton from './components/parts/CartButton.svelte';
 import { cart, globalState } from './store.svelte.js'
 import Api from './api.js';
 
@@ -57,6 +59,7 @@ function initSvelteApp() {
     }
   }
 
+  // DISCOUNTS
   const menuDiscountsTarget = document.getElementById('menudiscounts-component');
   const discountDataElement = document.getElementById('menu-discounts');
   if(menuDiscountsTarget && discountDataElement && !menuDiscountsTarget.dataset.mounted) {
@@ -67,6 +70,18 @@ function initSvelteApp() {
     mount(DiscountItems, {
       target: menuDiscountsTarget,
       props: { discountItems }
+    });
+  }
+
+  // COMBOS
+  const menuCombosTarget = document.getElementById('menucombos-component');
+  const combosDataElement = document.getElementById('menu-combos');
+  if(menuCombosTarget && combosDataElement && !menuCombosTarget.dataset.mounted) {
+    const comboItems = JSON.parse(combosDataElement.textContent || '[]');
+    menuCombosTarget.dataset.mounted = "true";
+    mount(ComboItems, {
+      target: menuCombosTarget,
+      props: { comboItems }
     });
   }
 
@@ -106,6 +121,15 @@ function initSvelteApp() {
     mount(LanguageChooser,  {
       target: languageChooserTarget,
       props: {close: ()=> globalState.setIsLanguageModalOpened(false)}
+    });
+  }
+
+  // CART BUTTON COMPONENT
+  const cartButtonTarget = document.getElementById('cart-button');
+  if(cartButtonTarget && !cartButtonTarget.dataset.mounted) {
+    mount(CartButton,  {
+      target: cartButtonTarget,
+      props: {}
     });
   }
 

@@ -11,9 +11,6 @@ class MenuAPI extends Api
     static async createMenu(data: TMenu) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             let success: AxiosResponse<MenuCreateResponseItem> = await this.post('/api/menu/create', reqData, {}, true);
             if(success)
@@ -40,9 +37,6 @@ class MenuAPI extends Api
         data['prices'] = prices;
 
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             const success: AxiosResponse<MenuCreateResponseItem> = await this.post(`/api/menu/edit/${data.id}`, reqData, {}, true);
             if(success)
@@ -66,15 +60,12 @@ class MenuAPI extends Api
 
     static async getItems(): Promise<TMenu[] | undefined >
     {
-        let companyId = Store.getState().app.defaultCompany?.id;
-        const data: {company_id?: string} = {}
-        if(companyId != '')
-            data.company_id = companyId;
+        const data = {}
         
         let items: Array<TMenu> = [];
         // console.log('Default company id: ' + companyId);
         try {
-            let response = await this.get('/api/menu', { company_id: companyId }, {});
+            let response = await this.get('/api/menu', {}, {});
             if(response && response.data) {
                 response.data.map((i:any) => {
                     items.push(i as TMenu);

@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Combo extends Model
+class Combo extends BaseModel
 {
     public $fillable = [
         'name',
@@ -20,6 +19,23 @@ class Combo extends Model
         'start_at',
         'end_at',
         'quantity'
+    ];
+
+    public $relations = [
+        'price',
+        'items',
+        'items.menu',
+        'items.portion',
+        'items.portion.prices',
+        'items.menu',
+        'items.menu.category', 
+        'items.menu.extras', 
+        'items.menu.extras.prices', 
+        'items.menu.preferences', 
+        'items.menu.ingridients', 
+        'items.menu.portions.prices',
+        'items.menu.translations',
+        'items.menu.translations.language'
     ];
 
     public $timestamps = true;

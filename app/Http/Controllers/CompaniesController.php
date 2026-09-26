@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CompanyCreateRequest;
 use App\Http\Repositories\CompanyRepository;
 use App\Http\Requests\CompanyEditRequest;
+use App\Http\Requests\CompanySwitchRequest;
 use App\Http\Responses\EditResponse;
 use App\Interfaces\CompanyRepositoryInterface;
 use App\Models\Company;
@@ -17,15 +18,19 @@ use App\Http\Responses\CreateResponse;
 use Illuminate\Support\Facades\Auth;
 use Log;
 use Response;
+use App\Services\CompanyContextService;
+
 
 class CompaniesController extends Controller
 {
     private CompanyRepositoryInterface $companyRepository;
     private MediaService $mediaService;
-    public function __construct(CompanyRepository $cs, MediaService $ms)
+    protected $contextService;
+    public function __construct(CompanyRepository $cs, MediaService $ms, CompanyContextService $cService)
     {
         $this->companyRepository = $cs;
         $this->mediaService = $ms;
+        $this->contextService = $cService;
     }
     public function home()
     {
@@ -93,11 +98,62 @@ class CompaniesController extends Controller
         }
     }
 
+    public function switchCompany(CompanySwitchRequest $r)
+    {
+
+        $r->validate([
+            'company_id' => 'required|exists:companies,id',
+        ]);
+
+        $newToken = $this->contextService->issueCompanyToken(
+            request()->user(),
+            request()->input('company_id')
+        );
+
+        return response()->json([
+            'token'     => $newToken,
+            'message'   => 'Switched context successfully'
+        ]);
+
+    }
+
+    public function switchCompanyBack(CompanySwitchRequest $r)
+    {
+        $newToken = $this->contextService->issueCleanToken($r->user());
+
+        return response()->json([
+            'token'     => $newToken,
+            'message'   => 'Returned to a standard global view'
+        ]);        
+    }
+
     public function delete($id): JsonResponse
     {
         $success = $this->companyRepository->delete($id);
         if($success)
             return response()->json([ 'message'=> 'success' ]);
         else return response()->json([ 'message'=> 'Failed to delete resource' ], 404);
+    }
+
+    public function getSettings(Request $r)
+    {
+        $user = $r->user();
+        $companyId = $user->getActiveCompanyId();
+        $company = Company::find($companyId);
+        if(!$company)
+            return Response::json(null, 403);
+
+        return Response::json($company->settings);
+    }
+
+    public function saveSettings(Request $r)
+    {
+        // dd($r->settings);
+        $user = $r->user();
+        $companyId = $user->getActiveCompanyId();
+        $success = $this->companyRepository->saveSettings($r->settings, $companyId);
+        if($success)
+            return new EditResponse(true, ['message' => 'Company settings edited successfully', 'settings' => $r->settings]);
+        else return new EditResponse(false, 'Could not edit company settings!');
     }
 }

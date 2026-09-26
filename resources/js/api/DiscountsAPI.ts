@@ -8,9 +8,6 @@ class DiscountsAPI extends Api
     static async createDiscount(data: IDiscount) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             let success: AxiosResponse<IDiscountResponseItem> = await this.post('/api/discounts/create', reqData, {}, true);
             if(success)
@@ -23,9 +20,6 @@ class DiscountsAPI extends Api
     static async editDiscount(data: IDiscount) 
     {
         let reqData: any = data;
-        let company = Store.getState().app.defaultCompany;
-        if(company)
-            reqData['company_id'] = company.id;
         try {
             const success: AxiosResponse<IDiscountResponseItem> = await this.post(`/api/discounts/edit/${data.id}`, reqData, {}, true);
             if(success)
@@ -54,8 +48,6 @@ class DiscountsAPI extends Api
         // debugger;
         let items: Array<IDiscount> = [];
         const data: {company_id?: string} = {}
-        if(companyId)
-            data.company_id = companyId;
         try {
             let response = await this.get('/api/discounts', data, {});
             if(response && response.data) {

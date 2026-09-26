@@ -13,7 +13,8 @@ class MenuRequest extends FormRequest
     public function authorize(): bool
     {
         $req = request();
-        $company_id = $req->input('company_id');
+        $user = $req->user();
+        $company_id = $user->getActiveCompanyId();
         $user = $req->user();
         if($user->role === User::ADMIN_ROLE)
             return true;
@@ -27,8 +28,9 @@ class MenuRequest extends FormRequest
     public function prepareForValidation(): void
     {
         $r = request();
+        $user = $r->user();
         $this->merge([
-            "company_id" => $r->input('company_id')
+            "company_id" => $user->getActiveCompanyId()
         ]);
     }
 

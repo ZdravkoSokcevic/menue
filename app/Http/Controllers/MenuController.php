@@ -47,6 +47,7 @@ class MenuController extends Controller
 
     public function insert(MenuCreateRequest $r): CreateResponse
     {
+        $user = $r->user();
         $data = $r->only((new Menu)->getFillable());
         // 1. Insert menu image and return picture path
         // 2. Replace data image path
@@ -57,7 +58,7 @@ class MenuController extends Controller
             $data['picture'] = $picture_path;
         }
 
-        $company = Company::find($r->input('company_id'));
+        $company = Company::find($user->getActiveCompanyId());
 
         // dd($company->currency);
         
@@ -116,12 +117,13 @@ class MenuController extends Controller
 
     public function edit($id, MenuEditRequest $r): EditResponse
     {
+        $user = $r->user();
         $data = $r->only((new Menu)->getFillable());
         $menu = Menu::find($id);
         if(!$menu)
             return new EditResponse(success: false, custom_message: 'Menu not found!');
         else {
-            $company = Company::find($r->input('company_id'));
+            $company = Company::find($user->getActiveCompanyId());
             // only if picture is preset
             if($r->hasFile('picture')) {
                 $picture_path = '';

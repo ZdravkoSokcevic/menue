@@ -12,7 +12,9 @@ use App\Models\Combo;
 use App\Models\Price;
 use App\Models\Company;
 use Gate;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\Collection;
 use Response;
 
@@ -29,7 +31,7 @@ class CombosController extends Controller
      * /
      * @return Collection
      */
-    public function get(Request $r)
+    public function get(Request $r): ResponseFactory | JsonResponse | Collection
     {
         if(Gate::denies('view-combos',  $r)) {
             return \response(null,403);
@@ -39,7 +41,8 @@ class CombosController extends Controller
 
     public function insert(CombosCreateRequest $r): CreateResponse
     {
-        $company = Company::find($r->input('company_id'));
+        $user = $r->user();
+        $company = Company::find($user->getActiveCompanyId());
         $priceId = Price::insertGetId(['name' => 'Combo Price', 'price' => $r->price, 'currency_id' => $company->currency->id]);
         // dd($priceId);
         $r->merge(['price_id' => $priceId]);

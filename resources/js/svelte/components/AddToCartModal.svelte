@@ -6,11 +6,12 @@
     // export let close;
     let { type, close } = $props();
 
-    let quantity = 1;
-    let selectedPortion = item.portions[0];
-    let extras = [];
-    let preferences = [];
-    let note = '';
+    let quantity = $state(1);
+    let selectedPortion = $state(item.portions[0]);
+    let selectedPortionId = $state(item.portions[0].id);
+    let extras = $state([]);
+    let preferences = $state([]);
+    let note = $state('');
 
     // Example 
 
@@ -103,8 +104,11 @@
                     {#each portions as portion}
                         <button
                             class="w-full flex justify-between p-3 rounded-xl border
-                            {selectedPortion === portion ? 'border-blue-600 bg-blue-50' : 'border-gray-200'}"
-                            onclick={() => selectedPortion = portion}
+                            {selectedPortionId === portion.id ? 'border-blue-600 bg-blue-50' : 'border-gray-200'}"
+                            onclick={() => {
+                                selectedPortion = portion
+                                selectedPortionId = portion.id
+                            }}
                         >
                             <span>{portion.name}</span>
                             <span>${portion.prices.price}</span>

@@ -27,6 +27,8 @@ export const userSlice = createSlice({
             state.user = initialUser;
         },
         setToken: (state, action: PayloadAction<{token: string}>) => {
+            console.log('Switching token');
+            console.log(action.payload.token);
             state.token = action.payload.token as string;
         },
         removeToken: (state, action) => {

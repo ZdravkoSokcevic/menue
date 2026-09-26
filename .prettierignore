@@ -1,3 +1,7 @@
 resources/js/components/ui/*
 resources/js/ziggy.js
 resources/views/mail/*
+node_modules
+vendor
+pulic
+resources/sass

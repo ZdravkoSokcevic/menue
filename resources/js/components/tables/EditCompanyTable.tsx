@@ -157,7 +157,7 @@ class EditCompanyTable extends React.Component<IProps, IState>
                 <div className="form-page">
 
                     <div className="modal-header">
-                        <h2>Translations</h2>
+                        <h2>Edit table</h2>
                         <button className="close-btn" onClick={() => this.closeModal()}>&times;</button>
                     </div>
 
